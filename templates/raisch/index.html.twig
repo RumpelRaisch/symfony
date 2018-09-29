@@ -1,25 +1,129 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello {{ controller_name }}!{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ absolute_url(asset('build/raisch.common.css')) }}">
+{% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-<script src="{{ absolute_url(asset('build/app.js')) }}"></script>
+<script src="{{ absolute_url(asset('build/raisch.common.js')) }}"></script>
 {% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+    <a class="navbar-brand" href="#"><i class="fa fa-bug"></i></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" data-history href="#">one</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-history href="#">two</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-history href="#">three</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">esp</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown">
+                    <a class="dropdown-item" data-history href="#">un</a>
+                    <a class="dropdown-item" data-history href="#">dos</a>
+                    <a class="dropdown-item" data-history href="#">tres</a>
+                </div>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
+</nav>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<main role="main">
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-3"><i class="fab fa-js-square"></i> JavaScript Tests</h1>
+            <p class="lead"><i class="fa fa-history"></i> History API</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Respondeat totidem verbis. Praeteritis, inquit, gaudeo. Hos contra singulos dici est melius. Nam de isto magna dissensio est.</p>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button">Quo Vadis &raquo;</a></p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card bg-primary mb-4">
+                    <div class="card-body">
+                        <pre class="card-text" id="output">foo</pre>
+                    </div>
+                </div>
+            </div>
+                <div class="col-md-12">
+                    <div class="card bg-secondary mb-4">
+                        <div class="card-body">
+                            <h4 class="card-title">debug</h4>
+                            <pre class="card-text" id="debug">{{ debug }}</pre>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card border-light mb-4">
+                    <div class="card-header">Lorem</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Ipsum</h4>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Respondeat totidem verbis. Praeteritis, inquit, gaudeo. Hos contra singulos dici est melius. Nam de isto magna dissensio est.</p>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Respondeat totidem verbis. Praeteritis, inquit, gaudeo. Hos contra singulos dici est melius. Nam de isto magna dissensio est.</p>
+                        <p class="card-text"><a class="btn btn-success" href="#" role="button">Quo Vadis &raquo;</a></p>
+                    </div>
+                    <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                        foo
+                        <span class="badge badge-primary badge-pill">4</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-light mb-4">
+                    <div class="card-header">Lorem</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Ipsum</h4>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Respondeat totidem verbis. Praeteritis, inquit, gaudeo. Hos contra singulos dici est melius. Nam de isto magna dissensio est.</p>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Respondeat totidem verbis. Praeteritis, inquit, gaudeo. Hos contra singulos dici est melius. Nam de isto magna dissensio est.</p>
+                        <p class="card-text"><a class="btn btn-warning" href="#" role="button">Quo Vadis &raquo;</a></p>
+                    </div>
+                    <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                        bar
+                        <span class="badge badge-primary badge-pill">7</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-light mb-4">
+                    <div class="card-header">Lorem</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Ipsum</h4>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Respondeat totidem verbis. Praeteritis, inquit, gaudeo. Hos contra singulos dici est melius. Nam de isto magna dissensio est.</p>
+                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Respondeat totidem verbis. Praeteritis, inquit, gaudeo. Hos contra singulos dici est melius. Nam de isto magna dissensio est.</p>
+                        <p class="card-text"><a class="btn btn-danger" href="#" role="button">Quo Vadis &raquo;</a></p>
+                    </div>
+                    <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                        baz
+                        <span class="badge badge-primary badge-pill">2</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div> <!-- /.container -->
+</main>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'src/Controller/RaischController.php'|file_link(0) }}">src/Controller/RaischController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'templates/raisch/index.html.twig'|file_link(0) }}">templates/raisch/index.html.twig</a></code></li>
-    </ul>
-</div>
+<footer class="container">
+    <p>&copy; Sol 2017-2018</p>
+</footer>
 {% endblock %}
