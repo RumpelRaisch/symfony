@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RaischController extends Controller
 {
     /**
-     * @Route("/", name="raisch")
+     * @Route("/", name="raischcontroller_index")
      */
     public function index(Request $request): Response
     {
