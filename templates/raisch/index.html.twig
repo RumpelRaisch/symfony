@@ -14,7 +14,7 @@
 
 {% block body %}
 <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
-    <a class="navbar-brand" href="#"><i class="fa fa-bug"></i></a>
+    <a class="navbar-brand" href="{{ absolute_url('/') }}"><i class="fa fa-bug"></i></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -51,7 +51,7 @@
             <h1 class="display-3"><i class="fab fa-js-square"></i> JavaScript Tests</h1>
             <p class="lead"><i class="fa fa-history"></i> History API</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Respondeat totidem verbis. Praeteritis, inquit, gaudeo. Hos contra singulos dici est melius. Nam de isto magna dissensio est.</p>
-            <p><a class="btn btn-primary btn-lg" href="#" role="button">Quo Vadis &raquo;</a></p>
+            <p><a id="gubed" class="btn btn-primary btn-lg" href="{{ absolute_url(path('api.gubed')) }}" role="button">gubed &raquo;</a></p>
         </div>
     </div>
     <div class="container">
@@ -59,7 +59,7 @@
             <div class="col-md-12">
                 <div class="card bg-primary mb-4">
                     <div class="card-body">
-                        <pre class="card-text" id="output">foo</pre>
+                        <pre class="card-text">foo</pre>
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
                     <div class="card bg-secondary mb-4">
                         <div class="card-body">
                             <h4 class="card-title">debug</h4>
-                            <pre class="card-text" id="debug">{{ debug }}</pre>
+                            <pre class="card-text" id="output">{{ output }}</pre>
                         </div>
                     </div>
                 </div>
