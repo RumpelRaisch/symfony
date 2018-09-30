@@ -24,12 +24,16 @@ $(() =>
         $.post($this.attr('href'))
             .done((data, status, xhr) =>
             {
-                $output.addClass('text-success');
+                $output
+                    .removeClass('text-danger')
+                    .addClass('text-success');
                 $output.text(JSON.stringify(data, null, 4));
             })
             .fail((xhr, status, errorThrown) =>
             {
-                $output.addClass('text-danger');
+                $output
+                    .removeClass('text-success')
+                    .addClass('text-danger');
 
                 if ('<!DOCTYPE' == xhr.responseText.substring(0, 9)) {
                     $output.text(xhr.status + ' ' + xhr.statusText);
