@@ -14,7 +14,7 @@ use App\Helper\LoremIpsumHelper;
  */
 class AppController extends Abstracts\AbstractController
 {
-    public const SESSION_APP = 'raisch/app';
+    public const SESSION_APP = self::SESSION_ROOT . '/app';
 
     /**
      * Response Objekt.
