@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 abstract class AbstractController extends Controller
 {
-    protected const SESSION_ROOT = 'raisch';
+    public const SESSION_ROOT = 'raisch';
 
     /**
      * Session Objekt
@@ -88,7 +88,9 @@ abstract class AbstractController extends Controller
             new NamespacedAttributeBag()
         );
 
-        $this->session->set(self::SESSION_ROOT, []);
+        if (null === $this->session->get(self::SESSION_ROOT, null)) {
+            $this->session->set(self::SESSION_ROOT, []);
+        }
 
         return $this;
     }

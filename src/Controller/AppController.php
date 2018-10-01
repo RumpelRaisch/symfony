@@ -14,6 +14,8 @@ use App\Helper\LoremIpsumHelper;
  */
 class AppController extends Abstracts\AbstractController
 {
+    public const SESSION_APP = 'raisch/app';
+
     /**
      * Response Objekt.
      *
@@ -29,6 +31,10 @@ class AppController extends Abstracts\AbstractController
         parent::__construct();
 
         $this->setDefaultSession();
+
+        if (null === $this->getSession()->get(self::SESSION_APP, null)) {
+            $this->getSession()->set(self::SESSION_APP, []);
+        }
     }
 
     /**
