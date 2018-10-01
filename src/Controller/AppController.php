@@ -5,12 +5,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Helper\LoremIpsumHelper;
+
 /**
- * [RaischController description].
+ * [AppController description].
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
-class RaischController extends Abstracts\AbstractController
+class AppController extends Abstracts\AbstractController
 {
     /**
      * Response Objekt.
@@ -25,6 +27,8 @@ class RaischController extends Abstracts\AbstractController
     public function __construct()
     {
         parent::__construct();
+
+        $this->setDefaultSession();
     }
 
     /**
@@ -32,9 +36,10 @@ class RaischController extends Abstracts\AbstractController
      */
     public function index(Request $request): Response
     {
-        return $this->render('raisch/index.html.twig', [
-            'title'  => 'Raisch::Symfony->Test',
-            'output' => '.',
+        return $this->render('app/index.html.twig', [
+            'title'  => 'App::Symfony->Test',
+            'lorem'  => new LoremIpsumHelper(),
+            'output' => '',
         ]);
     }
 
@@ -43,7 +48,7 @@ class RaischController extends Abstracts\AbstractController
         $this->response = null;
         $this->response = new Response();
         $this->response
-            ->setStatusCode(200)
+            ->setStatusCode(Response::HTTP_OK)
             ->setCharset('UTF-8')
             ->headers->set('Content-Type', 'text/plain');
 
