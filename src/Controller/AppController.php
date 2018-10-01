@@ -32,7 +32,7 @@ class AppController extends Abstracts\AbstractController
     }
 
     /**
-     * @Route("/", name="raisch.index")
+     * @Route("/", name="app.index")
      */
     public function index(Request $request): Response
     {
