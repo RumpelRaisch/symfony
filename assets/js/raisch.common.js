@@ -13,13 +13,17 @@ import '../css/navbar.fix.scss';
 $(() =>
 {
     const $output = $(document.getElementById('output'));
-    const $gubed  = $(document.getElementById('gubed'));
+    const $gubed  = $('a[data-api-call]');
 
     $gubed.on('click', (e) =>
     {
         e.preventDefault();
 
         const $this = $(e.target);
+
+        $gubed.removeClass('active');
+        $this.addClass('active');
+        $this.blur();
 
         $.post($this.attr('href'))
             .done((data, status, xhr) =>

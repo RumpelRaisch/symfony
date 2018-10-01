@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Kernel;
 
 abstract class AbstractController extends Controller
 {
+    protected const SESSION_ROOT = 'raisch';
+
     /**
      * Session Objekt
      *
@@ -32,6 +34,10 @@ abstract class AbstractController extends Controller
      */
     protected function getDebug(array $add = []): array
     {
+        if (null === $this->getSession()) {
+            $this->setDefaultSession();
+        }
+
         return array_merge([
             'php.version'     => PHP_VERSION,
             'symfony.version' => Kernel::VERSION,
@@ -39,6 +45,7 @@ abstract class AbstractController extends Controller
             '$_GET'           => $_GET,
             '$_POST'          => $_POST,
             '$_COOKIE'        => $_COOKIE,
+            '$_SESSION'       => $_SESSION,
             '$_FILES'         => $_FILES,
             '$_SERVER'        => $_SERVER,
             '$_ENV'           => $_ENV,
@@ -74,12 +81,14 @@ abstract class AbstractController extends Controller
      *
      * @return self
      */
-    protected function setDefaultSession(): ?AbstractController
+    protected function setDefaultSession(): AbstractController
     {
         $this->session = new Session(
             new NativeSessionStorage(),
             new NamespacedAttributeBag()
         );
+
+        $this->session->set(self::SESSION_ROOT, []);
 
         return $this;
     }
