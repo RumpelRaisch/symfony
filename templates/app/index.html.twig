@@ -1,41 +1,68 @@
-{% set config = {
-    'pagetitle' : 'Dashboard'
-} %}
-
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ title }}{% endblock %}
-
 {% block stylesheets %}
-{# <link rel="stylesheet" href="{{ absolute_url(asset('css/app.common.css')) }}"> #}
+{# <link rel="stylesheet" href="{{ absolute_url(asset('css/app.common.min.css')|cacheHack) }}"> #}
 {% endblock %}
 
 {% block javascripts %}
-<script src="{{ absolute_url(asset('js/app.common.js')) }}"></script>
+<script type="text/javascript" src="{{ absolute_url(asset('js/plugins/chartjs.min.js')) }}"></script>
+<script type="text/javascript" src="{{ absolute_url(asset('js/app.common.js')|cacheHack) }}"></script>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-md-12 mb-4">
-        <div class="btn-group">
-            <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed')) }}" role="button">gubed</a>
-            <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed.headers')) }}" role="button">headers</a>
-            <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed.server')) }}" role="button">server</a>
-            <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed.session')) }}" role="button">session</a>
-        </div>
-    </div>
     <div class="col-md-12">
-        <div class="card mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-category">GitHub</h5>
+                <h2 class="card-title">Repos</h2>
+            </div>
             <div class="card-body">
-                <h4 class="card-title">debug</h4>
-                <pre class="card-text" id="output">{{ output }}</pre>
+                <pre class="card-text">{{ dump(repos) }}</pre>
+            </div>
+            <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                i dont know
+                <span class="badge badge-primary badge-pill">4</span>
             </div>
         </div>
     </div>
 </div>
+
+<div class="row">
+    {% for repo in repos %}
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav float-right">
+                    <li class="nav-item">
+                        <a href="{{ repo.html_url }}" target="_blank" data-toggle="tooltip" data-placement="top" title="View repo on GitHub."><i class="fab fa-github fa-fw"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ repo.owner.html_url }}" target="_blank" data-toggle="tooltip" data-placement="top" title="View user on GitHub."><i class="fas fa-user fa-fw"></i></a>
+                    </li>
+                </ul>
+                <h5 class="card-category">{{ repo.language }}</h5>
+                <h2 class="card-title">{{ repo.name }}</h2>
+            </div>
+            <div class="card-body">
+                <p class="card-text d-flex justify-content-between">
+                    created
+                    <span>{{ repo.created_at|formatDateTimeGitHub }}</span>
+                </p>
+                <p class="card-text d-flex justify-content-between">
+                    updated
+                    <span>{{ repo.updated_at|formatDateTimeGitHub }}</span>
+                </p>
+            </div>
+            <div class="card-footer"></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 <div class="row">
     <div class="col-md-4">
-        <div class="card border-light mb-4">
+        <div class="card">
             <div class="card-header">Lorem</div>
             <div class="card-body">
                 <h4 class="card-title">Ipsum</h4>
@@ -49,7 +76,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-light mb-4">
+        <div class="card">
             <div class="card-header">Lorem</div>
             <div class="card-body">
                 <h4 class="card-title">Ipsum</h4>
@@ -63,7 +90,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-light mb-4">
+        <div class="card">
             <div class="card-header">Lorem</div>
             <div class="card-body">
                 <h4 class="card-title">Ipsum</h4>

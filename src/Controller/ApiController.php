@@ -5,6 +5,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * [ApiController description]
+ *
+ * @author Rainer Schulz <rainer.schulz@bitshifting.de>
+ */
 class ApiController extends Abstracts\AbstractController
 {
     /**

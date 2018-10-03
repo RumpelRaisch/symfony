@@ -1,0 +1,89 @@
+{% set config = {
+'pageTitle' : title,
+'activeController' : controller,
+'brandText' : brandText,
+'brandUrl' : brandUrl
+} %}
+
+{% set active = 'bar' %}
+
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+<script type="text/javascript" src="{{ absolute_url(asset('js/playground.common.js')|cacheHack) }}"></script>
+{% endblock %}
+
+{% block sidebarPlayground %}
+{% include 'playground/sidebar.html.twig' %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-sm-6 text-left">
+                        <h5 class="card-category">Some Geeky Stuff</h5>
+                        <h2 class="card-title">Binary Thinking</h2>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
+                            <label class="btn btn-sm btn-primary btn-simple" data-api-call>
+                                <input type="radio" name="options">
+                                <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">reset</span>
+                                <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-button-power"></i>
+                                </span>
+                            </label>
+                            <label class="btn btn-sm btn-primary btn-simple" data-api-call="{{ absolute_url(path('api.gubed')) }}">
+                                <input type="radio" name="options">
+                                <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">gubed</span>
+                                <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-tap-02"></i>
+                                </span>
+                            </label>
+                            <label class="btn btn-sm btn-primary btn-simple" data-api-call="{{ absolute_url(path('api.gubed.headers')) }}">
+                                <input type="radio" name="options">
+                                <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">headers</span>
+                                <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-tap-02"></i>
+                                </span>
+                            </label>
+                            <label class="btn btn-sm btn-primary btn-simple" data-api-call="{{ absolute_url(path('api.gubed.server')) }}">
+                                <input type="radio" name="options">
+                                <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">server</span>
+                                <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-tap-02"></i>
+                                </span>
+                            </label>
+                            <label class="btn btn-sm btn-primary btn-simple" data-api-call="{{ absolute_url(path('api.gubed.session')) }}">
+                                <input type="radio" name="options">
+                                <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">session</span>
+                                <span class="d-block d-sm-none">
+                                    <i class="tim-icons icon-tap-02"></i>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <pre class="card-text" id="output"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    {% for match in matches %}
+    <div class="col-lg-2 col-md-3 col-sm-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h2 class="card-text"><i class="tim-icons {{ match[1] }}"></i></h2>
+            </div>
+            <div class="card-footer">{{ match[1] }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

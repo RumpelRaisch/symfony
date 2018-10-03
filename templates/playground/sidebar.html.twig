@@ -1,0 +1,29 @@
+{% if active is not defined %}
+    {% set active = '' %}
+{% endif %}
+<ul class="nav">
+    <li class="nav-item{% if 'foo' == active %} active{% endif %}">
+        <a class="nav-link" href="#">
+            <i class="tim-icons icon-atom"></i>
+            foo
+        </a>
+    </li>
+    <li class="nav-item{% if 'bar' == active %} active{% endif %}">
+        <a class="nav-link" href="#">
+            <i class="tim-icons icon-globe-2"></i>
+            bar
+        </a>
+    </li>
+    <li class="nav-item{% if 'baz' == active %} active{% endif %}">
+        <a class="nav-link" href="#">
+            <i class="tim-icons icon-molecule-40"></i>
+            baz
+        </a>
+    </li>
+    <li class="nav-item{% if 'qux' == active %} active{% endif %}">
+        <a class="nav-link" href="#">
+            <i class="tim-icons icon-planet"></i>
+            qux
+        </a>
+    </li>
+</ul>

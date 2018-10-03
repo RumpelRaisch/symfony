@@ -6,7 +6,13 @@ use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * [AbstractController description]
+ *
+ * @author Rainer Schulz <rainer.schulz@bitshifting.de>
+ */
 abstract class AbstractController extends Controller
 {
     public const SESSION_ROOT = 'raisch';
@@ -53,11 +59,30 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * Generates absolute URL for given route name.
+     *
+     * @author Rainer Schulz <rainer.schulz@bitshifting.de>
+     *
+     * @param  string $routeName route name
+     * @param  array  $params    parameters for query string
+     *
+     * @return string            absolute URL for given route name
+     */
+    protected function generateAbsoluteUrl(string $routeName, array $params = []): string
+    {
+        return $this->generateUrl(
+            $routeName,
+            $params,
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+    }
+
+    /**
      * Gets the Session Objekt
      *
      * @return Session
      */
-    protected function getSession()
+    protected function getSession(): Session
     {
         return $this->session;
     }
