@@ -1,126 +1,80 @@
+{% set config = {
+    'pagetitle' : 'Dashboard'
+} %}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block stylesheets %}
-{{ parent() }}
-<link rel="stylesheet" href="{{ absolute_url(asset('build/raisch.common.css')) }}">
+{# <link rel="stylesheet" href="{{ absolute_url(asset('css/app.common.css')) }}"> #}
 {% endblock %}
 
 {% block javascripts %}
-{{ parent() }}
-<script src="{{ absolute_url(asset('build/raisch.common.js')) }}"></script>
+<script src="{{ absolute_url(asset('js/app.common.js')) }}"></script>
 {% endblock %}
 
-{% block body %}
-<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
-    <a class="navbar-brand" href="{{ absolute_url(path('app.index')) }}"><i class="fa fa-bug"></i></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbar">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" data-history href="#">one</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-history href="#">two</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-history href="#">three</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">esp</a>
-                <div class="dropdown-menu" aria-labelledby="dropdown">
-                    <a class="dropdown-item" data-history href="#">un</a>
-                    <a class="dropdown-item" data-history href="#">dos</a>
-                    <a class="dropdown-item" data-history href="#">tres</a>
-                </div>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-success my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>
-        </form>
-    </div>
-</nav>
-
-<main role="main">
-    <div class="jumbotron">
-        <div class="container">
-            <h1 class="display-3"><i class="fab fa-js-square"></i> JavaScript Tests</h1>
-            <p class="lead"><i class="fa fa-history"></i> History API</p>
-            {{ lorem.get(2)|raw }}
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="btn-group">
+            <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed')) }}" role="button">gubed</a>
+            <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed.headers')) }}" role="button">headers</a>
+            <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed.server')) }}" role="button">server</a>
+            <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed.session')) }}" role="button">session</a>
         </div>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 mb-4">
-                <div class="btn-group">
-                    <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed')) }}" role="button">gubed</a>
-                    <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed.headers')) }}" role="button">headers</a>
-                    <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed.server')) }}" role="button">server</a>
-                    <a class="btn btn-primary btn-lg" data-api-call href="{{ absolute_url(path('api.gubed.session')) }}" role="button">session</a>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="card bg-secondary mb-4">
-                    <div class="card-body">
-                        <h4 class="card-title">debug</h4>
-                        <pre class="card-text" id="output">{{ output }}</pre>
-                    </div>
-                </div>
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title">debug</h4>
+                <pre class="card-text" id="output">{{ output }}</pre>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card border-light mb-4">
-                    <div class="card-header">Lorem</div>
-                    <div class="card-body">
-                        <h4 class="card-title">Ipsum</h4>
-                        {{ lorem.get(2, 'card-text')|raw }}
-                        <p class="card-text"><a class="btn btn-success" href="#" role="button">Quo Vadis &raquo;</a></p>
-                    </div>
-                    <div class="card-footer text-muted d-flex justify-content-between align-items-center">
-                        foo
-                        <span class="badge badge-primary badge-pill">4</span>
-                    </div>
-                </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card border-light mb-4">
+            <div class="card-header">Lorem</div>
+            <div class="card-body">
+                <h4 class="card-title">Ipsum</h4>
+                {{ lorem.get(2, 'card-text')|raw }}
+                <p class="card-text"><a class="btn btn-success" href="#" role="button">Quo Vadis &raquo;</a></p>
             </div>
-            <div class="col-md-4">
-                <div class="card border-light mb-4">
-                    <div class="card-header">Lorem</div>
-                    <div class="card-body">
-                        <h4 class="card-title">Ipsum</h4>
-                        {{ lorem.get(4, 'card-text')|raw }}
-                        <p class="card-text"><a class="btn btn-warning" href="#" role="button">Quo Vadis &raquo;</a></p>
-                    </div>
-                    <div class="card-footer text-muted d-flex justify-content-between align-items-center">
-                        bar
-                        <span class="badge badge-primary badge-pill">7</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card border-light mb-4">
-                    <div class="card-header">Lorem</div>
-                    <div class="card-body">
-                        <h4 class="card-title">Ipsum</h4>
-                        {{ lorem.get(3, 'card-text')|raw }}
-                        <p class="card-text"><a class="btn btn-danger" href="#" role="button">Quo Vadis &raquo;</a></p>
-                    </div>
-                    <div class="card-footer text-muted d-flex justify-content-between align-items-center">
-                        baz
-                        <span class="badge badge-primary badge-pill">2</span>
-                    </div>
-                </div>
+            <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                foo
+                <span class="badge badge-primary badge-pill">4</span>
             </div>
         </div>
-        <hr>
-    </div> <!-- /.container -->
-</main>
-
-<footer class="container">
-    <p>&copy; Sol 2017-2018</p>
-</footer>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-light mb-4">
+            <div class="card-header">Lorem</div>
+            <div class="card-body">
+                <h4 class="card-title">Ipsum</h4>
+                {{ lorem.get(4, 'card-text')|raw }}
+                <p class="card-text"><a class="btn btn-warning" href="#" role="button">Quo Vadis &raquo;</a></p>
+            </div>
+            <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                bar
+                <span class="badge badge-primary badge-pill">7</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-light mb-4">
+            <div class="card-header">Lorem</div>
+            <div class="card-body">
+                <h4 class="card-title">Ipsum</h4>
+                {{ lorem.get(3, 'card-text')|raw }}
+                <p class="card-text"><a class="btn btn-danger" href="#" role="button">Quo Vadis &raquo;</a></p>
+            </div>
+            <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                baz
+                <span class="badge badge-primary badge-pill">2</span>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

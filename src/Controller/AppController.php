@@ -43,9 +43,10 @@ class AppController extends Abstracts\AbstractController
     public function index(Request $request): Response
     {
         return $this->render('app/index.html.twig', [
-            'title'  => 'App::Symfony->Test',
-            'lorem'  => new LoremIpsumHelper(),
-            'output' => '',
+            'title'         => 'App::Symfony->Test',
+            'lorem'         => new LoremIpsumHelper(),
+            'output'        => '',
+            'indexIsActive' => true,
         ]);
     }
 
