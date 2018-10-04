@@ -48,7 +48,7 @@ class AppController extends Abstracts\AbstractController
             'brandText'     => 'Dashboard',
             'brandUrl'      => $this->generateAbsoluteUrl('app.index'),
             'lorem'         => new LoremIpsumHelper(),
-            'repos'         => $this->callGitHubAPI('users/RumpelRaisch/repos'),
+            'repos'         => $this->getGitHubRepoOverview(),
         ]);
     }
 
@@ -69,13 +69,26 @@ class AppController extends Abstracts\AbstractController
         return $this->response;
     }
 
+    private function getGitHubRepoOverview(): array
+    {
+        // TODO: only one request every hour, save data for one hour
+
+        $repos = $this->callGitHubAPI('users/RumpelRaisch/repos');
+
+        foreach ($repos as &$repo) {
+            $repo['participation'] = $this->callGitHubAPI("repos/{$repo['full_name']}/stats/participation");
+        }
+
+        return $repos;
+    }
+
     /**
      * [callGitHubAPI description]
      *
      * @param  string $path [description]
      * @return array        [description]
      */
-    public function callGitHubAPI(string $path): array
+    private function callGitHubAPI(string $path): array
     {
         $curl = curl_init();
 
@@ -96,6 +109,6 @@ class AppController extends Abstracts\AbstractController
             return [];
         }
 
-        return json_decode($response);
+        return json_decode($response, true);
     }
 }

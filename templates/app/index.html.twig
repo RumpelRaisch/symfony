@@ -45,6 +45,9 @@
                 <h2 class="card-title">{{ repo.name }}</h2>
             </div>
             <div class="card-body">
+                <canvas data-print="chart" data-chart-labels="{{ repo.participation.all|join(',') }}" data-chart-data="{{ repo.participation.all|join(',') }}"></canvas>
+            </div>
+            <div class="card-footer">
                 <p class="card-text d-flex justify-content-between">
                     created
                     <span>{{ repo.created_at|formatDateTimeGitHub }}</span>
@@ -54,7 +57,6 @@
                     <span>{{ repo.updated_at|formatDateTimeGitHub }}</span>
                 </p>
             </div>
-            <div class="card-footer"></div>
         </div>
     </div>
     {% endfor %}
