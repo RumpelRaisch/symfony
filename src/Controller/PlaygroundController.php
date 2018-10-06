@@ -43,7 +43,7 @@ class PlaygroundController extends Abstracts\AbstractController
                 ],
                 'brandText'        => 'Playground',
                 'brandUrl'         => $this->generateAbsoluteUrl('playground.index'),
-            ] + $this->getBaseTemplateConfig($this->getSession()),
+            ] + $this->getBaseTemplateConfig(),
         ]);
     }
 
@@ -61,7 +61,7 @@ class PlaygroundController extends Abstracts\AbstractController
                 ],
                 'brandText'        => 'Icons',
                 'brandUrl'         => $this->generateAbsoluteUrl('playground.icons'),
-            ] + $this->getBaseTemplateConfig($this->getSession()),
+            ] + $this->getBaseTemplateConfig(),
             'matches' => $this->parseNucleoIconsCss(),
         ]);
     }
@@ -80,7 +80,7 @@ class PlaygroundController extends Abstracts\AbstractController
                 ],
                 'brandText'        => 'Photos',
                 'brandUrl'         => $this->generateAbsoluteUrl('playground.photos'),
-            ] + $this->getBaseTemplateConfig($this->getSession()),
+            ] + $this->getBaseTemplateConfig(),
         ]);
     }
 

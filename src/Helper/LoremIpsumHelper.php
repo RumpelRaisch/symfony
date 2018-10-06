@@ -2,7 +2,7 @@
 namespace App\Helper;
 
 /**
- * LoremIpsum class
+ * [LoremIpsumHelper description]
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
