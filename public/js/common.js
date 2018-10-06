@@ -18,11 +18,12 @@ $(function () {
 
     $.notify({
       icon: 'tim-icons icon-bell-55',
-      message: 'Theme changed.'
+      message: "Theme changed to \"".concat($newTheme, "\".")
     }, {
       type: 'success',
       delay: 2000,
       timer: 500,
+      mouse_over: 'pause',
       placement: {
         from: 'top',
         align: 'left'

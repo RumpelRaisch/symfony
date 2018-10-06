@@ -30,6 +30,17 @@ body[data-theme=pink] {
 
     .main-panel {
         border-top: 2px solid @color-pink-end;
+
+        .content,
+        .footer {
+            a:not(.nav-item):not(.nav-link):not(.btn) {
+                color: @color-pink-end;
+            }
+
+            a:not(.nav-item):not(.nav-link):not(.btn):hover {
+                color: darken(@color-pink-end, 10%);
+            }
+        }
     }
 
     table.table thead tr th,
@@ -50,6 +61,17 @@ body[data-theme=blue] {
 
     .main-panel {
         border-top: 2px solid @color-blue-end;
+
+        .content,
+        .footer {
+            a:not(.nav-item):not(.nav-link):not(.btn) {
+                color: @color-blue-end;
+            }
+
+            a:not(.nav-item):not(.nav-link):not(.btn):hover {
+                color: darken(@color-blue-end, 10%);
+            }
+        }
     }
 
     table.table thead tr th,
@@ -70,6 +92,17 @@ body[data-theme=green] {
 
     .main-panel {
         border-top: 2px solid @color-green-end;
+
+        .content,
+        .footer {
+            a:not(.nav-item):not(.nav-link):not(.btn) {
+                color: @color-green-end;
+            }
+
+            a:not(.nav-item):not(.nav-link):not(.btn):hover {
+                color: darken(@color-green-end, 10%);
+            }
+        }
     }
 
     table.table thead tr th,
