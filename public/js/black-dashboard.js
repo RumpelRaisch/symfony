@@ -81,7 +81,7 @@ $(document).ready(function() {
   var scroll_start = 0;
   var startchange = $('.row');
   var offset = startchange.offset();
-  var scrollElement = /*navigator.platform.indexOf('Win') > -1 ? $(".ps") :*/ $(window);
+  var scrollElement = navigator.platform.indexOf('Win') > -1 ? $(".ps") : $(window);
   scrollElement.scroll(function() {
 
     scroll_start = $(this).scrollTop();

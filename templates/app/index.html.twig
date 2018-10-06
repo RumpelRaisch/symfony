@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+{% if dumpRepos is same as(true) %}
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -20,41 +21,54 @@
             <div class="card-body">
                 <pre class="card-text">{{ dump(repos) }}</pre>
             </div>
-            <div class="card-footer text-muted d-flex justify-content-between align-items-center">
-                i dont know
-                <span class="badge badge-primary badge-pill">4</span>
-            </div>
         </div>
     </div>
 </div>
-
+{% endif %}
 <div class="row">
     {% for repo in repos %}
     <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="card">
             <div class="card-header">
-                <ul class="nav float-right">
-                    <li class="nav-item">
-                        <a href="{{ repo.html_url }}" target="_blank" data-toggle="tooltip" data-placement="top" title="View repo on GitHub."><i class="fab fa-github fa-fw"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ repo.owner.html_url }}" target="_blank" data-toggle="tooltip" data-placement="top" title="View user on GitHub."><i class="fas fa-user fa-fw"></i></a>
-                    </li>
-                </ul>
-                <h5 class="card-category">{{ repo.language }}</h5>
-                <h2 class="card-title">{{ repo.name }}</h2>
+                <div class="float-right">
+                    <div class="bs-photo bs-photo-round bs-photo-size-32">
+                        <a href="{{ repo.owner.html_url }}" target="_blank" data-toggle="tooltip" data-placement="top" title="View user on GitHub.">
+                            <img src="{{ repo.owner.avatar_url }}" alt="Profile Photo" >
+                        </a>
+                    </div>
+                </div>
+                <h5 class="card-category">
+                    {{ repo.language }}
+                </h5>
+                <h2 class="card-title d-flex justify-content-between">
+                    <a href="{{ repo.html_url }}" target="_blank" data-toggle="tooltip" data-placement="top" title="View repo on GitHub.">
+                        {{ repo.name }}
+                    </a>
+                </h2>
             </div>
             <div class="card-body">
-                <canvas data-print="chart" data-chart-labels="{{ repo.participation.all|join(',') }}" data-chart-data="{{ repo.participation.all|join(',') }}"></canvas>
+                <h4 class="card-title">Commits in the last 12 weeks:</h4>
+            </div>
+            <div class="card-body">
+                {% if
+                    repo.participation is defined and
+                    repo.participation is iterable and
+                    repo.participation.all is defined and
+                    repo.participation.all is iterable
+                %}
+                <canvas data-print="chart" data-chart-data="{{ repo.participation.all|join(',') }}"></canvas>
+                {% else %}
+                <p class="card-text text-danger">No Data.</p>
+                {% endif %}
             </div>
             <div class="card-footer">
                 <p class="card-text d-flex justify-content-between">
                     created
-                    <span>{{ repo.created_at|formatDateTimeGitHub }}</span>
+                    <span>{{ repo.created_at }}</span>
                 </p>
                 <p class="card-text d-flex justify-content-between">
                     updated
-                    <span>{{ repo.updated_at|formatDateTimeGitHub }}</span>
+                    <span>{{ repo.updated_at }}</span>
                 </p>
             </div>
         </div>

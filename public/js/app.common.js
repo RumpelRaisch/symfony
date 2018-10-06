@@ -1,11 +1,13 @@
 "use strict";
 
 $(function () {
-  var $tooltip = $('[data-toggle="tooltip"]');
   var $charts = $('canvas[data-print="chart"]');
 
-  var printChart = function printChart(chartElem, chartLabels, chartData) {
-    gradientChartOptionsConfiguration = {
+  var printChart = function printChart(chartElem, chartData) {
+    var chartLabels = ['week 12', 'week 11', 'week 10', 'week 9', 'week 8', 'week 7', 'week 6', 'week 5', 'week 4', 'week 3', 'week 2', 'this week'];
+    chartData = chartData.split(',');
+    chartData = chartData.slice(Math.max(chartData.length - 12, 0));
+    var gradientChartOptionsConfiguration = {
       maintainAspectRatio: false,
       legend: {
         display: false
@@ -30,8 +32,8 @@ $(function () {
             zeroLineColor: "transparent"
           },
           ticks: {
-            suggestedMin: 50,
-            suggestedMax: 110,
+            suggestedMin: 0,
+            suggestedMax: Math.ceil((Math.max.apply(null, chartData) + 1) / 10) * 10,
             padding: 20,
             fontColor: "#9a9a9a"
           }
@@ -45,9 +47,17 @@ $(function () {
           },
           ticks: {
             padding: 20,
-            fontColor: "#9a9a9a"
+            fontColor: "#9a9a9a" // ticks: {
+            //     display: false //this will remove only the label
+            // }
+
           }
         }]
+        /*,
+        xAxes: [{
+          display: false //this will remove all the x-axis grid lines
+        }]*/
+
       }
     };
     var ctx = chartElem.getContext("2d");
@@ -70,22 +80,21 @@ $(function () {
         pointBorderColor: 'rgba(255,255,255,0)',
         pointHoverBackgroundColor: '#d048b6',
         pointBorderWidth: 20,
-        pointHoverRadius: 4,
+        pointHoverRadius: 2,
         pointHoverBorderWidth: 15,
-        pointRadius: 4,
+        pointRadius: 2,
         data: chartData
       }]
     };
-    var myChart = new Chart(ctx, {
+    var chart = new Chart(ctx, {
       type: 'line',
       data: data,
       options: gradientChartOptionsConfiguration
     });
   };
 
-  $tooltip.tooltip();
   $charts.each(function (i, elem) {
     var $this = $(elem);
-    printChart(elem, $this.data('chart-labels'), $this.data('chart-data'));
+    printChart(elem, $this.data('chart-data'));
   });
 });

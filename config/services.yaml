@@ -29,3 +29,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # see: https://symfony.vojtechvondra.cz/en/2014-08-28-saving-the-last-matched-route
+    smf_example.last_route_event_listener:
+        class: App\EventListener\LastRouteListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }

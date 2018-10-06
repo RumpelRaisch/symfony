@@ -1,10 +1,14 @@
 $(() =>
 {
-    const $tooltip   = $('[data-toggle="tooltip"]');
     const $charts    = $('canvas[data-print="chart"]');
-    const printChart = (chartElem, chartLabels, chartData) =>
+    const printChart = (chartElem, chartData) =>
     {
-        gradientChartOptionsConfiguration =  {
+        const chartLabels = ['week 12','week 11','week 10','week 9','week 8','week 7','week 6','week 5','week 4','week 3','week 2','this week'];
+
+        chartData   = chartData.split(',');
+        chartData   = chartData.slice(Math.max(chartData.length - 12, 0));
+
+        const gradientChartOptionsConfiguration = {
             maintainAspectRatio: false,
             legend: {
                 display: false
@@ -29,8 +33,8 @@ $(() =>
                         zeroLineColor: "transparent",
                     },
                     ticks: {
-                        suggestedMin:50,
-                        suggestedMax: 110,
+                        suggestedMin: 0,
+                        suggestedMax: Math.ceil((Math.max.apply(null, chartData)+1)/10)*10,
                         padding: 20,
                         fontColor: "#9a9a9a"
                     }
@@ -46,18 +50,24 @@ $(() =>
                         padding: 20,
                         fontColor: "#9a9a9a"
                     }
-                }]
+                    // ticks: {
+                    //     display: false //this will remove only the label
+                    // }
+                }]/*,
+                xAxes: [{
+                    display: false //this will remove all the x-axis grid lines
+                }]*/
             }
         };
 
-        var ctx = chartElem.getContext("2d");
-        var gradientStroke = ctx.createLinearGradient(0,230,0,50);
+        const ctx = chartElem.getContext("2d");
+        const gradientStroke = ctx.createLinearGradient(0,230,0,50);
 
         gradientStroke.addColorStop(1, 'rgba(72,72,176,0.2)');
         gradientStroke.addColorStop(0.2, 'rgba(72,72,176,0.0)');
         gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
 
-        var data = {
+        const data = {
             labels: chartLabels,
             datasets: [{
                 label: "Data",
@@ -71,26 +81,24 @@ $(() =>
                 pointBorderColor:'rgba(255,255,255,0)',
                 pointHoverBackgroundColor: '#d048b6',
                 pointBorderWidth: 20,
-                pointHoverRadius: 4,
+                pointHoverRadius: 2,
                 pointHoverBorderWidth: 15,
-                pointRadius: 4,
+                pointRadius: 2,
                 data: chartData,
             }]
         };
 
-        var myChart = new Chart(ctx, {
+        const chart = new Chart(ctx, {
             type: 'line',
             data: data,
             options: gradientChartOptionsConfiguration
         });
     };
 
-    $tooltip.tooltip();
-
     $charts.each((i, elem) =>
     {
         const $this = $(elem);
 
-        printChart(elem, $this.data('chart-labels'), $this.data('chart-data'));
+        printChart(elem, $this.data('chart-data'));
     });
 });

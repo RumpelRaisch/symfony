@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<div class="row">
+    {% for match in matches %}
+    <div class="col-lg-2 col-md-3 col-sm-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h2 class="card-text"><i class="tim-icons {{ match[1] }}"></i></h2>
+            </div>
+            <div class="card-footer">{{ match[1] }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

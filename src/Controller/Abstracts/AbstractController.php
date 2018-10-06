@@ -15,7 +15,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 abstract class AbstractController extends Controller
 {
-    public const SESSION_ROOT = 'raisch';
+    public const SESSION_ROOT  = 'raisch';
+    public const SESSION_THEME = self::SESSION_ROOT . '/theme';
+    public const DIR_TEMP      = __DIR__ . '/../../../tmp/';
+    public const DIR_CACHE     = __DIR__ . '/../../../cache/';
 
     /**
      * Session Objekt
@@ -33,6 +36,92 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * [getBaseTemplateConfig description]
+     *
+     * @return array [description]
+     */
+    protected function getBaseTemplateConfig(): array
+    {
+        return [
+            'pageTitle'        => 'Dashboard',
+            'activeController' => 'app',
+            'activeController' => [
+                'name' => 'app',
+                'sub'  => '',
+            ],
+            'brandText'        => 'Dashboard',
+            'brandUrl'         => $this->generateAbsoluteUrl('app.index'),
+            'theme'            => $this->getSession()->get(self::SESSION_THEME, 'pink'),
+        ];
+    }
+
+    /**
+     * [getLastRoute description]
+     *
+     * @return array [description]
+     */
+    protected function getLastRoute(): array
+    {
+        $lastRoute = $this->getSession()->get(
+            'last_route',
+            [
+                'name'   => 'app.index',
+                'params' => [],
+            ]
+        );
+
+        if (true === empty($lastRoute)) {
+            $lastRoute = [
+                'name'   => 'app.index',
+                'params' => [],
+            ];
+        }
+
+        if (true === empty($lastRoute['name'])) {
+            $lastRoute['name'] = 'app.index';
+        }
+
+        if (false === is_array($lastRoute['params'])) {
+            $lastRoute['params'] = [];
+        }
+
+        return $lastRoute;
+    }
+
+    /**
+     * [getCurrentRoute description]
+     *
+     * @return array [description]
+     */
+    protected function getCurrentRoute(): array
+    {
+        $currentRoute = $this->getSession()->get(
+            'this_route',
+            [
+                'name'   => 'app.index',
+                'params' => [],
+            ]
+        );
+
+        if (true === empty($currentRoute)) {
+            $currentRoute = [
+                'name'   => 'app.index',
+                'params' => [],
+            ];
+        }
+
+        if (true === empty($currentRoute['name'])) {
+            $currentRoute['name'] = 'app.index';
+        }
+
+        if (false === is_array($currentRoute['params'])) {
+            $currentRoute['params'] = [];
+        }
+
+        return $currentRoute;
+    }
+
+    /**
      * Provides data about the request, globals, environment etc.
      *
      * @param  array $add additional data
@@ -40,9 +129,7 @@ abstract class AbstractController extends Controller
      */
     protected function getDebug(array $add = []): array
     {
-        if (null === $this->getSession()) {
-            $this->setDefaultSession();
-        }
+        $this->getSession(); // inits session if isnt
 
         return array_merge([
             'php.version'     => PHP_VERSION,
@@ -84,6 +171,10 @@ abstract class AbstractController extends Controller
      */
     protected function getSession(): Session
     {
+        if (null === $this->session) {
+            return $this->setDefaultSession()->session;
+        }
+
         return $this->session;
     }
 

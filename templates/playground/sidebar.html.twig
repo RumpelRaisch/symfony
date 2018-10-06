@@ -1,29 +1,20 @@
-{% if active is not defined %}
-    {% set active = '' %}
-{% endif %}
 <ul class="nav">
-    <li class="nav-item{% if 'foo' == active %} active{% endif %}">
-        <a class="nav-link" href="#">
+    <li class="nav-item{% if 'playground.index' == config.activeController.sub %} active{% endif %}">
+        <a class="nav-link" href="{{ absolute_url(path('playground.index')) }}">
             <i class="tim-icons icon-atom"></i>
-            foo
+            Geeky Stuff
         </a>
     </li>
-    <li class="nav-item{% if 'bar' == active %} active{% endif %}">
-        <a class="nav-link" href="#">
-            <i class="tim-icons icon-globe-2"></i>
-            bar
-        </a>
-    </li>
-    <li class="nav-item{% if 'baz' == active %} active{% endif %}">
-        <a class="nav-link" href="#">
+    <li class="nav-item{% if 'playground.icons' == config.activeController.sub %} active{% endif %}">
+        <a class="nav-link" href="{{ absolute_url(path('playground.icons')) }}">
             <i class="tim-icons icon-molecule-40"></i>
-            baz
+            CSS Icons
         </a>
     </li>
-    <li class="nav-item{% if 'qux' == active %} active{% endif %}">
-        <a class="nav-link" href="#">
-            <i class="tim-icons icon-planet"></i>
-            qux
+    <li class="nav-item{% if 'playground.photos' == config.activeController.sub %} active{% endif %}">
+        <a class="nav-link" href="{{ absolute_url(path('playground.photos')) }}">
+            <i class="tim-icons icon-image-02"></i>
+            CSS Photos
         </a>
     </li>
 </ul>

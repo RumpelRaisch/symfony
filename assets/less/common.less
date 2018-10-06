@@ -1,4 +1,85 @@
-ul.nav > li.nav-item > ul.nav {
+@import "_colors";
+
+.table-responsive {
+    overflow: auto;
+}
+
+.card :not(pre) > code[class*="language-"],
+.card pre[class*="language-"] {
+    background: darken(#27293d, 2%);
+}
+
+.bs-bg-dark {
+    background: @color-dark-grey-start;
+    background: -webkit-linear-gradient(0deg, @color-dark-grey-start 0%, @color-dark-grey-end 100%);
+    background: -o-linear-gradient(0deg, @color-dark-grey-start 0%, @color-dark-grey-end 100%);
+    background: -moz-linear-gradient(0deg, @color-dark-grey-start 0%, @color-dark-grey-end 100%);
+    background: linear-gradient(0deg, @color-dark-grey-start 0%, @color-dark-grey-end 100%);
+}
+
+body,
+body[data-theme=pink] {
+    .sidebar,
+    .off-canvas-sidebar {
+        background: @color-pink-start;
+        background: -webkit-linear-gradient(0deg, @color-pink-start 0%, @color-pink-end 100%);
+        background: -o-linear-gradient(0deg, @color-pink-start 0%, @color-pink-end 100%);
+        background: -moz-linear-gradient(0deg, @color-pink-start 0%, @color-pink-end 100%);
+        background: linear-gradient(0deg, @color-pink-start 0%, @color-pink-end 100%);
+    }
+
+    .main-panel {
+        border-top: 2px solid @color-pink-end;
+    }
+
+    table.table thead tr th,
+    .card pre[class*="language-"] .line-numbers-rows span::before {
+        color: @color-pink-end;
+    }
+}
+
+body[data-theme=blue] {
+    .sidebar,
+    .off-canvas-sidebar {
+        background: @color-blue-start;
+        background: -webkit-linear-gradient(0deg, @color-blue-start 0%, @color-blue-end 100%);
+        background: -o-linear-gradient(0deg, @color-blue-start 0%, @color-blue-end 100%);
+        background: -moz-linear-gradient(0deg, @color-blue-start 0%, @color-blue-end 100%);
+        background: linear-gradient(0deg,@color-blue-start,@color-blue-end);
+    }
+
+    .main-panel {
+        border-top: 2px solid @color-blue-end;
+    }
+
+    table.table thead tr th,
+    .card pre[class*="language-"] .line-numbers-rows span::before {
+        color: @color-blue-end;
+    }
+}
+
+body[data-theme=green] {
+    .sidebar,
+    .off-canvas-sidebar {
+        background: @color-green-start;
+        background: -webkit-linear-gradient(0deg, @color-green-start 0%, @color-green-end 100%);
+        background: -o-linear-gradient(0deg, @color-green-start 0%, @color-green-end 100%);
+        background: -moz-linear-gradient(0deg, @color-green-start 0%, @color-green-end 100%);
+        background: linear-gradient(0deg,@color-green-start,@color-green-end);
+    }
+
+    .main-panel {
+        border-top: 2px solid @color-green-end;
+    }
+
+    table.table thead tr th,
+    .card pre[class*="language-"] .line-numbers-rows span::before {
+        color: @color-green-end;
+    }
+}
+
+ul.nav > li.nav-item > ul.nav,
+ul.nav > li.nav-item > div > ul.nav {
     margin-top: 0;
 
     > li.nav-item {
@@ -8,5 +89,75 @@ ul.nav > li.nav-item > ul.nav {
             // padding-top: 0;
             // padding-bottom: 0;
         }
+    }
+}
+
+.bs-photo {
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+
+    &.bs-photo-border-white {
+        border: 2px solid @color-white;
+
+        a:hover& {
+            border-color: darken(@color-white, 25%);
+        }
+
+        &.active {
+            border-color: darken(@color-white, 25%);
+
+            a:hover& {
+                border-color: @color-white;
+            }
+        }
+    }
+
+    &.bs-photo-round {
+        border-radius: 50%;
+    }
+
+    &.bs-photo-size-16 {
+        height: 16px;
+        width: 16px;
+    }
+
+    &.bs-photo-size-32 {
+        height: 32px;
+        width: 32px;
+    }
+
+    &.bs-photo-size-48 {
+        height: 48px;
+        width: 48px;
+    }
+
+    &.bs-photo-size-64 {
+        height: 64px;
+        width: 64px;
+    }
+
+    &.bs-photo-size-80 {
+        height: 80px;
+        width: 80px;
+    }
+
+    &.bs-photo-size-96 {
+        height: 96px;
+        width: 96px;
+    }
+
+    &.bs-photo-size-112 {
+        height: 112px;
+        width: 112px;
+    }
+
+    &.bs-photo-size-128 {
+        height: 128px;
+        width: 128px;
+    }
+
+    img {
+        width: 100%;
     }
 }

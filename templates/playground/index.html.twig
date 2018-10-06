@@ -1,12 +1,3 @@
-{% set config = {
-'pageTitle' : title,
-'activeController' : controller,
-'brandText' : brandText,
-'brandUrl' : brandUrl
-} %}
-
-{% set active = 'bar' %}
-
 {% extends 'base.html.twig' %}
 
 {% block javascripts %}
@@ -73,17 +64,5 @@
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    {% for match in matches %}
-    <div class="col-lg-2 col-md-3 col-sm-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <h2 class="card-text"><i class="tim-icons {{ match[1] }}"></i></h2>
-            </div>
-            <div class="card-footer">{{ match[1] }}</div>
-        </div>
-    </div>
-    {% endfor %}
 </div>
 {% endblock %}

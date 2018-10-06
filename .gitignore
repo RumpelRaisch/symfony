@@ -24,3 +24,9 @@ yarn-error.log
 
 /less-watch-compiler.*
 /babel.*
+
+/tmp/*
+!/tmp/.gitkeep
+
+/cache/*
+!/cache/.gitkeep

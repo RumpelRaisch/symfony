@@ -1,0 +1,334 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ absolute_url(asset('css/prism.css')) }}">
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript" src="{{ absolute_url(asset('js/core/prism.min.js')) }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-category">css</h5>
+                <h2 class="card-title">Normal Photos</h2>
+            </div>
+            <div class="card-body">
+                <div class="bs-photo bs-photo-size-16">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-size-32">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-size-48">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-size-64">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-size-80">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-size-96">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-size-112">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-size-128">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 128px">Preview</th>
+                                <th>Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-size-16">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-size-16"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-size-32">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-size-32"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-size-48">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-size-48"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-size-64">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-size-64"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-size-80">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-size-80"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-size-96">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-size-96"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-size-112">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-size-112"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-size-128">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-size-128"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-category">css</h5>
+                <h2 class="card-title">Round Photos</h2>
+            </div>
+            <div class="card-body">
+                <div class="bs-photo bs-photo-round bs-photo-size-16">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-round bs-photo-size-32">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-round bs-photo-size-48">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-round bs-photo-size-64">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-round bs-photo-size-80">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-round bs-photo-size-96">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-round bs-photo-size-112">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+                <div class="bs-photo bs-photo-round bs-photo-size-128">
+                    <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 128px">Preview</th>
+                                <th>Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-round bs-photo-size-16">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-round bs-photo-size-16"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-round bs-photo-size-32">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-round bs-photo-size-32"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-round bs-photo-size-48">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-round bs-photo-size-48"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-round bs-photo-size-64">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-round bs-photo-size-64"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-round bs-photo-size-80">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-round bs-photo-size-80"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-round bs-photo-size-96">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-round bs-photo-size-96"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-round bs-photo-size-112">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-round bs-photo-size-112"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">
+                                    <div class="bs-photo bs-photo-round bs-photo-size-128">
+                                        <img src="{{ absolute_url(asset('img/rumpel.jpg')) }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    <pre class="line-numbers"><code class="language-html">
+                                        &lt;div class="bs-photo bs-photo-round bs-photo-size-128"&gt;
+                                            &lt;img src="{PATH_TO_FILE}" alt="Profile Photo"&gt;
+                                        &lt;/div&gt;
+                                    </code></pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

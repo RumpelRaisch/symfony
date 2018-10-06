@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -20,6 +21,38 @@ class ApiController extends Abstracts\AbstractController
         parent::__construct();
 
         $this->setDefaultSession();
+    }
+
+    /**
+     * [setTheme description]
+     *
+     * @param  string       $theme   [description]
+     * @param  Request      $request [description]
+     * @return JsonResponse          [description]
+     *
+     * @Route(
+     *      "/api/set/theme/{theme}",
+     *      name="api.set.theme",
+     *      requirements={
+     *          "theme"="pink|blue|green|test"
+     *      }
+     * )
+     */
+    public function setTheme(string $theme, Request $request): Response
+    {
+        if (false === in_array($theme, ['pink', 'blue', 'green'])) {
+            return JsonResponse::create("Theme '{$theme}' not found.", 404);
+        }
+
+        $this->getSession()->set(self::SESSION_THEME, $theme);
+
+        if (false === $request->isXmlHttpRequest()) {
+            $lastRoute = $this->getCurrentRoute();
+
+            return $this->redirectToRoute($lastRoute['name'], $lastRoute['params']);
+        }
+
+        return JsonResponse::create($theme);
     }
 
     /**

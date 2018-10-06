@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PlaygroundController extends Abstracts\AbstractController
 {
+    public const CONTROLLER_NAME    = 'playground';
     public const SESSION_PLAYGROUND = self::SESSION_ROOT . '/playground';
 
     /**
@@ -31,14 +32,55 @@ class PlaygroundController extends Abstracts\AbstractController
     /**
      * @Route("/playground", name="playground.index")
      */
-    public function index()
+    public function indexView()
     {
         return $this->render('playground/index.html.twig', [
-            'title'      => 'Playground',
-            'controller' => 'playground',
-            'brandText'  => 'Playground',
-            'brandUrl'   => $this->generateAbsoluteUrl('playground.index'),
-            'matches'    => $this->parseNucleoIconsCss(),
+            'config' => [
+                'pageTitle'        => 'Playground',
+                'activeController' => [
+                    'name' => self::CONTROLLER_NAME,
+                    'sub'  => self::CONTROLLER_NAME . '.index',
+                ],
+                'brandText'        => 'Playground',
+                'brandUrl'         => $this->generateAbsoluteUrl('playground.index'),
+            ] + $this->getBaseTemplateConfig($this->getSession()),
+        ]);
+    }
+
+    /**
+     * @Route("/playground/icons", name="playground.icons")
+     */
+    public function iconsView()
+    {
+        return $this->render('playground/icons.html.twig', [
+            'config'  => [
+                'pageTitle'        => 'Icons',
+                'activeController' => [
+                    'name' => self::CONTROLLER_NAME,
+                    'sub'  => self::CONTROLLER_NAME . '.icons',
+                ],
+                'brandText'        => 'Icons',
+                'brandUrl'         => $this->generateAbsoluteUrl('playground.icons'),
+            ] + $this->getBaseTemplateConfig($this->getSession()),
+            'matches' => $this->parseNucleoIconsCss(),
+        ]);
+    }
+
+    /**
+     * @Route("/playground/photos", name="playground.photos")
+     */
+    public function photosView()
+    {
+        return $this->render('playground/photos.html.twig', [
+            'config' => [
+                'pageTitle'        => 'Photos',
+                'activeController' => [
+                    'name' => self::CONTROLLER_NAME,
+                    'sub'  => self::CONTROLLER_NAME . '.photos',
+                ],
+                'brandText'        => 'Photos',
+                'brandUrl'         => $this->generateAbsoluteUrl('playground.photos'),
+            ] + $this->getBaseTemplateConfig($this->getSession()),
         ]);
     }
 
