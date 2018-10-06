@@ -67,7 +67,7 @@ class PlaygroundController extends Abstracts\AbstractController
                 'brandText'        => 'Playground',
                 'brandUrl'         => $this->generateAbsoluteUrl('playground.index'),
             ] + $this->getBaseTemplateConfig(),
-            'test'   => $test,
+            'test'   => [$this->get('kernel')->getLogDir(), $test],
         ]);
     }
 

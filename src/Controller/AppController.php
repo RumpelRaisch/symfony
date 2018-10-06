@@ -44,7 +44,10 @@ class AppController extends Abstracts\AbstractController
      */
     public function indexView(Request $request): Response
     {
-        $gitHubApiHelper = new GitHubApiHelper(self::DIR_CACHE, self::DIR_TEMP);
+        $gitHubApiHelper = new GitHubApiHelper(
+            $this->get('kernel')->getCacheDir(),
+            $this->get('kernel')->getTempDir()
+        );
 
         return $this->render('app/index.html.twig', [
             'config'    => $this->getBaseTemplateConfig(),

@@ -17,8 +17,6 @@ abstract class AbstractController extends Controller
 {
     public const SESSION_ROOT  = 'raisch';
     public const SESSION_THEME = self::SESSION_ROOT . '/theme';
-    public const DIR_TEMP      = __DIR__ . '/../../../tmp/';
-    public const DIR_CACHE     = __DIR__ . '/../../../cache/';
 
     /**
      * Session Objekt
