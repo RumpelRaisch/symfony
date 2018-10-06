@@ -34,6 +34,29 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function indexView()
     {
+        $test = [];
+        $str = '200 Test RS';
+        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
+        $test[] = [$str, $matches];
+        $str = 'Test RS';
+        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
+        $test[] = [$str, $matches];
+        $str = '200';
+        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
+        $test[] = [$str, $matches];
+        $str = ' Test RS';
+        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
+        $test[] = [$str, $matches];
+        $str = '200 ';
+        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
+        $test[] = [$str, $matches];
+        $str = ' ';
+        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
+        $test[] = [$str, $matches];
+        $str = '';
+        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
+        $test[] = [$str, $matches];
+
         return $this->render('playground/index.html.twig', [
             'config' => [
                 'pageTitle'        => 'Playground',
@@ -44,6 +67,7 @@ class PlaygroundController extends Abstracts\AbstractController
                 'brandText'        => 'Playground',
                 'brandUrl'         => $this->generateAbsoluteUrl('playground.index'),
             ] + $this->getBaseTemplateConfig(),
+            'test'   => $test,
         ]);
     }
 

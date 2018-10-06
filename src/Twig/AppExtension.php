@@ -50,7 +50,7 @@ class AppExtension extends AbstractExtension
      */
     public function printR($data): string
     {
-        return print_r($data);
+        return print_r($data, true);
     }
 
     /**
