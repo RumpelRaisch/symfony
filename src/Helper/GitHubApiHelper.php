@@ -55,17 +55,23 @@ class GitHubApiHelper
     public function getGitHubRepoOverview(string $user): array
     {
         $file  = $this->getDirCache() . 'github/repos.json';
-        $repos = $this->getGithubCache($file);
+        $cache = $this->getGithubCache($file);
         $all   = [];
 
-        if (true === empty($repos)) {
+        if (true === empty($cache)) {
             $repos = $this->callGitHubAPI("users/{$user}/repos", true);
 
             if (true === empty($repos)) {
-                return ['all' => [], 'data' => []];
+                $repos = $this->getGithubCache($file, true);
+
+                if (true === empty($repos)) {
+                    return ['all' => [], 'data' => []];
+                }
             }
 
             $this->setGithubCache($file, $repos);
+        } else {
+            $repos = $cache;
         }
 
         foreach ($repos as &$repo) {
@@ -102,12 +108,12 @@ class GitHubApiHelper
      */
     public function getGithubRepoParticipation(int $id, string $fullName): array
     {
-        $file          = $this->getDirCache() . "github/participation/repo.{$id}.json";
-        $participation = $this->getGithubCache($file);
+        $file  = $this->getDirCache() . "github/participation/repo.{$id}.json";
+        $cache = $this->getGithubCache($file);
 
         if (
-            true === empty($participation) ||
-            true === empty($participation['all'])
+            true === empty($cache) ||
+            true === empty($cache['all'])
         ) {
             $participation = $this->callGitHubAPI("repos/{$fullName}/stats/participation");
 
@@ -115,10 +121,19 @@ class GitHubApiHelper
                 true === empty($participation) ||
                 true === empty($participation['all'])
             ) {
-                return ['all' => []];
+                $participation = $this->getGithubCache($file, true);
+
+                if (
+                    true === empty($participation) ||
+                    true === empty($participation['all'])
+                ) {
+                    return ['all' => [], 'owner' => []];
+                }
             }
 
             $this->setGithubCache($file, $participation);
+        } else {
+            $participation = $cache;
         }
 
         return $participation;
@@ -131,8 +146,10 @@ class GitHubApiHelper
      *
      * @return null|array       [description]
      */
-    private function getGithubCache(string $file): ?array
-    {
+    private function getGithubCache(
+        string $file,
+        bool   $ignoreLifetime = false
+    ): ?array {
         $dir = dirname($file);
 
         if (false === is_dir($dir)) {
@@ -140,7 +157,10 @@ class GitHubApiHelper
         }
 
         if (true === is_file($file)) {
-            if ($this->getcacheLifeTime() > time() - filemtime($file)) {
+            if (
+                true === $ignoreLifetime ||
+                $this->getCacheLifeTime() > (time() - filemtime($file))
+            ) {
                 $json = file_get_contents($file);
                 $data = json_decode($json, true);
 
