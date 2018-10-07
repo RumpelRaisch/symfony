@@ -4,6 +4,7 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -16,11 +17,13 @@ class ApiController extends Abstracts\AbstractController
     /**
      * Constructor.
      */
-    public function __construct()
+    public function __construct(KernelInterface $kernel)
     {
         parent::__construct();
 
-        $this->setDefaultSession();
+        $this
+            ->setDefaultSession()
+            ->setDefaultLogger($kernel);
     }
 
     /**
@@ -40,6 +43,8 @@ class ApiController extends Abstracts\AbstractController
      */
     public function setTheme(string $theme, Request $request): Response
     {
+        $this->getLogger()->trace("api.set.theme '{$theme}'", ['__AREA__' => 'ApiController']);
+
         if (false === in_array($theme, ['pink', 'blue', 'green'])) {
             return JsonResponse::create("Theme '{$theme}' not found.", 404);
         }
@@ -60,6 +65,8 @@ class ApiController extends Abstracts\AbstractController
      */
     public function gubed(Request $request): JsonResponse
     {
+        $this->getLogger()->trace('api.gubed', ['__AREA__' => 'ApiController']);
+
         return JsonResponse::create($this->getDebug(['request' => $request]));
     }
 
@@ -68,6 +75,8 @@ class ApiController extends Abstracts\AbstractController
      */
     public function gubedHeaders(): JsonResponse
     {
+        $this->getLogger()->trace('api.gubed.headers', ['__AREA__' => 'ApiController']);
+
         return JsonResponse::create(getallheaders());
     }
 
@@ -76,6 +85,8 @@ class ApiController extends Abstracts\AbstractController
      */
     public function gubedServer(): JsonResponse
     {
+        $this->getLogger()->trace('api.gubed.server', ['__AREA__' => 'ApiController']);
+
         return JsonResponse::create($_SERVER);
     }
 
@@ -84,6 +95,8 @@ class ApiController extends Abstracts\AbstractController
      */
     public function gubedSession(): JsonResponse
     {
+        $this->getLogger()->trace('api.gubed.session', ['__AREA__' => 'ApiController']);
+
         return JsonResponse::create($_SESSION);
     }
 }

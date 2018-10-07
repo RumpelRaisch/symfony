@@ -185,7 +185,7 @@ abstract class AbstractLogger implements LoggerInterface
             $area = $context['__AREA__'];
         }
 
-        $pre  = '[' . sprintf("%' 9s", $level) . '] ';
+        $pre  = '[' . sprintf("%'=9s", strtoupper($level)) . '] ';
         $pre .=  date('Y-m-d H:i:s') . ' | ';
 
         $message  = preg_replace('/\r\n/', "\n", $message);

@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-category">log</h5>
+                <h2 class="card-title">log file content</h2>
+            </div>
+            <div class="card-body">
+                <pre class="card-text">{{ log }}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

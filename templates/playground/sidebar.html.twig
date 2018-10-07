@@ -17,4 +17,10 @@
             CSS Photos
         </a>
     </li>
+    <li class="nav-item{% if 'playground.log' == config.activeController.sub %} active{% endif %}">
+        <a class="nav-link" href="{{ absolute_url(path('playground.log')) }}">
+            <i class="tim-icons icon-notes"></i>
+            App Log File
+        </a>
+    </li>
 </ul>

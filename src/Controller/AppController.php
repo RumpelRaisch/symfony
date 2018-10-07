@@ -3,14 +3,11 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Helper\GitHubApiHelper;
 use App\Helper\LoremIpsumHelper;
-use App\Logger\LogLevel;
-use App\Logger\FileLogger;
-
-use \Exception;
 
 /**
  * [AppController description].
@@ -32,11 +29,13 @@ class AppController extends Abstracts\AbstractController
     /**
      * Constructor.
      */
-    public function __construct()
+    public function __construct(KernelInterface $kernel)
     {
         parent::__construct();
 
-        $this->setDefaultSession();
+        $this
+            ->setDefaultSession()
+            ->setDefaultLogger($kernel);
 
         if (null === $this->getSession()->get(self::SESSION_APP, null)) {
             $this->getSession()->set(self::SESSION_APP, []);
@@ -48,22 +47,10 @@ class AppController extends Abstracts\AbstractController
      */
     public function indexView(Request $request): Response
     {
-        $envLogLevels = explode(',', getenv('LOG_LEVEL'));
-        $levels       = [];
-
-        foreach ($envLogLevels as $logLevel) {
-            try {
-                $levels[] = constant(LogLevel::class . '::' . $logLevel);
-            } catch (Exception $ex) {
-                // 42
-            }
-        }
+        $this->getLogger()->trace('app.index', ['__AREA__' => 'AppController']);
 
         $gitHubApiHelper = new GitHubApiHelper(
-            new FileLogger(
-                $this->get('kernel')->getLogDir() . '/app.log',
-                ...$levels
-            ),
+            $this->getLogger(),
             $this->get('kernel')->getAppCacheDir(),
             $this->get('kernel')->getAppTempDir()
         );

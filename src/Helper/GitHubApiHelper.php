@@ -399,9 +399,9 @@ class GitHubApiHelper implements LoggerAwareInterface
     /**
      * Get the value of [private description]
      *
-     * @return FileLogger
+     * @return LoggerInterface
      */
-    private function getLogger()
+    private function getLogger(): LoggerInterface
     {
         return $this->logger;
     }

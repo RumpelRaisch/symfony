@@ -6,7 +6,13 @@ use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+use App\Logger\LogLevel;
+use App\Logger\FileLogger;
+
+use \Exception;
 
 /**
  * [AbstractController description]
@@ -19,11 +25,18 @@ abstract class AbstractController extends Controller
     public const SESSION_THEME = self::SESSION_ROOT . '/theme';
 
     /**
-     * Session Objekt
+     * Session Object
      *
      * @var Session
      */
     private $session = null;
+
+    /**
+     * Logger Object
+     *
+     * @var FileLogger
+     */
+    private $logger = null;
 
     /**
      * Constructor.
@@ -163,7 +176,7 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * Gets the Session Objekt
+     * Gets the Session Object
      *
      * @return Session
      */
@@ -177,11 +190,11 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * Sets the Session Objekt
+     * Sets the Session Object
      *
      * @param Session $session
      *
-     * @return self
+     * @return AbstractController
      */
     protected function setSession(Session $session): AbstractController
     {
@@ -191,9 +204,9 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * Sets the default Session Objekt
+     * Sets the default Session Object
      *
-     * @return self
+     * @return AbstractController
      */
     protected function setDefaultSession(): AbstractController
     {
@@ -207,5 +220,55 @@ abstract class AbstractController extends Controller
         }
 
         return $this;
+    }
+
+    /**
+     * Sets the Logger Object
+     *
+     * @return AbstractController
+     */
+    protected function setLogger(FileLogger $logger): AbstractController
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+    /**
+     * Sets the default Logger Object
+     *
+     * @param $kernel KernelInterface
+     *
+     * @return AbstractController
+     */
+    protected function setDefaultLogger(KernelInterface $kernel): AbstractController
+    {
+        $envLogLevels = explode(',', getenv('LOG_LEVEL'));
+        $levels       = [];
+
+        foreach ($envLogLevels as $logLevel) {
+            try {
+                $levels[] = constant(LogLevel::class . '::' . $logLevel);
+            } catch (Exception $ex) {
+                // 42
+            }
+        }
+
+        $this->logger = new FileLogger(
+            $kernel->getLogDir() . '/app.log',
+            ...$levels
+        );
+
+        return $this;
+    }
+
+    /**
+     * Get the value of Logger Object
+     *
+     * @return FileLogger
+     */
+    protected function getLogger(): FileLogger
+    {
+        return $this->logger;
     }
 }

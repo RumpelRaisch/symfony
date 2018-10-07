@@ -3,10 +3,10 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Logger\LogLevel;
-use App\Logger\FileLogger;
 
 use \Exception;
 
@@ -23,11 +23,13 @@ class PlaygroundController extends Abstracts\AbstractController
     /**
      * Constructor.
      */
-    public function __construct()
+    public function __construct(KernelInterface $kernel)
     {
         parent::__construct();
 
-        $this->setDefaultSession();
+        $this
+            ->setDefaultSession()
+            ->setDefaultLogger($kernel);
 
         if (null === $this->getSession()->get(self::SESSION_PLAYGROUND, null)) {
             $this->getSession()->set(self::SESSION_PLAYGROUND, []);
@@ -39,6 +41,8 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function indexView()
     {
+        $this->getLogger()->trace('playground.index', ['__AREA__' => 'PlaygroundController']);
+
         $test = [];
         $str = '200 Test RS';
         preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
@@ -82,11 +86,6 @@ class PlaygroundController extends Abstracts\AbstractController
             }
         }
 
-        $logger = new FileLogger(
-            $this->get('kernel')->getLogDir() . '/app.log',
-            ...$levels
-        );
-
         return $this->render('playground/index.html.twig', [
             'config' => [
                 'pageTitle'        => 'Playground',
@@ -100,7 +99,7 @@ class PlaygroundController extends Abstracts\AbstractController
             'test'   => [
                 $log,
                 $levels,
-                $logger->getFlags(),
+                $this->getLogger()->getFlags(),
                 $this->get('kernel')->getLogDir(),
                 $test,
             ],
@@ -112,6 +111,8 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function iconsView()
     {
+        $this->getLogger()->trace('playground.icons', ['__AREA__' => 'PlaygroundController']);
+
         return $this->render('playground/icons.html.twig', [
             'config'  => [
                 'pageTitle'        => 'Icons',
@@ -131,6 +132,8 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function photosView()
     {
+        $this->getLogger()->trace('playground.photos', ['__AREA__' => 'PlaygroundController']);
+
         return $this->render('playground/photos.html.twig', [
             'config' => [
                 'pageTitle'        => 'Photos',
@@ -141,6 +144,27 @@ class PlaygroundController extends Abstracts\AbstractController
                 'brandText'        => 'Photos',
                 'brandUrl'         => $this->generateAbsoluteUrl('playground.photos'),
             ] + $this->getBaseTemplateConfig(),
+        ]);
+    }
+
+    /**
+     * @Route("/playground/log", name="playground.log")
+     */
+    public function logView()
+    {
+        $this->getLogger()->trace('playground.log', ['__AREA__' => 'PlaygroundController']);
+
+        return $this->render('playground/log.html.twig', [
+            'config' => [
+                'pageTitle'        => 'Log',
+                'activeController' => [
+                    'name' => self::CONTROLLER_NAME,
+                    'sub'  => self::CONTROLLER_NAME . '.log',
+                ],
+                'brandText'        => 'Log',
+                'brandUrl'         => $this->generateAbsoluteUrl('playground.log'),
+            ] + $this->getBaseTemplateConfig(),
+            'log'    => file_get_contents($this->getLogger()->getFile()),
         ]);
     }
 
