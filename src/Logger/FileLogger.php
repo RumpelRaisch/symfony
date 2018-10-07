@@ -116,4 +116,14 @@ class FileLogger extends Abstracts\AbstractLogger
     {
         return $this->file;
     }
+
+    /**
+     * Get the path of the log file
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return pathinfo($this->file, PATHINFO_DIRNAME);
+    }
 }
