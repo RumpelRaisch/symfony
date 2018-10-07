@@ -5,6 +5,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Logger\LogLevel;
+use App\Logger\SimpleFileLogger;
+
+use \Exception;
+
 /**
  * [PlaygroundController description]
  *
@@ -57,6 +62,31 @@ class PlaygroundController extends Abstracts\AbstractController
         preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
         $test[] = [$str, $matches];
 
+        $levels         = [];
+        $log            = [];
+        $log['env']     = getenv('LOG_LEVEL');
+        $log['explode'] = explode(',', $log['env']);
+
+        foreach ($log['explode'] as $i => $logLevel) {
+            try {
+                $value = constant(LogLevel::class . '::' . $logLevel);
+
+                $levels[] = $value;
+
+                $log['explode'][$i] = [
+                    $logLevel,
+                    $value,
+                ];
+            } catch (Exception $ex) {
+                // 42
+            }
+        }
+
+        $logger = new SimpleFileLogger(
+            $this->get('kernel')->getLogDir() . '/app.log',
+            ...$levels
+        );
+
         return $this->render('playground/index.html.twig', [
             'config' => [
                 'pageTitle'        => 'Playground',
@@ -67,7 +97,13 @@ class PlaygroundController extends Abstracts\AbstractController
                 'brandText'        => 'Playground',
                 'brandUrl'         => $this->generateAbsoluteUrl('playground.index'),
             ] + $this->getBaseTemplateConfig(),
-            'test'   => [$this->get('kernel')->getLogDir(), $test],
+            'test'   => [
+                $log,
+                $levels,
+                $logger->getFlags(),
+                $this->get('kernel')->getLogDir(),
+                $test,
+            ],
         ]);
     }
 

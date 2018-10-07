@@ -7,6 +7,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use App\Helper\GitHubApiHelper;
 use App\Helper\LoremIpsumHelper;
+use App\Logger\LogLevel;
+use App\Logger\SimpleFileLogger;
+
+use \Exception;
 
 /**
  * [AppController description].
@@ -44,9 +48,24 @@ class AppController extends Abstracts\AbstractController
      */
     public function indexView(Request $request): Response
     {
+        $envLogLevels = explode(',', getenv('LOG_LEVEL'));
+        $levels       = [];
+
+        foreach ($envLogLevels as $logLevel) {
+            try {
+                $levels[] = constant(LogLevel::class . '::' . $logLevel);
+            } catch (Exception $ex) {
+                // 42
+            }
+        }
+
         $gitHubApiHelper = new GitHubApiHelper(
-            $this->get('kernel')->getCacheDir(),
-            $this->get('kernel')->getTempDir()
+            new SimpleFileLogger(
+                $this->get('kernel')->getLogDir() . '/app.log',
+                ...$levels
+            ),
+            $this->get('kernel')->getAppCacheDir(),
+            $this->get('kernel')->getAppTempDir()
         );
 
         return $this->render('app/index.html.twig', [

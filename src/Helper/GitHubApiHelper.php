@@ -1,6 +1,10 @@
 <?php
 namespace App\Helper;
 
+use App\Logger\SimpleFileLogger;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+
 use \DateTime;
 
 /**
@@ -8,7 +12,7 @@ use \DateTime;
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
-class GitHubApiHelper
+class GitHubApiHelper implements LoggerAwareInterface
 {
     /**
      * [private description]
@@ -32,14 +36,23 @@ class GitHubApiHelper
     private $cacheLifeTime = null;
 
     /**
+     * [private description]
+     *
+     * @var SimpleFileLogger
+     */
+    private $logger = null;
+
+    /**
      * Constructor.
      */
     public function __construct(
-        string $dirCache,
-        string $dirTemp,
-        int    $cacheLifeTime = 3600
+        SimpleFileLogger $logger,
+        string           $dirCache,
+        string           $dirTemp,
+        int              $cacheLifeTime = 3600
     ) {
         $this
+            ->setLogger($logger)
             ->setDirCache($dirCache)
             ->setDirTemp($dirTemp)
             ->setcacheLifeTime($cacheLifeTime);
@@ -54,7 +67,7 @@ class GitHubApiHelper
      */
     public function getGitHubRepoOverview(string $user): array
     {
-        $file  = "{$this->getDirCache()}github/{$user}.repos.json";
+        $file  = "{$this->getDirCache()}/github/{$user}.repos.json";
         $cache = $this->getGithubCache($file);
         $repos = null;
         $all   = [];
@@ -114,7 +127,7 @@ class GitHubApiHelper
      */
     public function getGithubRepoParticipation(int $id, string $fullName): array
     {
-        $file  = $this->getDirCache() . "github/participation/repo.{$id}.json";
+        $file  = $this->getDirCache() . "/github/participation/repo.{$id}.json";
         $cache = $this->getGithubCache($file);
 
         if (
@@ -274,11 +287,22 @@ class GitHubApiHelper
         ];
 
         if (true === $saveHeaders) {
+            $file = $this->getDirTemp() . '/github.headers.txt';
+            $dir  = dirname($file);
+
+            if (false === is_dir($dir)) {
+                mkdir($dir, 0664, true);
+            }
+
             file_put_contents(
-                $this->getDirTemp() . 'github.headers.txt',
+                $file,
                 print_r($headers, true)
             );
         }
+
+        $this->getLogger()->debugR($headers, [
+            '__AREA__' => 'GitHubApiHelper->callGitHubAPI()',
+        ]);
 
         if (false === $response) {
             return ['headers' => $headers, 'data' => []];
@@ -360,5 +384,25 @@ class GitHubApiHelper
         $this->cacheLifeTime = $cacheLifeTime;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLogger(LoggerInterface $logger): GitHubApiHelper
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of [private description]
+     *
+     * @return SimpleFileLogger
+     */
+    private function getLogger()
+    {
+        return $this->logger;
     }
 }
