@@ -22,7 +22,7 @@ class FileLogger extends Abstracts\AbstractLogger
      *
      * @var integer
      */
-    private $maxFileSize = 512000;
+    private $maxFileSize = 51200;
 
     /**
      * [__construct description]
@@ -78,9 +78,14 @@ class FileLogger extends Abstracts\AbstractLogger
     {
         if (filesize($this->file) > $this->maxFileSize) {
             $pathInfo = pathinfo($this->file);
-            $newFile  = $pathInfo['dirname']
-                . date('/Ymd.His.')
-                . $pathInfo['basename'];
+            // $newFile  = $pathInfo['dirname']
+            //     . date('/Ymd.His.')
+            //     . $pathInfo['basename'];
+            $newFile = preg_replace(
+                '/\/([^\/]*\.)*([^\/\.]+)$/',
+                '/${1}' . date('YmdHis.') . '$2',
+                $this->file
+            );
 
             rename($this->file, $newFile);
         }
