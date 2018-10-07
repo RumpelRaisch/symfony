@@ -97,6 +97,17 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
+     * [debugDump description]
+     *
+     * @param  mixed $message [description]
+     * @param  array $context [description]
+     */
+    public function debugDump($message, array $context = [])
+    {
+        $this->debug($this->getVarDump($message), $context);
+    }
+
+    /**
      * Detailed trace information.
      *
      * @param string $message
@@ -116,6 +127,17 @@ abstract class AbstractLogger implements LoggerInterface
     public function traceR($message, array $context = [])
     {
         $this->trace(print_r($message, true), $context);
+    }
+
+    /**
+     * [traceDump description]
+     *
+     * @param  mixed $message [description]
+     * @param  array $context [description]
+     */
+    public function traceDump($message, array $context = [])
+    {
+        $this->trace($this->getVarDump($message), $context);
     }
 
     /**
@@ -180,6 +202,17 @@ abstract class AbstractLogger implements LoggerInterface
         }
 
         return $pre . $message;
+    }
+
+    protected function getVarDump($data)
+    {
+        $eol = preg_quote(PHP_EOL);
+
+        ob_start();
+
+        var_dump($data);
+
+        return preg_replace("/\]=>{$eol} +/", '] => ', ob_get_clean());
     }
 
     /**
