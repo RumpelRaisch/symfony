@@ -18,6 +18,13 @@ class FileLogger extends Abstracts\AbstractLogger
     private $file = null;
 
     /**
+     * [private description]
+     *
+     * @var integer
+     */
+    private $maxFileSize = 512000;
+
+    /**
      * [__construct description]
      *
      * @param string $file   [description]
@@ -57,6 +64,41 @@ class FileLogger extends Abstracts\AbstractLogger
         $message = $this->interpolate($message, $context);
         $message = $this->beautify($level, $message, $context);
 
+        $this->checkFileSize();
+
         file_put_contents($this->file, $message, FILE_APPEND);
+    }
+
+    /**
+     * [checkFileSize description]
+     *
+     * @return FileLogger
+     */
+    protected function checkFileSize(): FileLogger
+    {
+        if (filesize($this->file) > $this->maxFileSize) {
+            $pathInfo = pathinfo($this->file);
+            $newFile  = $pathInfo['dirname']
+                . date('/Ymd.His.')
+                . $pathInfo['basename'];
+
+            rename($this->file, $newFile);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [private description]
+     *
+     * @param  integer $maxFileSize
+     *
+     * @return FileLogger
+     */
+    public function setMaxFileSize(int $maxFileSize): FileLogger
+    {
+        $this->maxFileSize = $maxFileSize;
+
+        return $this;
     }
 }
