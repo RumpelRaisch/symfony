@@ -1,12 +1,18 @@
 @import "_colors";
+@pre_bg: darken(#27293d, 2%);
 
 .table-responsive {
     overflow: auto;
 }
 
-.card :not(pre) > code[class*="language-"],
-.card pre[class*="language-"] {
-    background: darken(#27293d, 2%);
+.card {
+    [class*="card-"] pre,
+    :not(pre) > code[class*="language-"],
+    pre[class*="language-"] {
+        background: @pre_bg;
+        border-radius: .5em;
+        padding: 1em;
+    }
 }
 
 .bs-bg-dark {
