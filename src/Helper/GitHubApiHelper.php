@@ -73,7 +73,7 @@ class GitHubApiHelper implements LoggerAwareInterface
         $all   = [];
 
         if (true === empty($cache)) {
-            $apiResponse = $this->callGitHubAPI("users/{$user}/repos", true);
+            $apiResponse = $this->callGitHubAPI("users/{$user}/repos");
 
             if (
                 200  !== $apiResponse['headers']['status']['code'] ||
@@ -214,11 +214,10 @@ class GitHubApiHelper implements LoggerAwareInterface
      * [callGitHubAPI description]
      *
      * @param string  $path        [description]
-     * @param boolean $saveHeaders [description]
      *
      * @return array                [description]
      */
-    private function callGitHubAPI(string $path, bool $saveHeaders = null): array
+    private function callGitHubAPI(string $path): array
     {
         $curl    = curl_init();
         $headers = [];
@@ -285,20 +284,6 @@ class GitHubApiHelper implements LoggerAwareInterface
                 ? 'No Status Message'
                 : $matches['message'],
         ];
-
-        if (true === $saveHeaders) {
-            $file = $this->getDirTemp() . '/github.headers.txt';
-            $dir  = dirname($file);
-
-            if (false === is_dir($dir)) {
-                mkdir($dir, 0664, true);
-            }
-
-            file_put_contents(
-                $file,
-                print_r($headers, true)
-            );
-        }
 
         $this->getLogger()->debugR($headers, [
             '__AREA__' => 'GitHubApiHelper->callGitHubAPI()',
