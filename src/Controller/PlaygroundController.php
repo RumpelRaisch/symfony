@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Logger\LogLevel;
-use App\Logger\SimpleFileLogger;
+use App\Logger\FileLogger;
 
 use \Exception;
 
@@ -82,7 +82,7 @@ class PlaygroundController extends Abstracts\AbstractController
             }
         }
 
-        $logger = new SimpleFileLogger(
+        $logger = new FileLogger(
             $this->get('kernel')->getLogDir() . '/app.log',
             ...$levels
         );

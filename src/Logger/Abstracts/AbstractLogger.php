@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 use \Exception;
 
 /**
- * [SimpleFileLogger description]
+ * [AbstractLogger description]
  *
  * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
  * @see Psr\Log\LoggerInterface

@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Helper\GitHubApiHelper;
 use App\Helper\LoremIpsumHelper;
 use App\Logger\LogLevel;
-use App\Logger\SimpleFileLogger;
+use App\Logger\FileLogger;
 
 use \Exception;
 
@@ -60,7 +60,7 @@ class AppController extends Abstracts\AbstractController
         }
 
         $gitHubApiHelper = new GitHubApiHelper(
-            new SimpleFileLogger(
+            new FileLogger(
                 $this->get('kernel')->getLogDir() . '/app.log',
                 ...$levels
             ),

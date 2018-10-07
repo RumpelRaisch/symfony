@@ -4,11 +4,11 @@ namespace App\Logger;
 use \Exception;
 
 /**
- * [SimpleFileLogger description]
+ * [FileLogger description]
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
-class SimpleFileLogger extends Abstracts\AbstractLogger
+class FileLogger extends Abstracts\AbstractLogger
 {
     /**
      * [private description]

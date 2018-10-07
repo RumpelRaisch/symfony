@@ -1,7 +1,7 @@
 <?php
 namespace App\Helper;
 
-use App\Logger\SimpleFileLogger;
+use App\Logger\FileLogger;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
@@ -38,7 +38,7 @@ class GitHubApiHelper implements LoggerAwareInterface
     /**
      * [private description]
      *
-     * @var SimpleFileLogger
+     * @var FileLogger
      */
     private $logger = null;
 
@@ -46,10 +46,10 @@ class GitHubApiHelper implements LoggerAwareInterface
      * Constructor.
      */
     public function __construct(
-        SimpleFileLogger $logger,
-        string           $dirCache,
-        string           $dirTemp,
-        int              $cacheLifeTime = 3600
+        FileLogger $logger,
+        string     $dirCache,
+        string     $dirTemp,
+        int        $cacheLifeTime = 3600
     ) {
         $this
             ->setLogger($logger)
@@ -399,7 +399,7 @@ class GitHubApiHelper implements LoggerAwareInterface
     /**
      * Get the value of [private description]
      *
-     * @return SimpleFileLogger
+     * @return FileLogger
      */
     private function getLogger()
     {
