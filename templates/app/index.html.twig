@@ -26,21 +26,6 @@
 </div>
 {% endif %}
 <div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-category">GitHub</h5>
-                <h2 class="card-title">All commits in the last 12 weeks for all Repos</h2>
-            </div>
-            <div class="card-body">
-                {% if repos.all is defined and repos.all is iterable %}
-                <canvas data-print="chart" data-chart-data="{{ repos.all|join(',') }}"></canvas>
-                {% else %}
-                <p class="card-text text-danger">No Data.</p>
-                {% endif %}
-            </div>
-        </div>
-    </div>
     {% for repo in repos.data %}
     <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="card">
@@ -89,8 +74,22 @@
         </div>
     </div>
     {% endfor %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-category">GitHub</h5>
+                <h2 class="card-title">All commits in the last 12 weeks for all Repos</h2>
+            </div>
+            <div class="card-body">
+                {% if repos.all is defined and repos.all is iterable %}
+                <canvas data-print="chart" data-chart-data="{{ repos.all|join(',') }}"></canvas>
+                {% else %}
+                <p class="card-text text-danger">No Data.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
-
 <div class="row">
     <div class="col-md-4">
         <div class="card">
