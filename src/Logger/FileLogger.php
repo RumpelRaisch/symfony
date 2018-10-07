@@ -101,4 +101,14 @@ class FileLogger extends Abstracts\AbstractLogger
 
         return $this;
     }
+
+    /**
+     * Get the value of [private description]
+     *
+     * @return string
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
 }
