@@ -1,6 +1,7 @@
 <?php
-namespace App\Logger;
+namespace App\Logger\Abstracts;
 
+use App\Logger\LogLevel;
 use Psr\Log\LoggerInterface;
 
 use \Exception;
@@ -11,27 +12,14 @@ use \Exception;
  * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
  * @see Psr\Log\LoggerInterface
  */
-class SimpleFileLogger implements LoggerInterface
+abstract class AbstractLogger implements LoggerInterface
 {
+    /**
+     * [private description]
+     *
+     * @var integer
+     */
     private $flags = 0;
-    private $file  = null;
-
-    public function __construct(string $file, string ...$levels)
-    {
-        try {
-            $this->file = $file;
-
-            file_put_contents($this->file, '', FILE_APPEND);
-        } catch (Exception $ex) {
-            $this->file = null;
-
-            throw new Exception('Logfile not writeable.', 0, $ex);
-        }
-
-        if (0 < count($levels)) {
-            $this->addLogLevel(...$levels);
-        }
-    }
 
     /**
      * {@inheritdoc}
@@ -97,6 +85,12 @@ class SimpleFileLogger implements LoggerInterface
         $this->log(LogLevel::DEBUG, $message, $context);
     }
 
+    /**
+     * [debugR description]
+     *
+     * @param mixed $message [description]
+     * @param array $context [description]
+     */
     public function debugR($message, array $context = [])
     {
         $this->debug(print_r($message, true), $context);
@@ -105,8 +99,8 @@ class SimpleFileLogger implements LoggerInterface
     /**
      * Detailed trace information.
      *
-     * @param  string $message
-     * @param  array  $context
+     * @param string $message
+     * @param array  $context
      */
     public function trace($message, array $context = [])
     {
@@ -116,8 +110,8 @@ class SimpleFileLogger implements LoggerInterface
     /**
      * [traceR description]
      *
-     * @param  mixed $message [description]
-     * @param  array $context [description]
+     * @param mixed $message [description]
+     * @param array $context [description]
      */
     public function traceR($message, array $context = [])
     {
@@ -127,29 +121,14 @@ class SimpleFileLogger implements LoggerInterface
     /**
      * {@inheritdoc}
      */
-    public function log($level, $message, array $context = [])
-    {
-        $levelFlag = LogLevel::getLevelFlag($level);
-
-        if (
-            LogLevel::FLAG_NONE === $levelFlag ||
-            false === $this->issetFlag($levelFlag)
-        ) {
-            return;
-        }
-
-        $message = $this->interpolate($message, $context);
-        $message = $this->beautify($level, $message, $context);
-
-        file_put_contents($this->file, $message, FILE_APPEND);
-    }
+    abstract public function log($level, $message, array $context = []);
 
     /**
      * Interpolates context values into the message placeholders.
      *
      * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md#12-message
      */
-    private function interpolate(string $message, array $context = [])
+    protected function interpolate(string $message, array $context = [])
     {
         // build a replacement array with braces around the context keys
         $replace = [];
@@ -167,13 +146,13 @@ class SimpleFileLogger implements LoggerInterface
     /**
      * [beautify description]
      *
-     * @param  string $level   [description]
-     * @param  string $message [description]
-     * @param  array  $context [description]
+     * @param string $level   [description]
+     * @param string $message [description]
+     * @param array  $context [description]
      *
      * @return string          [description]
      */
-    private function beautify(
+    protected function beautify(
         string $level,
         string $message,
         array  $context = []
@@ -187,11 +166,20 @@ class SimpleFileLogger implements LoggerInterface
         $pre  = '[' . sprintf("%' 9s", $level) . '] ';
         $pre .=  date('Y-m-d H:i:s') . ' | ';
 
-        $message = preg_replace('/\r\n/', "\n",   $message);
-        $message = preg_replace('/\r/',   "\n",   $message);
-        $message = preg_replace('/\t/',   "    ", $message);
+        $message  = preg_replace('/\r\n/', "\n", $message);
+        $message  = preg_replace('/\r/', "\n", $message);
+        $message  = preg_replace('/\t/', " ", $message);
+        $message .= ' (' . $area . ')';
+        $lines    = explode("\n", $message);
+        $message  = array_shift($lines) . "\n";
 
-        return $pre . $message . ' (' . $area . ")\n";
+        foreach ($lines as $line) {
+            $line     = '    ' . $line;
+            $line     = rtrim($line);
+            $message .= $line . "\n";
+        }
+
+        return $pre . $message;
     }
 
     /**
@@ -215,7 +203,7 @@ class SimpleFileLogger implements LoggerInterface
     /**
      * [removeLogLevel description]
      *
-     * @param  string $levels [description]
+     * @param string $levels [description]
      */
     public function removeLogLevel(string ...$levels)
     {
@@ -243,7 +231,7 @@ class SimpleFileLogger implements LoggerInterface
      *
      * @param int $flag [description]
      */
-    private function setFlag(int $flag)
+    protected function setFlag(int $flag)
     {
         $this->flags |= $flag;
     }
@@ -251,9 +239,9 @@ class SimpleFileLogger implements LoggerInterface
     /**
      * [removeFlag description]
      *
-     * @param  int    $flag [description]
+     * @param int    $flag [description]
      */
-    private function removeFlag(int $flag)
+    protected function removeFlag(int $flag)
     {
         $this->flags &= ~$flag;
     }
@@ -261,11 +249,11 @@ class SimpleFileLogger implements LoggerInterface
     /**
      * [issetFlag description]
      *
-     * @param  int  $flag [description]
+     * @param int  $flag [description]
      *
      * @return bool       [description]
      */
-    private function issetFlag(int $flag): bool
+    protected function issetFlag(int $flag): bool
     {
         return (($this->flags & $flag) === $flag);
     }

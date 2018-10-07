@@ -61,7 +61,7 @@ class GitHubApiHelper implements LoggerAwareInterface
     /**
      * [getGitHubRepoOverview description]
      *
-     * @param  string $user [description]
+     * @param string $user [description]
      *
      * @return array        [description]
      */
@@ -120,8 +120,8 @@ class GitHubApiHelper implements LoggerAwareInterface
     /**
      * [getGithubRepoParticipation description]
      *
-     * @param  int    $id       [description]
-     * @param  string $fullName [description]
+     * @param int    $id       [description]
+     * @param string $fullName [description]
      *
      * @return array            [description]
      */
@@ -164,7 +164,7 @@ class GitHubApiHelper implements LoggerAwareInterface
     /**
      * [getGithubCache description]
      *
-     * @param  string     $file [description]
+     * @param string     $file [description]
      *
      * @return null|array       [description]
      */
@@ -213,8 +213,8 @@ class GitHubApiHelper implements LoggerAwareInterface
     /**
      * [callGitHubAPI description]
      *
-     * @param  string  $path        [description]
-     * @param  boolean $saveHeaders [description]
+     * @param string  $path        [description]
+     * @param boolean $saveHeaders [description]
      *
      * @return array                [description]
      */
