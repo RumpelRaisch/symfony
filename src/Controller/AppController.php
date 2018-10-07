@@ -19,6 +19,8 @@ class AppController extends Abstracts\AbstractController
     public const CONTROLLER_NAME = 'app';
     public const SESSION_APP     = self::SESSION_ROOT . '/app';
 
+    private $context = [];
+
     /**
      * Response Objekt.
      *
@@ -37,6 +39,8 @@ class AppController extends Abstracts\AbstractController
             ->setDefaultSession()
             ->setDefaultLogger($kernel);
 
+        $this->context['__AREA__'] = 'AppController';
+
         if (null === $this->getSession()->get(self::SESSION_APP, null)) {
             $this->getSession()->set(self::SESSION_APP, []);
         }
@@ -47,7 +51,7 @@ class AppController extends Abstracts\AbstractController
      */
     public function indexView(Request $request): Response
     {
-        $this->getLogger()->trace('app.index', ['__AREA__' => 'AppController']);
+        $this->getLogger()->trace('app.index', $this->context);
 
         $gitHubApiHelper = new GitHubApiHelper(
             $this->getLogger(),

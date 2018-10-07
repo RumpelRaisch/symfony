@@ -9,6 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Logger\LogLevel;
 
 use \Exception;
+use \RecursiveDirectoryIterator;
+use \RecursiveIteratorIterator;
 
 /**
  * [PlaygroundController description]
@@ -19,6 +21,8 @@ class PlaygroundController extends Abstracts\AbstractController
 {
     public const CONTROLLER_NAME    = 'playground';
     public const SESSION_PLAYGROUND = self::SESSION_ROOT . '/playground';
+
+    private $context = [];
 
     /**
      * Constructor.
@@ -31,6 +35,8 @@ class PlaygroundController extends Abstracts\AbstractController
             ->setDefaultSession()
             ->setDefaultLogger($kernel);
 
+        $this->context['__AREA__'] = 'PlaygroundController';
+
         if (null === $this->getSession()->get(self::SESSION_PLAYGROUND, null)) {
             $this->getSession()->set(self::SESSION_PLAYGROUND, []);
         }
@@ -39,9 +45,9 @@ class PlaygroundController extends Abstracts\AbstractController
     /**
      * @Route("/playground", name="playground.index")
      */
-    public function indexView()
+    public function indexView(): Response
     {
-        $this->getLogger()->trace('playground.index', ['__AREA__' => 'PlaygroundController']);
+        $this->getLogger()->trace('playground.index', $this->context);
 
         $test = [];
         $str = '200 Test RS';
@@ -109,9 +115,9 @@ class PlaygroundController extends Abstracts\AbstractController
     /**
      * @Route("/playground/icons", name="playground.icons")
      */
-    public function iconsView()
+    public function iconsView(): Response
     {
-        $this->getLogger()->trace('playground.icons', ['__AREA__' => 'PlaygroundController']);
+        $this->getLogger()->trace('playground.icons', $this->context);
 
         return $this->render('playground/icons.html.twig', [
             'config'  => [
@@ -130,9 +136,9 @@ class PlaygroundController extends Abstracts\AbstractController
     /**
      * @Route("/playground/photos", name="playground.photos")
      */
-    public function photosView()
+    public function photosView(): Response
     {
-        $this->getLogger()->trace('playground.photos', ['__AREA__' => 'PlaygroundController']);
+        $this->getLogger()->trace('playground.photos', $this->context);
 
         return $this->render('playground/photos.html.twig', [
             'config' => [
@@ -148,14 +154,59 @@ class PlaygroundController extends Abstracts\AbstractController
     }
 
     /**
-     * @Route("/playground/log", name="playground.log")
+     * @Route(
+     *      "/playground/log/{file}",
+     *      name="playground.log",
+     *      defaults={"file"=""},
+     *      requirements={"file"=".*"}
+     * )
      */
-    public function logView()
+    public function logView(string $file = ''): Response
     {
-        $this->getLogger()->trace('playground.log', ['__AREA__' => 'PlaygroundController']);
+        $this->getLogger()->trace("playground.log '{$file}'", $this->context);
+
+        $file = strtr($file, ['%' => '']);
+        $dd   = '/\.\.\//';
+
+        while (true === (bool) preg_match($dd, $file)) {
+            $file = preg_replace($dd, '', $file);
+        }
+
+        $strtr       = ['\\' => '/'];
+        $logDir      = strtr($this->get('kernel')->getLogDir(), $strtr);
+        $logDirInfo  = [];
+        $dirIterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
+                $logDir,
+                RecursiveDirectoryIterator::SKIP_DOTS
+            )
+        );
+
+        foreach ($dirIterator as $fileInfo) {
+            if (false === $fileInfo->isFile()) {
+                continue;
+            }
+
+            $relPathname = strtr(
+                strtr($fileInfo->getPathname(), $strtr),
+                [$logDir . '/' => '']
+            );
+
+            $logDirInfo[] = $relPathname;
+        }
+
+        $logContent = null;
+
+        if ('' !== $file) {
+            try {
+                $logContent = file_get_contents("{$logDir}/$file");
+            } catch (Exception $ex) {
+                $logContent = 'Unable to get log file content.';
+            }
+        }
 
         return $this->render('playground/log.html.twig', [
-            'config' => [
+            'config'     => [
                 'pageTitle'        => 'Log',
                 'activeController' => [
                     'name' => self::CONTROLLER_NAME,
@@ -164,7 +215,9 @@ class PlaygroundController extends Abstracts\AbstractController
                 'brandText'        => 'Log',
                 'brandUrl'         => $this->generateAbsoluteUrl('playground.log'),
             ] + $this->getBaseTemplateConfig(),
-            'log'    => file_get_contents($this->getLogger()->getFile()),
+            'file'       => $file,
+            'logDirInfo' => $logDirInfo,
+            'log'        => $logContent,
         ]);
     }
 
