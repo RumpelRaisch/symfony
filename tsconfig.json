@@ -1,0 +1,16 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": ["es6"],
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "typeRoots": ["./assets/typescript/typings"],
+        "types": [],
+        "newLine": "lf",
+        "outDir": "./public/js"
+    },
+    "include": ["./assets/typescript/scripts/**/*"]
+}
