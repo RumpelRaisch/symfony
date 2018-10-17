@@ -27,6 +27,21 @@
     background: linear-gradient(0deg, @color-dark-grey-start 0%, @color-dark-grey-end 100%);
 }
 
+body {
+    .main-panel {
+        .content,
+        .footer {
+            a:not(.nav-item):not(.nav-link):not(.btn) {
+                -webkit-transition: all 300ms ease 0s;
+                -moz-transition: all 300ms ease 0s;
+                -o-transition: all 300ms ease 0s;
+                -ms-transition: all 300ms ease 0s;
+                transition: all 300ms ease 0s;
+            }
+        }
+    }
+}
+
 body,
 body[data-theme=pink] {
     .sidebar,
@@ -41,16 +56,16 @@ body[data-theme=pink] {
     .main-panel {
         border-top: 2px solid @color-pink-end;
 
-        // .content,
-        // .footer {
-        //     a:not(.nav-item):not(.nav-link):not(.btn) {
-        //         color: @color-pink-end;
-        //     }
-        //
-        //     a:not(.nav-item):not(.nav-link):not(.btn):hover {
-        //         color: darken(@color-pink-end, 10%);
-        //     }
-        // }
+        .content,
+        .footer {
+            a:not(.nav-item):not(.nav-link):not(.btn) {
+                color: @color-pink-end;
+            }
+
+            a:not(.nav-item):not(.nav-link):not(.btn):hover {
+                color: darken(@color-pink-end, 10%);
+            }
+        }
     }
 
     table.table thead tr th,
@@ -72,16 +87,16 @@ body[data-theme=blue] {
     .main-panel {
         border-top: 2px solid @color-blue-end;
 
-        // .content,
-        // .footer {
-        //     a:not(.nav-item):not(.nav-link):not(.btn) {
-        //         color: @color-blue-end;
-        //     }
-        //
-        //     a:not(.nav-item):not(.nav-link):not(.btn):hover {
-        //         color: darken(@color-blue-end, 10%);
-        //     }
-        // }
+        .content,
+        .footer {
+            a:not(.nav-item):not(.nav-link):not(.btn) {
+                color: @color-blue-end;
+            }
+
+            a:not(.nav-item):not(.nav-link):not(.btn):hover {
+                color: darken(@color-blue-end, 10%);
+            }
+        }
     }
 
     table.table thead tr th,
@@ -103,16 +118,16 @@ body[data-theme=green] {
     .main-panel {
         border-top: 2px solid @color-green-end;
 
-        // .content,
-        // .footer {
-        //     a:not(.nav-item):not(.nav-link):not(.btn) {
-        //         color: @color-green-end;
-        //     }
-        //
-        //     a:not(.nav-item):not(.nav-link):not(.btn):hover {
-        //         color: darken(@color-green-end, 10%);
-        //     }
-        // }
+        .content,
+        .footer {
+            a:not(.nav-item):not(.nav-link):not(.btn) {
+                color: @color-green-end;
+            }
+
+            a:not(.nav-item):not(.nav-link):not(.btn):hover {
+                color: darken(@color-green-end, 10%);
+            }
+        }
     }
 
     table.table thead tr th,
@@ -143,7 +158,7 @@ ul.nav > li.nav-item > div > ul.nav {
     &.bs-photo-border-white {
         border: 2px solid @color-white;
 
-        a:hover& {
+        &a:hover {
             border-color: darken(@color-white, 25%);
         }
 
