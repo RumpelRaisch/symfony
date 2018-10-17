@@ -3,7 +3,7 @@ $(() =>
     const $charts    = $('canvas[data-print="chart"]');
     const printChart = (chartElem, chartData) =>
     {
-        const chartLabels = ['week 12','week 11','week 10','week 9','week 8','week 7','week 6','week 5','week 4','week 3','week 2','this week'];
+        const chartLabels = ['week 12','week 11','week 10','week 9','week 8','week 7','week 6','week 5','week 4','week 3','week 2','last week'];
 
         chartData   = chartData.split(',');
         chartData   = chartData.slice(Math.max(chartData.length - 12, 0));
