@@ -1,5 +1,5 @@
 {
-    "compileOnSave": true,
+    "compileOnSave": false,
     "compilerOptions": {
         "module": "commonjs",
         "lib": ["es6"],
