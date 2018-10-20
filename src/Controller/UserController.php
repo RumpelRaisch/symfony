@@ -13,7 +13,7 @@ class UserController extends Abstracts\AbstractController
     /**
      * @Route("/login", name="user.login")
      */
-    public function index()
+    public function loginView()
     {
         return $this->render('user/login.html.twig', []);
     }
