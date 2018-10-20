@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+        <link rel="icon" href="{{ absolute_url(asset('favicon.ico')) }}">
+
+        <title>Login - bitshifting.de</title>
+
+        <link rel="stylesheet" href="{{ absolute_url(asset('css/login.min.css')|cacheHack) }}">
+    </head>
+    <body>
+        <div class="form-field">
+    		<input id="email" required class="focus" type="email" name="email" placeholder="E-Mail Adresse">
+    		<label for="email">E-Mail Adresse</label>
+    		<div class="hint-text email"></div>
+    	</div>
+
+    	<div class="form-field">
+    		<input id="password" required class="focus" type="password" name="password" placeholder="Passwort" >
+    		<label for="password">Passwort</label>
+    		<div class="hint-text password"></div>
+    	</div>
+    </body>
+</html>
