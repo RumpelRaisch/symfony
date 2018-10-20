@@ -20,7 +20,7 @@ use \RecursiveIteratorIterator;
 class PlaygroundController extends Abstracts\AbstractController
 {
     public const CONTROLLER_NAME    = 'playground';
-    public const SESSION_PLAYGROUND = self::SESSION_ROOT . '/playground';
+    public const SESSION_PLAYGROUND = self::SESSION_ROOT . '/' . self::CONTROLLER_NAME;
 
     private $context = [];
 
@@ -47,7 +47,7 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function indexView(): Response
     {
-        $this->getLogger()->trace('playground.index', $this->context);
+        $this->getLogger()->trace(self::CONTROLLER_NAME . '.index', $this->context);
 
         $test = [];
         $str = '200 Test RS';
@@ -92,7 +92,7 @@ class PlaygroundController extends Abstracts\AbstractController
             }
         }
 
-        return $this->render('playground/index.html.twig', [
+        return $this->render(self::CONTROLLER_NAME . '/index.html.twig', [
             'config' => [
                 'pageTitle'        => 'Playground',
                 'activeController' => [
@@ -100,7 +100,9 @@ class PlaygroundController extends Abstracts\AbstractController
                     'sub'  => self::CONTROLLER_NAME . '.index',
                 ],
                 'brandText'        => 'Playground',
-                'brandUrl'         => $this->generateAbsoluteUrl('playground.index'),
+                'brandUrl'         => $this->generateAbsoluteUrl(
+                    self::CONTROLLER_NAME . '.index'
+                ),
             ] + $this->getBaseTemplateConfig(),
             'test'   => [
                 $log,
@@ -117,17 +119,19 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function iconsView(): Response
     {
-        $this->getLogger()->trace('playground.icons', $this->context);
+        $this->getLogger()->trace(self::CONTROLLER_NAME . '.icons', $this->context);
 
-        return $this->render('playground/icons.html.twig', [
+        return $this->render(self::CONTROLLER_NAME . '/icons.html.twig', [
             'config'  => [
-                'pageTitle'        => 'Icons',
+                'pageTitle'        => ucfirst(self::CONTROLLER_NAME) . ' Icons',
                 'activeController' => [
                     'name' => self::CONTROLLER_NAME,
                     'sub'  => self::CONTROLLER_NAME . '.icons',
                 ],
-                'brandText'        => 'Icons',
-                'brandUrl'         => $this->generateAbsoluteUrl('playground.icons'),
+                'brandText'        => ucfirst(self::CONTROLLER_NAME) . ' Icons',
+                'brandUrl'         => $this->generateAbsoluteUrl(
+                    self::CONTROLLER_NAME . '.icons'
+                ),
             ] + $this->getBaseTemplateConfig(),
             'matches' => $this->parseNucleoIconsCss(),
         ]);
@@ -138,17 +142,19 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function photosView(): Response
     {
-        $this->getLogger()->trace('playground.photos', $this->context);
+        $this->getLogger()->trace(self::CONTROLLER_NAME . '.photos', $this->context);
 
-        return $this->render('playground/photos.html.twig', [
+        return $this->render(self::CONTROLLER_NAME . '/photos.html.twig', [
             'config' => [
-                'pageTitle'        => 'Photos',
+                'pageTitle'        => ucfirst(self::CONTROLLER_NAME) . ' Photos',
                 'activeController' => [
                     'name' => self::CONTROLLER_NAME,
                     'sub'  => self::CONTROLLER_NAME . '.photos',
                 ],
-                'brandText'        => 'Photos',
-                'brandUrl'         => $this->generateAbsoluteUrl('playground.photos'),
+                'brandText'        => ucfirst(self::CONTROLLER_NAME) . ' Photos',
+                'brandUrl'         => $this->generateAbsoluteUrl(
+                    self::CONTROLLER_NAME . '.photos'
+                ),
             ] + $this->getBaseTemplateConfig(),
         ]);
     }
@@ -163,7 +169,7 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function logView(string $file = ''): Response
     {
-        $this->getLogger()->trace("playground.log '{$file}'", $this->context);
+        $this->getLogger()->trace(self::CONTROLLER_NAME . ".log '{$file}'", $this->context);
 
         $file = strtr($file, ['%' => '']);
         $dd   = '/\.\.\//';
@@ -192,7 +198,11 @@ class PlaygroundController extends Abstracts\AbstractController
                 [$logDir . '/' => '']
             );
 
-            $logDirInfo[] = $relPathname;
+            $logDirInfo[] = [
+                'name' => $relPathname,
+                'time' => date('Y-m-d H:i:s', $fileInfo->getMTime()),
+                'size' => $fileInfo->getSize() . ' bytes',
+            ];
         }
 
         $logContent = null;
@@ -205,15 +215,17 @@ class PlaygroundController extends Abstracts\AbstractController
             }
         }
 
-        return $this->render('playground/log.html.twig', [
+        return $this->render(self::CONTROLLER_NAME . '/log.html.twig', [
             'config'     => [
-                'pageTitle'        => 'Log',
+                'pageTitle'        => ucfirst(self::CONTROLLER_NAME) . ' Log Files',
                 'activeController' => [
                     'name' => self::CONTROLLER_NAME,
                     'sub'  => self::CONTROLLER_NAME . '.log',
                 ],
-                'brandText'        => 'Log',
-                'brandUrl'         => $this->generateAbsoluteUrl('playground.log'),
+                'brandText'        => ucfirst(self::CONTROLLER_NAME) . ' Log Files',
+                'brandUrl'         => $this->generateAbsoluteUrl(
+                    self::CONTROLLER_NAME . '.log'
+                ),
             ] + $this->getBaseTemplateConfig(),
             'file'       => $file,
             'logDirInfo' => $logDirInfo,

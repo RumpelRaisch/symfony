@@ -17,7 +17,7 @@ use App\Helper\LoremIpsumHelper;
 class AppController extends Abstracts\AbstractController
 {
     public const CONTROLLER_NAME = 'app';
-    public const SESSION_APP     = self::SESSION_ROOT . '/app';
+    public const SESSION_APP     = self::SESSION_ROOT . '/' . self::CONTROLLER_NAME;
 
     private $context = [];
 
@@ -51,7 +51,7 @@ class AppController extends Abstracts\AbstractController
      */
     public function indexView(Request $request): Response
     {
-        $this->getLogger()->trace('app.index', $this->context);
+        $this->getLogger()->trace(self::CONTROLLER_NAME . '.index', $this->context);
 
         $gitHubApiHelper = new GitHubApiHelper(
             $this->getLogger(),
@@ -59,7 +59,7 @@ class AppController extends Abstracts\AbstractController
             $this->get('kernel')->getAppTempDir()
         );
 
-        return $this->render('app/index.html.twig', [
+        return $this->render(self::CONTROLLER_NAME . '/index.html.twig', [
             'config'    => $this->getBaseTemplateConfig(),
             'lorem'     => new LoremIpsumHelper(),
             'repos'     => $gitHubApiHelper->getGitHubRepoOverview('RumpelRaisch'),

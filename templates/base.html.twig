@@ -21,6 +21,22 @@
 {% if config.theme is not defined %}
     {% set config = config|merge({ 'theme' : 'pink' }) %}
 {% endif %}
+
+{% if config.contentClasses is not defined %}
+    {% set config = config|merge({ 'contentClasses' : '' }) %}
+{% endif %}
+
+{% if config.showNavBar is not defined %}
+    {% set config = config|merge({ 'showNavBar' : true }) %}
+{% endif %}
+
+{% if config.showSideBar is not defined %}
+    {% set config = config|merge({ 'showSideBar' : true }) %}
+{% endif %}
+
+{% if config.showFooter is not defined %}
+    {% set config = config|merge({ 'showFooter' : true }) %}
+{% endif %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,15 +44,31 @@
         <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-        <link rel="icon" href="{{ absolute_url(asset('favicon.ico')) }}">
+        <link rel="apple-touch-icon" sizes="57x57" href="{{ absolute_url(asset('apple-icon-57x57.png')) }}">
+        <link rel="apple-touch-icon" sizes="60x60" href="{{ absolute_url(asset('apple-icon-60x60.png')) }}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{{ absolute_url(asset('apple-icon-72x72.png')) }}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{{ absolute_url(asset('apple-icon-76x76.png')) }}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{{ absolute_url(asset('apple-icon-114x114.png')) }}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{{ absolute_url(asset('apple-icon-120x120.png')) }}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{{ absolute_url(asset('apple-icon-144x144.png')) }}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ absolute_url(asset('apple-icon-152x152.png')) }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ absolute_url(asset('apple-icon-180x180.png')) }}">
+        <link rel="icon" type="image/png" sizes="192x192"  href="{{ absolute_url(asset('android-icon-192x192.png')) }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ absolute_url(asset('favicon-32x32.png')) }}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{{ absolute_url(asset('favicon-96x96.png')) }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ absolute_url(asset('favicon-16x16.png')) }}">
+        <link rel="shortcut icon" href="{{ absolute_url(asset('favicon.ico')) }}" type="image/x-icon">
+        <link rel="icon" href="{{ absolute_url(asset('favicon.ico')) }}" type="image/x-icon">
+        <link rel="manifest" href="{{ absolute_url(asset('manifest.json')) }}">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="{{ absolute_url(asset('ms-icon-144x144.png')) }}">
+        <meta name="theme-color" content="#ffffff">
 
         <title>{{ config.pageTitle }} - bitshifting.de</title>
 
         <!-- base css - start -->
-        <!-- fonts and icons -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
-        <!-- bootstrap theme -->
+        <link rel="stylesheet" href="{{ absolute_url(asset('css/fontawesome.min.css')) }}">
         <link rel="stylesheet" href="{{ absolute_url(asset('css/black-dashboard.css')|cacheHack) }}">
         <link rel="stylesheet" href="{{ absolute_url(asset('css/nucleo-icons.css')) }}">
         <link rel="stylesheet" href="{{ absolute_url(asset('css/common.min.css')|cacheHack) }}">
@@ -45,6 +77,8 @@
     </head>
     <body data-theme="{{ config.theme }}">
         <div class="wrapper">
+            {% if config.showSideBar is same as(true) %}
+            <!-- Sidebar -->
             <div class="sidebar" data-background-color="white">
                 <div class="logo">
                     <a href="{{ absolute_url(path('app.index')) }}" class="simple-text logo-mini">RD</a>
@@ -74,7 +108,10 @@
                     </ul>
                 </div>
             </div>
+            <!-- End Sidebar -->
+            {% endif %}
             <div class="main-panel">
+                {% if config.showNavBar is same as(true) %}
                 <!-- Navbar -->
                 <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
                     <div class="container-fluid">
@@ -188,11 +225,13 @@
                     </div>
                 </div>
                 <!-- End Navbar -->
-                <div class="content">
+                {% endif %}
+                <div class="content{% if '' != config.contentClasses %} {{ config.contentClasses }}{% endif %}">
                     <div class="container-fluid">
                         {% block content %}{% endblock %}
                     </div>
                 </div>
+                {% if config.showFooter is same as(true) %}
                 <footer class="footer">
                     <div class="container-fluid">
                         <nav class="float-left">
@@ -209,6 +248,7 @@
                         {% block footer %}{% endblock %}
                     </div>
                 </footer>
+                {% endif %}
             </div>
         </div>
 
