@@ -10,9 +10,6 @@ const sourcemaps   = require('gulp-sourcemaps');
 const typescript   = require('gulp-typescript');
 const uglify       = require('gulp-uglify');
 
-const LessAutoprefix   = require('less-plugin-autoprefix');
-const lessAutoprefixer = new LessAutoprefix({browsers: ['last 2 versions']});
-
 const src  = './assets/';
 const dest = './public/';
 
@@ -36,9 +33,8 @@ gulp.task('less', () =>
         .src(src + 'less/**/[^_]*.less')
         .pipe(sourcemaps.init())
             .pipe(plumber())
-            .pipe(less({
-                plugins: [lessAutoprefixer]
-            }))
+            .pipe(less())
+            .pipe(autoprefixer())
             .pipe(cleanCSS())
             .pipe(rename({suffix: '.min'}))
         .pipe(sourcemaps.write('.'))
