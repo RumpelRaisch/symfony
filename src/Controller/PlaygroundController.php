@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -14,6 +15,8 @@ use \RecursiveIteratorIterator;
 
 /**
  * [PlaygroundController description]
+ *
+ * @IsGranted("ROLE_ADMIN")
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
@@ -91,6 +94,9 @@ class PlaygroundController extends Abstracts\AbstractController
                 // 42
             }
         }
+
+        /** @var \App\Entity\User $user */
+        // $user = $this->getUser();
 
         return $this->render(self::CONTROLLER_NAME . '/index.html.twig', [
             'config' => [

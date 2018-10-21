@@ -27,8 +27,10 @@ class FileLogger extends Abstracts\AbstractLogger
     /**
      * [__construct description]
      *
-     * @param string $file   [description]
-     * @param string $levels [description]
+     * @param string $file      [description]
+     * @param string ...$levels [description]
+     *
+     * @throws Exception
      */
     public function __construct(string $file, string ...$levels)
     {

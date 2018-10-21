@@ -1,10 +1,12 @@
 <?php
 namespace App\Controller;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
  * [UserController description]
@@ -38,19 +40,38 @@ class UserController extends Abstracts\AbstractController
 
     /**
      * @Route("/login", name="user.login")
+     *
+     * @param  Request             $request
+     * @param  AuthenticationUtils $authUtils
+     *
+     * @return Response
      */
-    public function loginView(): Response
+    public function loginView(Request $request, AuthenticationUtils $authUtils): Response
     {
         $this->getLogger()->trace(self::CONTROLLER_NAME . '.login', $this->context);
 
+        $error        = $authUtils->getLastAuthenticationError();
+        $lastUsername = $authUtils->getLastUsername();
+
         return $this->render(self::CONTROLLER_NAME . '/login.html.twig', [
-            'config' => [
+            'config'       => [
                 'pageTitle'      => ucfirst(self::CONTROLLER_NAME) . ' Login',
                 'contentClasses' => 'd-flex align-items-center',
                 'showNavBar'     => false,
                 'showSideBar'    => false,
                 'showFooter'     => false,
             ] + $this->getBaseTemplateConfig(),
+            'error'        => $error,
+            'lastUsername' => $lastUsername,
         ]);
+    }
+
+    /**
+     * @Route("/logout", name="user.logout")
+     */
+    public function logout()
+    {
+        $this->getLogger()->trace(self::CONTROLLER_NAME . '.logout', $this->context);
+        // ...
     }
 }

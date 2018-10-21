@@ -8,26 +8,34 @@
 <div class="row">
     <div class="col-xl-4 offset-xl-4 col-lg-6 offset-lg-3 col-md-8 offset-md-2">
         <div class="card">
-            <div class="card-header">
-                <h5 class="card-category">User</h5>
-                <h2 class="card-title">Login</h2>
-            </div>
-            <div class="card-body login">
-                <div class="login-form-field">
-            		<input id="email" required class="focus" type="email" name="email" placeholder="email adress">
-            		<label for="email">email adress</label>
-            		<div class="hint-text email"></div>
-            	</div>
-            	<div class="login-form-field">
-            		<input id="password" required class="focus" type="password" name="password" placeholder="password">
-            		<label for="password">password</label>
-            		<div class="hint-text password"></div>
-            	</div>
-            </div>
-            <div class="card-footer text-center login">
-                <a class="btn btn-secondary" href="{{ absolute_url(path('app.index')) }}" role="button">home</a>
-                <a class="btn btn-primary" href="#" role="button">login</a>
-            </div>
+            <form action="{{ absolute_url(path('user.login')) }}" method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <div class="card-header">
+                    <h5 class="card-category">User</h5>
+                    <h2 class="card-title">Login</h2>
+                </div>
+                {% if error %}
+                <div class="card-body">
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                </div>
+                {% endif %}
+                <div class="card-body login">
+                    <div class="login-form-field">
+                        <input id="email" class="focus" type="email" name="_username" placeholder="email address" required autofocus value="{{ lastUsername }}">
+                        <label for="email">email address</label>
+                        <div class="hint-text email"></div>
+                    </div>
+                    <div class="login-form-field">
+                        <input id="password" class="focus" type="password" name="_password" placeholder="password" required>
+                        <label for="password">password</label>
+                        <div class="hint-text password"></div>
+                    </div>
+                </div>
+                <div class="card-footer text-center login">
+                    <a class="btn btn-secondary" href="{{ absolute_url(path('app.index')) }}" role="button">home</a>
+                    <button type="submit" class="btn btn-primary">login</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

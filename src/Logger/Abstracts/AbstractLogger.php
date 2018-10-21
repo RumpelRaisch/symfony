@@ -218,7 +218,7 @@ abstract class AbstractLogger implements LoggerInterface
     /**
      * [addLogLevel description]
      *
-     * @param string $levels [description]
+     * @param string ...$levels [description]
      */
     public function addLogLevel(string ...$levels)
     {

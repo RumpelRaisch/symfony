@@ -225,6 +225,8 @@ abstract class AbstractController extends Controller
     /**
      * Sets the Logger Object
      *
+     * @param  FileLogger         $logger
+     *
      * @return AbstractController
      */
     protected function setLogger(FileLogger $logger): AbstractController

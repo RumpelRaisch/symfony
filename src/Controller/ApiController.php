@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,6 +66,7 @@ class ApiController extends Abstracts\AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_ADMIN")
      * @Route("/api/gubed", name="api.gubed")
      */
     public function gubed(Request $request): JsonResponse
@@ -75,6 +77,7 @@ class ApiController extends Abstracts\AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_ADMIN")
      * @Route("/api/gubed/headers", name="api.gubed.headers")
      */
     public function gubedHeaders(): JsonResponse
@@ -85,6 +88,7 @@ class ApiController extends Abstracts\AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_ADMIN")
      * @Route("/api/gubed/server", name="api.gubed.server")
      */
     public function gubedServer(): JsonResponse
@@ -95,6 +99,7 @@ class ApiController extends Abstracts\AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_ADMIN")
      * @Route("/api/gubed/session", name="api.gubed.session")
      */
     public function gubedSession(): JsonResponse
