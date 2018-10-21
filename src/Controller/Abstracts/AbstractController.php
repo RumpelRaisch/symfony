@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Abstracts;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -53,16 +54,24 @@ abstract class AbstractController extends Controller
      */
     protected function getBaseTemplateConfig(): array
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($user instanceof User && false === empty($user->getTheme())) {
+            $theme = $user->getTheme();
+        } else {
+            $theme = $this->getSession()->get(self::SESSION_THEME, 'pink');
+        }
+
         return [
             'pageTitle'        => 'Dashboard',
-            'activeController' => 'app',
             'activeController' => [
                 'name' => 'app',
                 'sub'  => '',
             ],
             'brandText'        => 'Dashboard',
             'brandUrl'         => $this->generateAbsoluteUrl('app.index'),
-            'theme'            => $this->getSession()->get(self::SESSION_THEME, 'pink'),
+            'theme'            => $theme,
         ];
     }
 

@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -100,12 +99,12 @@ class PlaygroundController extends Abstracts\AbstractController
 
         return $this->render(self::CONTROLLER_NAME . '/index.html.twig', [
             'config' => [
-                'pageTitle'        => 'Playground',
+                'pageTitle'        => ucfirst(self::CONTROLLER_NAME),
                 'activeController' => [
                     'name' => self::CONTROLLER_NAME,
                     'sub'  => self::CONTROLLER_NAME . '.index',
                 ],
-                'brandText'        => 'Playground',
+                'brandText'        => ucfirst(self::CONTROLLER_NAME),
                 'brandUrl'         => $this->generateAbsoluteUrl(
                     self::CONTROLLER_NAME . '.index'
                 ),

@@ -1,8 +1,7 @@
 <?php
 namespace App\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,6 +21,8 @@ class UserController extends Abstracts\AbstractController
 
     /**
      * Constructor.
+     *
+     * @param KernelInterface $kernel
      */
     public function __construct(KernelInterface $kernel)
     {
@@ -41,12 +42,11 @@ class UserController extends Abstracts\AbstractController
     /**
      * @Route("/login", name="user.login")
      *
-     * @param  Request             $request
      * @param  AuthenticationUtils $authUtils
      *
      * @return Response
      */
-    public function loginView(Request $request, AuthenticationUtils $authUtils): Response
+    public function loginView(AuthenticationUtils $authUtils): Response
     {
         $this->getLogger()->trace(self::CONTROLLER_NAME . '.login', $this->context);
 
@@ -63,6 +63,31 @@ class UserController extends Abstracts\AbstractController
             ] + $this->getBaseTemplateConfig(),
             'error'        => $error,
             'lastUsername' => $lastUsername,
+        ]);
+    }
+
+    /**
+     * @IsGranted("ROLE_USER")
+     * @Route("/user/profile", name="user.profile")
+     *
+     * @return Response
+     */
+    public function profileView(): Response
+    {
+        $this->getLogger()->trace(self::CONTROLLER_NAME . '.profile', $this->context);
+
+        return $this->render(self::CONTROLLER_NAME . '/profile.html.twig', [
+            'config' => [
+                'pageTitle'        => ucfirst(self::CONTROLLER_NAME) . ' Profile',
+                'activeController' => [
+                    'name' => self::CONTROLLER_NAME,
+                    'sub'  => self::CONTROLLER_NAME . '.profile',
+                ],
+                'brandText'        => ucfirst(self::CONTROLLER_NAME) . ' Profile',
+                'brandUrl'         => $this->generateAbsoluteUrl(
+                    self::CONTROLLER_NAME . '.profile'
+                ),
+            ] + $this->getBaseTemplateConfig(),
         ]);
     }
 

@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\User;
+use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,9 +36,10 @@ class ApiController extends Abstracts\AbstractController
     /**
      * [setTheme description]
      *
-     * @param  string       $theme   [description]
-     * @param  Request      $request [description]
-     * @return JsonResponse          [description]
+     * @param  string        $theme   [description]
+     * @param  Request       $request [description]
+     * @param  ObjectManager $manager [description]
+     * @return JsonResponse           [description]
      *
      * @Route(
      *      "/api/set/theme/{theme}",
@@ -46,15 +49,27 @@ class ApiController extends Abstracts\AbstractController
      *      }
      * )
      */
-    public function setTheme(string $theme, Request $request): Response
-    {
+    public function setTheme(
+        string $theme,
+        Request $request,
+        ObjectManager $manager
+    ): Response {
         $this->getLogger()->trace("api.set.theme '{$theme}'", $this->context);
 
         if (false === in_array($theme, ['pink', 'blue', 'green'])) {
             return JsonResponse::create("Theme '{$theme}' not found.", 404);
         }
 
-        $this->getSession()->set(self::SESSION_THEME, $theme);
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($user instanceof User) {
+            $user->setTheme($theme);
+            $manager->persist($user);
+            $manager->flush();
+        } else {
+            $this->getSession()->set(self::SESSION_THEME, $theme);
+        }
 
         if (false === $request->isXmlHttpRequest()) {
             $lastRoute = $this->getCurrentRoute();

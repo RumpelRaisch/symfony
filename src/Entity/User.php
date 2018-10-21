@@ -53,6 +53,13 @@ class User implements UserInterface
      */
     private $avatar;
 
+    private $avatarBase64 = null;
+
+    /**
+     * @ORM\Column(type="string", length=25, nullable=true)
+     */
+    private $theme;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -179,12 +186,28 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getAvatarBase64()
+    public function getAvatarBase64(): string
     {
         if (false === is_resource($this->avatar)) {
-            return '';
+            return ''; // TODO: return default avatar
         }
 
-        return base64_encode(stream_get_contents($this->avatar));
+        if (null === $this->avatarBase64) {
+            $this->avatarBase64 = base64_encode(stream_get_contents($this->avatar));
+        }
+
+        return $this->avatarBase64;
+    }
+
+    public function getTheme(): ?string
+    {
+        return $this->theme;
+    }
+
+    public function setTheme(?string $theme): self
+    {
+        $this->theme = $theme;
+
+        return $this;
     }
 }

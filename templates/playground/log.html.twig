@@ -22,16 +22,20 @@
                     <li>
                         <hr>
                         <div class="row">
-                            <div class="col-md-3{{ class }}">
+                            <div class="col-md-2{{ class }}">
                                 <a href="{{ link }}">
                                     <i class="fas fa-chevron-{{ chevron }} fa-xs fa-fw"></i> {{ info.name }}
                                 </a>
                             </div>
-                            <div class="col-md-3{{ class }}">
+                            <div class="col-md-2{{ class }}">
                                 {{ info.time }}
                             </div>
-                            <div class="col-md-3{{ class }}">
+                            <div class="col-md-2{{ class }}">
                                 {{ info.size }}
+                            </div>
+                            <div class="col-md-2">
+                                <a href="#"><i class="fas fa-download text-info"></i></a>
+                                <a href="#"><i class="far fa-trash-alt text-danger"></i></a>
                             </div>
                             {% if file == info.name and log is not same as(null) %}
                             <div class="col-md-12 mt-3">
