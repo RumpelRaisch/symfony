@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Entity\UserAssert;
 use App\Facades\UserFacade;
 use App\Form\UserAssertType;
 use App\Helper\LoremIpsumHelper;
@@ -89,7 +88,7 @@ class UserController extends Abstracts\AbstractController
 
         /** @var \App\Entity\User $user */
         $user       = $this->getUser();
-        $userFacade = new UserFacade($user, new UserAssert(), $manager);
+        $userFacade = UserFacade::createFromUser($user, $manager);
 
         $userFacade->syncUserToUserAssert();
 

@@ -47,6 +47,19 @@ class UserFacade
     }
 
     /**
+     * Creates a UserFacade from User.
+     *
+     * @param User          $user
+     * @param ObjectManager $manager
+     *
+     * @return UserFacade
+     */
+    public static function createFromUser(User $user, ObjectManager $manager): self
+    {
+        return new self($user, new UserAssert(), $manager);
+    }
+
+    /**
      * Syncs UserAssert with data from User.
      *
      * @return UserFacade
