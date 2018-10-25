@@ -99,10 +99,27 @@ class UserController extends Abstracts\AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userFacade
-                ->syncUserAssertToUser()
-                ->saveUser();
+        if (true === $form->isSubmitted()) {
+            $this->getLogger()->trace(
+                self::CONTROLLER_NAME . '.profile - form submitted',
+                $this->context
+            );
+
+            if (true === $form->isValid()) {
+                $this->getLogger()->trace(
+                    self::CONTROLLER_NAME . '.profile - form is valid',
+                    $this->context
+                );
+
+                $userFacade
+                    ->syncUserAssertToUser()
+                    ->saveUser();
+            } else {
+                $this->getLogger()->trace(
+                    self::CONTROLLER_NAME . '.profile - form is NOT valid',
+                    $this->context
+                );
+            }
         }
 
         return $this->render(self::CONTROLLER_NAME . '/profile.html.twig', [
