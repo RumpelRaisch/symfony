@@ -4,28 +4,24 @@ namespace App\Logger;
 use \Exception;
 
 /**
- * [FileLogger description]
+ * Class FileLogger
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
 class FileLogger extends Abstracts\AbstractLogger
 {
     /**
-     * [private description]
-     *
      * @var string
      */
     private $file = null;
 
     /**
-     * [private description]
-     *
      * @var integer
      */
     private $maxFileSize = 51200;
 
     /**
-     * [__construct description]
+     * FileLogger constructor.
      *
      * @param string $file      [description]
      * @param string ...$levels [description]
@@ -41,7 +37,7 @@ class FileLogger extends Abstracts\AbstractLogger
         } catch (Exception $ex) {
             $this->file = null;
 
-            throw new Exception('Logfile not writeable.', 0, $ex);
+            throw new Exception('Logfile not writable.', 0, $ex);
         }
 
         if (0 < count($levels)) {
@@ -79,7 +75,7 @@ class FileLogger extends Abstracts\AbstractLogger
     protected function checkFileSize(): FileLogger
     {
         if (filesize($this->file) > $this->maxFileSize) {
-            $pathInfo = pathinfo($this->file);
+            // $pathInfo = pathinfo($this->file);
             // $newFile  = $pathInfo['dirname']
             //     . date('/Ymd.His.')
             //     . $pathInfo['basename'];
@@ -98,7 +94,7 @@ class FileLogger extends Abstracts\AbstractLogger
     /**
      * Set the value of [private description]
      *
-     * @param  integer $maxFileSize
+     * @param integer $maxFileSize
      *
      * @return FileLogger
      */
