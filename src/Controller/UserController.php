@@ -1,7 +1,13 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\UserAssert;
+use App\Facades\UserFacade;
+use App\Form\UserAssertType;
+use App\Helper\LoremIpsumHelper;
+use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,11 +46,11 @@ class UserController extends Abstracts\AbstractController
     }
 
     /**
-     * @Route("/login", name="user.login")
-     *
-     * @param  AuthenticationUtils $authUtils
+     * @param AuthenticationUtils $authUtils
      *
      * @return Response
+     *
+     * @Route("/login", name="user.login")
      */
     public function loginView(AuthenticationUtils $authUtils): Response
     {
@@ -67,14 +73,38 @@ class UserController extends Abstracts\AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_USER")
-     * @Route("/user/profile", name="user.profile")
+     * @param Request       $request
+     * @param ObjectManager $manager
      *
      * @return Response
+     *
+     * @IsGranted("ROLE_USER")
+     * @Route("/user/profile", name="user.profile")
      */
-    public function profileView(): Response
-    {
+    public function profileView(
+        Request       $request,
+        ObjectManager $manager
+    ): Response {
         $this->getLogger()->trace(self::CONTROLLER_NAME . '.profile', $this->context);
+
+        /** @var \App\Entity\User $user */
+        $user       = $this->getUser();
+        $userFacade = new UserFacade($user, new UserAssert(), $manager);
+
+        $userFacade->syncUserToUserAssert();
+
+        $form = $this->createForm(
+            UserAssertType::class,
+            $userFacade->getUserAssert()
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userFacade
+                ->syncUserAssertToUser()
+                ->saveUser();
+        }
 
         return $this->render(self::CONTROLLER_NAME . '/profile.html.twig', [
             'config' => [
@@ -88,6 +118,8 @@ class UserController extends Abstracts\AbstractController
                     self::CONTROLLER_NAME . '.profile'
                 ),
             ] + $this->getBaseTemplateConfig(),
+            'form'   => $form->createView(),
+            'lorem'  => new LoremIpsumHelper(),
         ]);
     }
 

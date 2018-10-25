@@ -192,7 +192,7 @@
                                 <li class="dropdown nav-item">
                                     <a href="{{ absolute_url(path('user.logout')) }}" class="dropdown-toggle nav-link" data-toggle="dropdown">
                                         <div class="photo">
-                                            <img src="data:image/png;base64,{{ app.user.getAvatarBase64() }}" alt="Profile Photo">
+                                            <img src="data:{{ app.user.getAvatarMimeType() }};base64,{{ app.user.getAvatarBase64() }}" alt="Profile Photo">
                                         </div>
                                         <b class="caret d-none d-lg-block d-xl-block"></b>
                                         <p class="d-lg-none">

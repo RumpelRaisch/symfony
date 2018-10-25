@@ -1,89 +1,36 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
 {% block content %}
 <div class="row">
     <div class="col-md-8">
         <div class="card">
+            {{ form_start(form) }}
             <div class="card-header">
                 <h5 class="title">Edit Profile</h5>
             </div>
             <div class="card-body">
-                <form>
-                    <div class="row">
-                        <div class="col-md-5 pr-md-1">
-                            <div class="form-group">
-                                <label>Company (disabled)</label>
-                                <input type="text" class="form-control" disabled="" placeholder="Company" value="Creative Code Inc.">
-                            </div>
-                        </div>
-                        <div class="col-md-3 px-md-1">
-                            <div class="form-group">
-                                <label>Username</label>
-                                <input type="text" class="form-control" placeholder="Username" value="michael23">
-                            </div>
-                        </div>
-                        <div class="col-md-4 pl-md-1">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" class="form-control" placeholder="mike@email.com">
-                            </div>
+                <div class="row">
+                    <div class="col-md-4 pr-md-1">
+                        <div class="form-group">
+                            <label for="email">Email address (disabled)</label>
+                            <input type="email" class="form-control" id="email" disabled placeholder="Email address" value="{{ app.user.getEmail() }}">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 pr-md-1">
-                            <div class="form-group">
-                                <label>First Name</label>
-                                <input type="text" class="form-control" placeholder="Company" value="Mike">
-                            </div>
-                        </div>
-                        <div class="col-md-6 pl-md-1">
-                            <div class="form-group">
-                                <label>Last Name</label>
-                                <input type="text" class="form-control" placeholder="Last Name" value="Andrew">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Address</label>
-                                <input type="text" class="form-control" placeholder="Home Address" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4 pr-md-1">
-                            <div class="form-group">
-                                <label>City</label>
-                                <input type="text" class="form-control" placeholder="City" value="Mike">
-                            </div>
-                        </div>
-                        <div class="col-md-4 px-md-1">
-                            <div class="form-group">
-                                <label>Country</label>
-                                <input type="text" class="form-control" placeholder="Country" value="Andrew">
-                            </div>
-                        </div>
-                        <div class="col-md-4 pl-md-1">
-                            <div class="form-group">
-                                <label>Postal Code</label>
-                                <input type="number" class="form-control" placeholder="ZIP Code">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label>About Me</label>
-                                <textarea rows="4" cols="80" class="form-control" placeholder="Here can be your description" value="Mike">Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</textarea>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 pr-md-1">{{ form_row(form.name) }}</div>
+                    <div class="col-md-6 pl-md-1">{{ form_row(form.surname) }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">{{ form_row(form.github_user) }}</div>
+                </div>
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-fill btn-primary">Save</button>
             </div>
+            {{ form_end(form) }}
         </div>
     </div>
     <div class="col-md-4">
@@ -96,27 +43,26 @@
                         <div class="block block-three"></div>
                         <div class="block block-four"></div>
                         <a href="#">
-                            <img class="avatar" src="data:image/png;base64,{{ app.user.getAvatarBase64() }}" alt="Profile Photo">
-                            <h5 class="title">Mike Andrew</h5>
+                            <img class="avatar" src="data:{{ app.user.getAvatarMimeType() }};base64,{{ app.user.getAvatarBase64() }}" alt="Profile Photo">
+                            <h5 class="title">{{ app.user.getName() }} {{ app.user.getSurname() }}</h5>
                         </a>
                         <p class="description">
-                            Ceo/Co-Founder
+                            {# TODO: find something fancy to display #}
+                            find something fancy to display
                         </p>
                     </div>
                 </div>
-                <div class="card-description">
-                    Do not be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
-                </div>
+                <div class="card-description">{{ lorem.get(3, 'card-text')|raw }}</div>
             </div>
             <div class="card-footer">
                 <div class="button-container">
-                    <button href="javascript:void(0)" class="btn btn-icon btn-round btn-facebook">
+                    <button class="btn btn-icon btn-round btn-facebook">
                         <i class="fab fa-facebook"></i>
                     </button>
-                    <button href="javascript:void(0)" class="btn btn-icon btn-round btn-twitter">
+                    <button class="btn btn-icon btn-round btn-twitter">
                         <i class="fab fa-twitter"></i>
                     </button>
-                    <button href="javascript:void(0)" class="btn btn-icon btn-round btn-google">
+                    <button class="btn btn-icon btn-round btn-google">
                         <i class="fab fa-google-plus"></i>
                     </button>
                 </div>

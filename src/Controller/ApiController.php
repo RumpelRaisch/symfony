@@ -36,10 +36,11 @@ class ApiController extends Abstracts\AbstractController
     /**
      * [setTheme description]
      *
-     * @param  string        $theme   [description]
-     * @param  Request       $request [description]
-     * @param  ObjectManager $manager [description]
-     * @return JsonResponse           [description]
+     * @param string        $theme   [description]
+     * @param Request       $request [description]
+     * @param ObjectManager $manager [description]
+     *
+     * @return JsonResponse [description]
      *
      * @Route(
      *      "/api/set/theme/{theme}",

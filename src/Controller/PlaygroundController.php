@@ -1,16 +1,14 @@
 <?php
 namespace App\Controller;
 
+use \Exception;
+use \RecursiveDirectoryIterator;
+use \RecursiveIteratorIterator;
+use App\Logger\LogLevel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
-
-use App\Logger\LogLevel;
-
-use \Exception;
-use \RecursiveDirectoryIterator;
-use \RecursiveIteratorIterator;
 
 /**
  * [PlaygroundController description]
@@ -28,6 +26,8 @@ class PlaygroundController extends Abstracts\AbstractController
 
     /**
      * Constructor.
+     *
+     * @param KernelInterface $kernel
      */
     public function __construct(KernelInterface $kernel)
     {
@@ -52,25 +52,25 @@ class PlaygroundController extends Abstracts\AbstractController
         $this->getLogger()->trace(self::CONTROLLER_NAME . '.index', $this->context);
 
         $test = [];
-        $str = '200 Test RS';
+        $str  = '200 Test RS';
         preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
         $test[] = [$str, $matches];
-        $str = 'Test RS';
+        $str    = 'Test RS';
         preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
         $test[] = [$str, $matches];
-        $str = '200';
+        $str    = '200';
         preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
         $test[] = [$str, $matches];
-        $str = ' Test RS';
+        $str    = ' Test RS';
         preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
         $test[] = [$str, $matches];
-        $str = '200 ';
+        $str    = '200 ';
         preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
         $test[] = [$str, $matches];
-        $str = ' ';
+        $str    = ' ';
         preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
         $test[] = [$str, $matches];
-        $str = '';
+        $str    = '';
         preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
         $test[] = [$str, $matches];
 
@@ -165,6 +165,10 @@ class PlaygroundController extends Abstracts\AbstractController
     }
 
     /**
+     * @param string $file
+     *
+     * @return Response
+     *
      * @Route(
      *      "/playground/log/{file}",
      *      name="playground.log",

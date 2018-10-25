@@ -1,13 +1,12 @@
 <?php
 namespace App\Controller;
 
+use App\Helper\GitHubApiHelper;
+use App\Helper\LoremIpsumHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
-
-use App\Helper\GitHubApiHelper;
-use App\Helper\LoremIpsumHelper;
 
 /**
  * [AppController description].
@@ -47,6 +46,10 @@ class AppController extends Abstracts\AbstractController
     }
 
     /**
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @Route("/", name="app.index")
      */
     public function indexView(Request $request): Response

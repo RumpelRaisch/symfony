@@ -1,7 +1,10 @@
 <?php
 namespace App\Controller\Abstracts;
 
+use \Exception;
 use App\Entity\User;
+use App\Logger\FileLogger;
+use App\Logger\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -9,11 +12,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
-use App\Logger\LogLevel;
-use App\Logger\FileLogger;
-
-use \Exception;
 
 /**
  * [AbstractController description]
@@ -144,8 +142,9 @@ abstract class AbstractController extends Controller
     /**
      * Provides data about the request, globals, environment etc.
      *
-     * @param  array $add additional data
-     * @return array      combined data
+     * @param array $add additional data
+     *
+     * @return array combined data
      */
     protected function getDebug(array $add = []): array
     {
@@ -170,10 +169,10 @@ abstract class AbstractController extends Controller
      *
      * @author Rainer Schulz <rainer.schulz@bitshifting.de>
      *
-     * @param  string $routeName route name
-     * @param  array  $params    parameters for query string
+     * @param string $routeName route name
+     * @param array  $params    parameters for query string
      *
-     * @return string            absolute URL for given route name
+     * @return string absolute URL for given route name
      */
     protected function generateAbsoluteUrl(string $routeName, array $params = []): string
     {
@@ -234,7 +233,7 @@ abstract class AbstractController extends Controller
     /**
      * Sets the Logger Object
      *
-     * @param  FileLogger         $logger
+     * @param FileLogger $logger
      *
      * @return AbstractController
      */
