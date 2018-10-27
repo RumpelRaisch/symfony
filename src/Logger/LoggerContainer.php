@@ -44,27 +44,47 @@ class LoggerContainer extends AbstractLogger
     }
 
     /**
-     * @param string $file
+     * @param AbstractLogger $logger
+     * @param null|string    $name
      *
-     * @throws Exception
-     *
-     * @return self
+     * @return LoggerContainer
      */
-    public function addFileLogger(string $file): self
-    {
-        $this->loggers[] = (new FileLogger($file))->setFlags($this->getFlags());
+    protected function addLogger(
+        AbstractLogger $logger,
+        string         $name = null
+    ): self {
+        $logger->setFlags($this->getFlags());
+
+        if (null !== $name) {
+            $this->loggers[$name] = $logger;
+        } else {
+            $this->loggers[] = $logger;
+        }
 
         return $this;
     }
 
     /**
+     * @param string      $file
+     * @param null|string $name
+     *
+     * @throws Exception
+     *
      * @return self
      */
-    public function addConsoleLogger(): self
+    public function addFileLogger(string $file, string $name = null): self
     {
-        $this->loggers[] = (new ConsoleLogger())->setFlags($this->getFlags());
+        return $this->addLogger(new FileLogger($file), $name);
+    }
 
-        return $this;
+    /**
+     * @param null|string $name
+     *
+     * @return self
+     */
+    public function addConsoleLogger(string $name = null): self
+    {
+        return $this->addLogger(new ConsoleLogger(), $name);
     }
 
     /**
@@ -247,7 +267,7 @@ class LoggerContainer extends AbstractLogger
     /**
      * {@inheritdoc}
      */
-    protected function setFlag(int $flag)
+    public function setFlag(int $flag)
     {
         parent::setFlag($flag);
 
@@ -259,7 +279,7 @@ class LoggerContainer extends AbstractLogger
     /**
      * {@inheritdoc}
      */
-    protected function removeFlag(int $flag)
+    public function removeFlag(int $flag)
     {
         parent::removeFlag($flag);
 

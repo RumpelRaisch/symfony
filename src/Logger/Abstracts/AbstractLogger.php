@@ -2,6 +2,8 @@
 namespace App\Logger\Abstracts;
 
 use \Exception;
+use App\Flag\Interfaces\FlagInterface;
+use App\Flag\Traits\FlagTrait;
 use App\Logger\Interfaces\LoggerInterface;
 use App\Logger\LogLevel;
 
@@ -11,14 +13,9 @@ use App\Logger\LogLevel;
  * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
  * @see Psr\Log\LoggerInterface
  */
-abstract class AbstractLogger implements LoggerInterface
+abstract class AbstractLogger implements LoggerInterface, FlagInterface
 {
-    /**
-     * [private description]
-     *
-     * @var integer
-     */
-    private $flags = LogLevel::FLAG_NONE;
+    use FlagTrait;
 
     /**
      * {@inheritdoc}
@@ -171,13 +168,11 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
-     * [beautify description]
+     * @param string $level
+     * @param string $message
+     * @param array  $context
      *
-     * @param string $level   [description]
-     * @param string $message [description]
-     * @param array  $context [description]
-     *
-     * @return string [description]
+     * @return string
      */
     protected function beautify(
         string $level,
@@ -243,9 +238,7 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
-     * [addLogLevel description]
-     *
-     * @param string ...$levels [description]
+     * @param string ...$levels
      *
      * @return self
      */
@@ -265,9 +258,7 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
-     * [removeLogLevel description]
-     *
-     * @param string ...$levels [description]
+     * @param string ...$levels
      *
      * @return self
      */
@@ -287,75 +278,11 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
-     * [resetLogLevel description]
-     *
      * @return self
      */
     public function resetLogLevel()
     {
         $this->flags = LogLevel::FLAG_NONE;
-
-        return $this;
-    }
-
-    /**
-     * [setFlag description]
-     *
-     * @param int $flag [description]
-     *
-     * @return self
-     */
-    protected function setFlag(int $flag)
-    {
-        $this->flags |= $flag;
-
-        return $this;
-    }
-
-    /**
-     * [removeFlag description]
-     *
-     * @param int $flag [description]
-     *
-     * @return self
-     */
-    protected function removeFlag(int $flag)
-    {
-        $this->flags &= ~$flag;
-
-        return $this;
-    }
-
-    /**
-     * [issetFlag description]
-     *
-     * @param int $flag [description]
-     *
-     * @return bool [description]
-     */
-    protected function issetFlag(int $flag): bool
-    {
-        return (($this->flags & $flag) === $flag);
-    }
-
-    /**
-     * [getFlags description]
-     *
-     * @return int current bit flags
-     */
-    public function getFlags(): int
-    {
-        return $this->flags;
-    }
-
-    /**
-     * @param int $flags
-     *
-     * @return self
-     */
-    protected function setFlags(int $flags)
-    {
-        $this->flags = $flags;
 
         return $this;
     }

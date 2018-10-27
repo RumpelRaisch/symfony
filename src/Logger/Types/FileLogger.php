@@ -25,8 +25,8 @@ class FileLogger extends AbstractLogger
     /**
      * FileLogger constructor.
      *
-     * @param string $file      [description]
-     * @param string ...$levels [description]
+     * @param string $file
+     * @param string ...$levels
      *
      * @throws Exception
      */
@@ -70,8 +70,6 @@ class FileLogger extends AbstractLogger
     }
 
     /**
-     * [checkFileSize description]
-     *
      * @return FileLogger
      */
     protected function checkFileSize(): FileLogger
@@ -94,7 +92,7 @@ class FileLogger extends AbstractLogger
     }
 
     /**
-     * Set the value of [private description]
+     * Set the value of maxFileSize property
      *
      * @param integer $maxFileSize
      *
@@ -108,7 +106,7 @@ class FileLogger extends AbstractLogger
     }
 
     /**
-     * Get the value of [private description]
+     * Get the value of file property
      *
      * @return string
      */

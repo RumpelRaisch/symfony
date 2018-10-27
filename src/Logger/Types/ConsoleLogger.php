@@ -14,7 +14,7 @@ class ConsoleLogger extends AbstractLogger
     /**
      * ConsoleLogger constructor.
      *
-     * @param string ...$levels [description]
+     * @param string ...$levels
      */
     public function __construct(string ...$levels)
     {

@@ -34,6 +34,8 @@ abstract class AbstractController extends Controller
      * Constructor.
      *
      * @param KernelInterface $kernel
+     *
+     * @throws Exception
      */
     public function __construct(KernelInterface $kernel)
     {
