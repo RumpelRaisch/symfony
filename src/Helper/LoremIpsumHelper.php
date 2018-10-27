@@ -16,12 +16,12 @@ class LoremIpsumHelper
     /**
      * Gets a placeholder text from loripsum.net.
      *
-     * @param  integer $paragraphs number of paragraphs
-     * @param  string  $pClass     css class for p tags
-     * @param  boolean $addPTags   use p tags?
-     * @param  boolean $prude      prude API call?
+     * @param integer $paragraphs number of paragraphs
+     * @param string  $pClass     css class for p tags
+     * @param boolean $addPTags   use p tags?
+     * @param boolean $prude      prude API call?
      *
-     * @return string               lorem ipsum text
+     * @return string lorem ipsum text
      */
     public static function get(
         int    $paragraphs = 1,

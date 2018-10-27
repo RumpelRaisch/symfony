@@ -35,7 +35,11 @@ class GitHubApiHelper
     private $context = [];
 
     /**
-     * Constructor.
+     * GitHubApiHelper constructor
+     *
+     * @param string $dirCache
+     * @param string $dirTemp
+     * @param int    $cacheLifeTime
      */
     public function __construct(
         string $dirCache,

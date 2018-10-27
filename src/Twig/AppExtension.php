@@ -1,10 +1,9 @@
 <?php
 namespace App\Twig;
 
+use \DateTime;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
-
-use \DateTime;
 
 /**
  * [AppExtension description]
@@ -30,9 +29,10 @@ class AppExtension extends AbstractExtension
     /**
      * [formatDateTimeGitHub description]
      *
-     * @param  string $date   [description]
-     * @param  string $format [description]
-     * @return string         [description]
+     * @param string $date   [description]
+     * @param string $format [description]
+     *
+     * @return string [description]
      */
     public function formatDateTimeGitHub(
         string $date,
@@ -45,8 +45,9 @@ class AppExtension extends AbstractExtension
     /**
      * [printR description]
      *
-     * @param  [type] $data [description]
-     * @return string       [description]
+     * @param [type] $data [description]
+     *
+     * @return string [description]
      */
     public function printR($data): string
     {
@@ -57,11 +58,12 @@ class AppExtension extends AbstractExtension
      * Cachehack filter for assets not maintained by Webpack Encore.
      *
      * usage in twig templates:
-     *      {{ asset('path/without/leading/slash/file_name.ext')|cacheHackS }}
+     *      {{ asset('path/without/leading/slash/file_name.ext')|cacheHack }}
      *      {{ absolute_url(asset('path/without/leading/slash/file_name.ext')|cacheHack) }}
      *
-     * @param  string $file filepath given by twigs asset() function
-     * @return string       file path with query based on last edit of file
+     * @param string $file filepath given by twigs asset() function
+     *
+     * @return string file path with query based on last edit of file
      */
     public function cacheHack(string $file): string
     {

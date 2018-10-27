@@ -13,13 +13,12 @@ class LastRouteListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         // Do not save subrequests
-        if ($event->getRequestType() !== HttpKernel::MASTER_REQUEST) {
+        if (HttpKernel::MASTER_REQUEST !== $event->getRequestType()) {
             return;
         }
 
-        $request = $event->getRequest();
-        $session = $request->getSession();
-
+        $request   = $event->getRequest();
+        $session   = $request->getSession();
         $routeName = $request->get('_route');
 
         // do not save api calls
@@ -28,7 +27,7 @@ class LastRouteListener
         }
 
         $routeParams = $request->get('_route_params');
-        if ($routeName[0] == '_') {
+        if ('_' == $routeName[0]) {
             return;
         }
         $routeData = ['name' => $routeName, 'params' => $routeParams];
