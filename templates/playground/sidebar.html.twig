@@ -1,10 +1,4 @@
 <ul class="nav">
-    <li class="nav-item{% if 'playground.index' == config.activeController.sub %} active{% endif %}">
-        <a class="nav-link" href="{{ absolute_url(path('playground.index')) }}">
-            <i class="tim-icons icon-atom"></i>
-            Geeky Stuff
-        </a>
-    </li>
     <li class="nav-item{% if 'playground.icons' == config.activeController.sub %} active{% endif %}">
         <a class="nav-link" href="{{ absolute_url(path('playground.icons')) }}">
             <i class="tim-icons icon-molecule-40"></i>
@@ -15,12 +9,6 @@
         <a class="nav-link" href="{{ absolute_url(path('playground.photos')) }}">
             <i class="tim-icons icon-image-02"></i>
             CSS Photos
-        </a>
-    </li>
-    <li class="nav-item{% if 'playground.log' == config.activeController.sub %} active{% endif %}">
-        <a class="nav-link" href="{{ absolute_url(path('playground.log')) }}">
-            <i class="tim-icons icon-notes"></i>
-            Log Files
         </a>
     </li>
 </ul>

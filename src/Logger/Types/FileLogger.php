@@ -75,13 +75,9 @@ class FileLogger extends AbstractLogger
     protected function checkFileSize(): FileLogger
     {
         if (filesize($this->file) > $this->maxFileSize) {
-            // $pathInfo = pathinfo($this->file);
-            // $newFile  = $pathInfo['dirname']
-            //     . date('/Ymd.His.')
-            //     . $pathInfo['basename'];
             $newFile = preg_replace(
                 '/\/([^\/]*\.)*([^\/\.]+)$/',
-                '/${1}' . date('YmdHis.') . '$2',
+                '/backup/${1}' . date('YmdHis.') . '$2',
                 $this->file
             );
 

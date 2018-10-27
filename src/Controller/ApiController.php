@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use \Exception;
 use App\Entity\User;
 use App\Logger\LoggerContainer;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -21,7 +22,11 @@ class ApiController extends Abstracts\AbstractController
     private $context = [];
 
     /**
-     * Constructor.
+     * ApiController constructor
+     *
+     * @param KernelInterface $kernel
+     *
+     * @throws Exception
      */
     public function __construct(KernelInterface $kernel)
     {
@@ -32,13 +37,11 @@ class ApiController extends Abstracts\AbstractController
     }
 
     /**
-     * [setTheme description]
+     * @param string        $theme
+     * @param Request       $request
+     * @param ObjectManager $manager
      *
-     * @param string        $theme   [description]
-     * @param Request       $request [description]
-     * @param ObjectManager $manager [description]
-     *
-     * @return JsonResponse [description]
+     * @return JsonResponse
      *
      * @Route(
      *      "/api/set/theme/{theme}",
@@ -81,6 +84,10 @@ class ApiController extends Abstracts\AbstractController
     }
 
     /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     *
      * @IsGranted("ROLE_ADMIN")
      * @Route("/api/gubed", name="api.gubed")
      */
@@ -92,6 +99,8 @@ class ApiController extends Abstracts\AbstractController
     }
 
     /**
+     * @return JsonResponse
+     *
      * @IsGranted("ROLE_ADMIN")
      * @Route("/api/gubed/headers", name="api.gubed.headers")
      */
@@ -104,6 +113,8 @@ class ApiController extends Abstracts\AbstractController
     }
 
     /**
+     * @return JsonResponse
+     *
      * @IsGranted("ROLE_ADMIN")
      * @Route("/api/gubed/server", name="api.gubed.server")
      */
@@ -116,6 +127,8 @@ class ApiController extends Abstracts\AbstractController
     }
 
     /**
+     * @return JsonResponse
+     *
      * @IsGranted("ROLE_ADMIN")
      * @Route("/api/gubed/session", name="api.gubed.session")
      */

@@ -2,19 +2,16 @@
 namespace App\Controller;
 
 use \Exception;
-use \RecursiveDirectoryIterator;
-use \RecursiveIteratorIterator;
 use App\Logger\LoggerContainer;
-use App\Logger\LogLevel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * [PlaygroundController description]
+ * PlaygroundController class
  *
- * @IsGranted("ROLE_ADMIN")
+ * @IsGranted("ROLE_DEV")
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
@@ -26,9 +23,11 @@ class PlaygroundController extends Abstracts\AbstractController
     private $context = [];
 
     /**
-     * Constructor.
+     * PlaygroundController constructor
      *
      * @param KernelInterface $kernel
+     *
+     * @throws Exception
      */
     public function __construct(KernelInterface $kernel)
     {
@@ -40,82 +39,6 @@ class PlaygroundController extends Abstracts\AbstractController
         if (null === $this->getSession()->get(self::SESSION_PLAYGROUND, null)) {
             $this->getSession()->set(self::SESSION_PLAYGROUND, []);
         }
-    }
-
-    /**
-     * @Route("/playground", name="playground.index")
-     */
-    public function indexView(): Response
-    {
-        LoggerContainer::getInstance()
-            ->trace(self::CONTROLLER_NAME . '.index', $this->context);
-
-        $test = [];
-        $str  = '200 Test RS';
-        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
-        $test[] = [$str, $matches];
-        $str    = 'Test RS';
-        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
-        $test[] = [$str, $matches];
-        $str    = '200';
-        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
-        $test[] = [$str, $matches];
-        $str    = ' Test RS';
-        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
-        $test[] = [$str, $matches];
-        $str    = '200 ';
-        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
-        $test[] = [$str, $matches];
-        $str    = ' ';
-        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
-        $test[] = [$str, $matches];
-        $str    = '';
-        preg_match('/^(?P<code>[0-9]+)? ?(?P<message>.*)?$/', $str, $matches);
-        $test[] = [$str, $matches];
-
-        $levels         = [];
-        $log            = [];
-        $log['env']     = getenv('LOG_LEVEL');
-        $log['explode'] = explode(',', $log['env']);
-
-        foreach ($log['explode'] as $i => $logLevel) {
-            try {
-                $value = constant(LogLevel::class . '::' . $logLevel);
-
-                $levels[] = $value;
-
-                $log['explode'][$i] = [
-                    $logLevel,
-                    $value,
-                ];
-            } catch (Exception $ex) {
-                // 42
-            }
-        }
-
-        /** @var \App\Entity\User $user */
-        // $user = $this->getUser();
-
-        return $this->render(self::CONTROLLER_NAME . '/index.html.twig', [
-            'config' => [
-                'pageTitle'        => ucfirst(self::CONTROLLER_NAME),
-                'activeController' => [
-                    'name' => self::CONTROLLER_NAME,
-                    'sub'  => self::CONTROLLER_NAME . '.index',
-                ],
-                'brandText'        => ucfirst(self::CONTROLLER_NAME),
-                'brandUrl'         => $this->generateAbsoluteUrl(
-                    self::CONTROLLER_NAME . '.index'
-                ),
-            ] + $this->getBaseTemplateConfig(),
-            'test'   => [
-                $log,
-                $levels,
-                LoggerContainer::getInstance()->getFlags(),
-                $this->get('kernel')->getLogDir(),
-                $test,
-            ],
-        ]);
     }
 
     /**
@@ -162,85 +85,6 @@ class PlaygroundController extends Abstracts\AbstractController
                     self::CONTROLLER_NAME . '.photos'
                 ),
             ] + $this->getBaseTemplateConfig(),
-        ]);
-    }
-
-    /**
-     * @param string $file
-     *
-     * @return Response
-     *
-     * @Route(
-     *      "/playground/log/{file}",
-     *      name="playground.log",
-     *      defaults={"file"=""},
-     *      requirements={"file"=".*"}
-     * )
-     */
-    public function logView(string $file = ''): Response
-    {
-        LoggerContainer::getInstance()
-            ->trace(self::CONTROLLER_NAME . ".log '{$file}'", $this->context);
-
-        $file = strtr($file, ['%' => '']);
-        $dd   = '/\.\.\//';
-
-        while (true === (bool) preg_match($dd, $file)) {
-            $file = preg_replace($dd, '', $file);
-        }
-
-        $strtr       = ['\\' => '/'];
-        $logDir      = strtr($this->get('kernel')->getLogDir(), $strtr);
-        $logDirInfo  = [];
-        $dirIterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(
-                $logDir,
-                RecursiveDirectoryIterator::SKIP_DOTS
-            )
-        );
-
-        foreach ($dirIterator as $fileInfo) {
-            if (false === $fileInfo->isFile()) {
-                continue;
-            }
-
-            $relPathname = strtr(
-                strtr($fileInfo->getPathname(), $strtr),
-                [$logDir . '/' => '']
-            );
-
-            $logDirInfo[] = [
-                'name' => $relPathname,
-                'time' => date('Y-m-d H:i:s', $fileInfo->getMTime()),
-                'size' => $fileInfo->getSize() . ' bytes',
-            ];
-        }
-
-        $logContent = null;
-
-        if ('' !== $file) {
-            try {
-                $logContent = file_get_contents("{$logDir}/$file");
-            } catch (Exception $ex) {
-                $logContent = 'Unable to get log file content.';
-            }
-        }
-
-        return $this->render(self::CONTROLLER_NAME . '/log.html.twig', [
-            'config'     => [
-                'pageTitle'        => ucfirst(self::CONTROLLER_NAME) . ' Log Files',
-                'activeController' => [
-                    'name' => self::CONTROLLER_NAME,
-                    'sub'  => self::CONTROLLER_NAME . '.log',
-                ],
-                'brandText'        => ucfirst(self::CONTROLLER_NAME) . ' Log Files',
-                'brandUrl'         => $this->generateAbsoluteUrl(
-                    self::CONTROLLER_NAME . '.log'
-                ),
-            ] + $this->getBaseTemplateConfig(),
-            'file'       => $file,
-            'logDirInfo' => $logDirInfo,
-            'log'        => $logContent,
         ]);
     }
 

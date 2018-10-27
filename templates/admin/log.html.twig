@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ absolute_url(asset('js/playground.log.min.js')|cacheHack) }}"></script>
+    <script type="text/javascript" src="{{ absolute_url(asset('js/admin.log.min.js')|cacheHack) }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -17,10 +17,10 @@
                     {% set class = '' %}
                     {% if file == info.name %}
                     {% set class = ' text-primary' %}
-                    {% set link = absolute_url(path('playground.log')) %}
+                    {% set link = absolute_url(path('admin.log')) %}
                     {% set chevron = 'down' %}
                     {% else %}
-                    {% set link = absolute_url(path('playground.log', { 'file' : info.name })) %}
+                    {% set link = absolute_url(path('admin.log', { 'file' : info.name })) %}
                     {% set chevron = 'right' %}
                     {% endif %}
                     <li>
