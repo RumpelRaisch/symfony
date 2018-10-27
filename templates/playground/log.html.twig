@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    <script type="text/javascript" src="{{ absolute_url(asset('js/playground.log.min.js')|cacheHack) }}"></script>
+{% endblock %}
+
 {% block content %}
-<div class="row">
+<div id="playground_log" class="row" data-active-log-file="{{ file }}">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
@@ -21,8 +25,8 @@
                     {% endif %}
                     <li>
                         <hr>
-                        <div class="row">
-                            <div class="col-md-2{{ class }}">
+                        <div class="row" data-log-file="{{ info.name }}">
+                            <div class="col-md-3{{ class }}">
                                 <a href="{{ link }}">
                                     <i class="fas fa-chevron-{{ chevron }} fa-xs fa-fw"></i> {{ info.name }}
                                 </a>
