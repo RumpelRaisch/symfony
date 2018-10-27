@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Helper\GitHubApiHelper;
 use App\Helper\LoremIpsumHelper;
+use App\Logger\LoggerContainer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -29,15 +30,14 @@ class AppController extends Abstracts\AbstractController
 
     /**
      * Constructor.
+     *
+     * @param KernelInterface $kernel
      */
     public function __construct(KernelInterface $kernel)
     {
-        parent::__construct();
+        parent::__construct($kernel);
 
-        $this
-            ->setDefaultSession()
-            ->setDefaultLogger($kernel);
-
+        $this->setDefaultSession();
         $this->context['__AREA__'] = 'AppController';
 
         if (null === $this->getSession()->get(self::SESSION_APP, null)) {
@@ -54,10 +54,10 @@ class AppController extends Abstracts\AbstractController
      */
     public function indexView(Request $request): Response
     {
-        $this->getLogger()->trace(self::CONTROLLER_NAME . '.index', $this->context);
+        LoggerContainer::getInstance()
+            ->trace(self::CONTROLLER_NAME . '.index', $this->context);
 
         $gitHubApiHelper = new GitHubApiHelper(
-            $this->getLogger(),
             $this->get('kernel')->getAppCacheDir(),
             $this->get('kernel')->getAppTempDir()
         );

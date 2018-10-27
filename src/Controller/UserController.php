@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Facades\UserFacade;
 use App\Form\UserAssertType;
 use App\Helper\LoremIpsumHelper;
+use App\Logger\LoggerContainer;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,12 +32,9 @@ class UserController extends Abstracts\AbstractController
      */
     public function __construct(KernelInterface $kernel)
     {
-        parent::__construct();
+        parent::__construct($kernel);
 
-        $this
-            ->setDefaultSession()
-            ->setDefaultLogger($kernel);
-
+        $this->setDefaultSession();
         $this->context['__AREA__'] = 'UserController';
 
         if (null === $this->getSession()->get(self::SESSION_USER, null)) {
@@ -53,7 +51,8 @@ class UserController extends Abstracts\AbstractController
      */
     public function loginView(AuthenticationUtils $authUtils): Response
     {
-        $this->getLogger()->trace(self::CONTROLLER_NAME . '.login', $this->context);
+        LoggerContainer::getInstance()
+            ->trace(self::CONTROLLER_NAME . '.login', $this->context);
 
         $error        = $authUtils->getLastAuthenticationError();
         $lastUsername = $authUtils->getLastUsername();
@@ -84,13 +83,12 @@ class UserController extends Abstracts\AbstractController
         Request       $request,
         ObjectManager $manager
     ): Response {
-        $this->getLogger()->trace(self::CONTROLLER_NAME . '.profile', $this->context);
+        LoggerContainer::getInstance()
+            ->trace(self::CONTROLLER_NAME . '.profile', $this->context);
 
         /** @var \App\Entity\User $user */
         $user       = $this->getUser();
         $userFacade = UserFacade::createFromUser($user, $manager);
-
-        $userFacade->syncUserToUserAssert();
 
         $form = $this->createForm(
             UserAssertType::class,
@@ -100,13 +98,13 @@ class UserController extends Abstracts\AbstractController
         $form->handleRequest($request);
 
         if (true === $form->isSubmitted()) {
-            $this->getLogger()->trace(
+            LoggerContainer::getInstance()->trace(
                 self::CONTROLLER_NAME . '.profile - form submitted',
                 $this->context
             );
 
             if (true === $form->isValid()) {
-                $this->getLogger()->trace(
+                LoggerContainer::getInstance()->trace(
                     self::CONTROLLER_NAME . '.profile - form is valid',
                     $this->context
                 );
@@ -115,7 +113,7 @@ class UserController extends Abstracts\AbstractController
                     ->syncUserAssertToUser()
                     ->saveUser();
             } else {
-                $this->getLogger()->trace(
+                LoggerContainer::getInstance()->trace(
                     self::CONTROLLER_NAME . '.profile - form is NOT valid',
                     $this->context
                 );
@@ -144,7 +142,8 @@ class UserController extends Abstracts\AbstractController
      */
     public function logout()
     {
-        $this->getLogger()->trace(self::CONTROLLER_NAME . '.logout', $this->context);
+        LoggerContainer::getInstance()
+            ->trace(self::CONTROLLER_NAME . '.logout', $this->context);
         // ...
     }
 }

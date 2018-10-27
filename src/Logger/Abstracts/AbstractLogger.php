@@ -1,10 +1,9 @@
 <?php
 namespace App\Logger\Abstracts;
 
-use App\Logger\LogLevel;
-use Psr\Log\LoggerInterface;
-
 use \Exception;
+use App\Logger\Interfaces\LoggerInterface;
+use App\Logger\LogLevel;
 
 /**
  * [AbstractLogger description]
@@ -19,7 +18,7 @@ abstract class AbstractLogger implements LoggerInterface
      *
      * @var integer
      */
-    private $flags = 0;
+    private $flags = LogLevel::FLAG_NONE;
 
     /**
      * {@inheritdoc}
@@ -86,10 +85,7 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
-     * [debugR description]
-     *
-     * @param mixed $message [description]
-     * @param array $context [description]
+     * {@inheritdoc}
      */
     public function debugR($message, array $context = [])
     {
@@ -97,10 +93,7 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
-     * [debugDump description]
-     *
-     * @param  mixed $message [description]
-     * @param  array $context [description]
+     * {@inheritdoc}
      */
     public function debugDump($message, array $context = [])
     {
@@ -108,10 +101,15 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
-     * Detailed trace information.
-     *
-     * @param string $message
-     * @param array  $context
+     * {@inheritdoc}
+     */
+    public function debugException(Exception $ex, array $context = [])
+    {
+        $this->debug("Exception:\n" . $this->getExceptionData($ex), $context);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function trace($message, array $context = [])
     {
@@ -119,10 +117,7 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
-     * [traceR description]
-     *
-     * @param mixed $message [description]
-     * @param array $context [description]
+     * {@inheritdoc}
      */
     public function traceR($message, array $context = [])
     {
@@ -130,14 +125,19 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
-     * [traceDump description]
-     *
-     * @param  mixed $message [description]
-     * @param  array $context [description]
+     * {@inheritdoc}
      */
     public function traceDump($message, array $context = [])
     {
         $this->trace($this->getVarDump($message), $context);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function traceException(Exception $ex, array $context = [])
+    {
+        $this->trace("Exception:\n" . $this->getExceptionData($ex), $context);
     }
 
     /**
@@ -149,6 +149,11 @@ abstract class AbstractLogger implements LoggerInterface
      * Interpolates context values into the message placeholders.
      *
      * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md#12-message
+     *
+     * @param string $message
+     * @param array  $context
+     *
+     * @return string
      */
     protected function interpolate(string $message, array $context = [])
     {
@@ -172,7 +177,7 @@ abstract class AbstractLogger implements LoggerInterface
      * @param string $message [description]
      * @param array  $context [description]
      *
-     * @return string          [description]
+     * @return string [description]
      */
     protected function beautify(
         string $level,
@@ -186,11 +191,11 @@ abstract class AbstractLogger implements LoggerInterface
         }
 
         $pre  = '[' . sprintf("%'=9s", strtoupper($level)) . '] ';
-        $pre .=  date('Y-m-d H:i:s') . ' | ';
+        $pre .= date('Y-m-d H:i:s') . ' | ';
 
         $message  = preg_replace('/\r\n/', "\n", $message);
         $message  = preg_replace('/\r/', "\n", $message);
-        $message  = preg_replace('/\t/', " ", $message);
+        $message  = preg_replace('/\t/', ' ', $message);
         $message .= ' (' . $area . ')';
         $lines    = explode("\n", $message);
         $message  = array_shift($lines) . "\n";
@@ -204,7 +209,12 @@ abstract class AbstractLogger implements LoggerInterface
         return $pre . $message;
     }
 
-    protected function getVarDump($data)
+    /**
+     * @param $data
+     *
+     * @return string
+     */
+    protected function getVarDump($data): string
     {
         $eol = preg_quote(PHP_EOL);
 
@@ -216,9 +226,28 @@ abstract class AbstractLogger implements LoggerInterface
     }
 
     /**
+     * @param Exception $ex
+     * @param int       $i
+     *
+     * @return string
+     */
+    protected function getExceptionData(Exception $ex, int $i = 1): string
+    {
+        $response = "#{$i} - {$ex->getMessage()} [{$ex->getFile()}:{$ex->getLine()}]";
+
+        if (null !== ($prev = $ex->getPrevious())) {
+            $response .= "\n" . $this->getExceptionData($prev, ++$i);
+        }
+
+        return $response;
+    }
+
+    /**
      * [addLogLevel description]
      *
      * @param string ...$levels [description]
+     *
+     * @return self
      */
     public function addLogLevel(string ...$levels)
     {
@@ -231,12 +260,16 @@ abstract class AbstractLogger implements LoggerInterface
 
             $this->setFlag($levelFlag);
         }
+
+        return $this;
     }
 
     /**
      * [removeLogLevel description]
      *
-     * @param string $levels [description]
+     * @param string ...$levels [description]
+     *
+     * @return self
      */
     public function removeLogLevel(string ...$levels)
     {
@@ -249,42 +282,56 @@ abstract class AbstractLogger implements LoggerInterface
 
             $this->removeFlag($levelFlag);
         }
+
+        return $this;
     }
 
     /**
      * [resetLogLevel description]
+     *
+     * @return self
      */
     public function resetLogLevel()
     {
         $this->flags = LogLevel::FLAG_NONE;
+
+        return $this;
     }
 
     /**
      * [setFlag description]
      *
      * @param int $flag [description]
+     *
+     * @return self
      */
     protected function setFlag(int $flag)
     {
         $this->flags |= $flag;
+
+        return $this;
     }
 
     /**
      * [removeFlag description]
      *
-     * @param int    $flag [description]
+     * @param int $flag [description]
+     *
+     * @return self
      */
     protected function removeFlag(int $flag)
     {
         $this->flags &= ~$flag;
+
+        return $this;
     }
 
     /**
      * [issetFlag description]
      *
-     * @param int  $flag [description]
+     * @param int $flag [description]
      *
-     * @return bool       [description]
+     * @return bool [description]
      */
     protected function issetFlag(int $flag): bool
     {
@@ -294,10 +341,22 @@ abstract class AbstractLogger implements LoggerInterface
     /**
      * [getFlags description]
      *
-     * @return [type] [description]
+     * @return int current bit flags
      */
-    public function getFlags()
+    public function getFlags(): int
     {
         return $this->flags;
+    }
+
+    /**
+     * @param int $flags
+     *
+     * @return self
+     */
+    protected function setFlags(int $flags)
+    {
+        $this->flags = $flags;
+
+        return $this;
     }
 }

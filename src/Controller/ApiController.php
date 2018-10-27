@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Logger\LoggerContainer;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,12 +25,9 @@ class ApiController extends Abstracts\AbstractController
      */
     public function __construct(KernelInterface $kernel)
     {
-        parent::__construct();
+        parent::__construct($kernel);
 
-        $this
-            ->setDefaultSession()
-            ->setDefaultLogger($kernel);
-
+        $this->setDefaultSession();
         $this->context['__AREA__'] = 'ApiController';
     }
 
@@ -55,7 +53,8 @@ class ApiController extends Abstracts\AbstractController
         Request $request,
         ObjectManager $manager
     ): Response {
-        $this->getLogger()->trace("api.set.theme '{$theme}'", $this->context);
+        LoggerContainer::getInstance()
+            ->trace("api.set.theme '{$theme}'", $this->context);
 
         if (false === in_array($theme, ['pink', 'blue', 'green'])) {
             return JsonResponse::create("Theme '{$theme}' not found.", 404);
@@ -87,7 +86,7 @@ class ApiController extends Abstracts\AbstractController
      */
     public function gubed(Request $request): JsonResponse
     {
-        $this->getLogger()->trace('api.gubed', $this->context);
+        LoggerContainer::getInstance()->trace('api.gubed', $this->context);
 
         return JsonResponse::create($this->getDebug(['request' => $request]));
     }
@@ -98,7 +97,8 @@ class ApiController extends Abstracts\AbstractController
      */
     public function gubedHeaders(): JsonResponse
     {
-        $this->getLogger()->trace('api.gubed.headers', $this->context);
+        LoggerContainer::getInstance()
+            ->trace('api.gubed.headers', $this->context);
 
         return JsonResponse::create(getallheaders());
     }
@@ -109,7 +109,8 @@ class ApiController extends Abstracts\AbstractController
      */
     public function gubedServer(): JsonResponse
     {
-        $this->getLogger()->trace('api.gubed.server', $this->context);
+        LoggerContainer::getInstance()
+            ->trace('api.gubed.server', $this->context);
 
         return JsonResponse::create($_SERVER);
     }
@@ -120,7 +121,8 @@ class ApiController extends Abstracts\AbstractController
      */
     public function gubedSession(): JsonResponse
     {
-        $this->getLogger()->trace('api.gubed.session', $this->context);
+        LoggerContainer::getInstance()
+            ->trace('api.gubed.session', $this->context);
 
         return JsonResponse::create($_SESSION);
     }

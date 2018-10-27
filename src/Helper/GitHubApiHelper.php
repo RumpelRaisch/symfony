@@ -1,18 +1,15 @@
 <?php
 namespace App\Helper;
 
-use App\Logger\FileLogger;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
-
 use \DateTime;
+use App\Logger\LoggerContainer;
 
 /**
  * [GitHubApiHelper description]
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
-class GitHubApiHelper implements LoggerAwareInterface
+class GitHubApiHelper
 {
     /**
      * [private description]
@@ -35,26 +32,17 @@ class GitHubApiHelper implements LoggerAwareInterface
      */
     private $cacheLifeTime = null;
 
-    /**
-     * [private description]
-     *
-     * @var FileLogger
-     */
-    private $logger = null;
-
     private $context = [];
 
     /**
      * Constructor.
      */
     public function __construct(
-        FileLogger $logger,
-        string     $dirCache,
-        string     $dirTemp,
-        int        $cacheLifeTime = 3600
+        string $dirCache,
+        string $dirTemp,
+        int    $cacheLifeTime = 3600
     ) {
         $this
-            ->setLogger($logger)
             ->setDirCache($dirCache)
             ->setDirTemp($dirTemp)
             ->setcacheLifeTime($cacheLifeTime);
@@ -67,11 +55,12 @@ class GitHubApiHelper implements LoggerAwareInterface
      *
      * @param string $user [description]
      *
-     * @return array        [description]
+     * @return array [description]
      */
     public function getGitHubRepoOverview(string $user): array
     {
-        $this->getLogger()->trace('getGitHubRepoOverview - start', $this->context);
+        LoggerContainer::getInstance()
+            ->trace('getGitHubRepoOverview - start', $this->context);
 
         $file  = "{$this->getDirCache()}/github/{$user}.repos.json";
         $cache = $this->getGithubCache($file);
@@ -79,32 +68,47 @@ class GitHubApiHelper implements LoggerAwareInterface
         $all   = [];
 
         if (true === empty($cache)) {
-            $this->getLogger()->trace('getGitHubRepoOverview - no or old cache', $this->context);
+            LoggerContainer::getInstance()->trace(
+                'getGitHubRepoOverview - no or old cache',
+                $this->context
+            );
 
             $apiResponse = $this->callGitHubAPI("users/{$user}/repos");
 
             if (
-                200  !== $apiResponse['headers']['status']['code'] ||
+                200 !== $apiResponse['headers']['status']['code'] ||
                 true === empty($apiResponse['data'])
             ) {
-                $this->getLogger()->trace('getGitHubRepoOverview - no data from api', $this->context);
+                LoggerContainer::getInstance()->trace(
+                    'getGitHubRepoOverview - no data from api',
+                    $this->context
+                );
 
                 $repos = $this->getGithubCache($file, true);
 
                 if (true === empty($repos)) {
-                    $this->getLogger()->trace('getGitHubRepoOverview - no cache (ignore lifetime)', $this->context);
+                    LoggerContainer::getInstance()->trace(
+                        'getGitHubRepoOverview - no cache (ignore lifetime)',
+                        $this->context
+                    );
 
                     return ['all' => [], 'data' => []];
                 }
             } else {
-                $this->getLogger()->trace('getGitHubRepoOverview - data from api', $this->context);
+                LoggerContainer::getInstance()->trace(
+                    'getGitHubRepoOverview - data from api',
+                    $this->context
+                );
 
                 $repos = $apiResponse['data'];
             }
 
             $this->setGithubCache($file, $repos);
         } else {
-            $this->getLogger()->trace('getGitHubRepoOverview - set cache as data', $this->context);
+            LoggerContainer::getInstance()->trace(
+                'getGitHubRepoOverview - set cache as data',
+                $this->context
+            );
 
             $repos = $cache;
         }
@@ -118,13 +122,19 @@ class GitHubApiHelper implements LoggerAwareInterface
                 DateTime::ISO8601,
                 $repo['updated_at']
             )->format('Y-m-d H:i:s');
-            $repo['participation'] = $this->getGithubRepoParticipation($repo['id'], $repo['full_name']);
+            $repo['participation'] = $this->getGithubRepoParticipation(
+                $repo['id'],
+                $repo['full_name']
+            );
 
             if (
                 false === empty($repo['participation']['all']) &&
-                52    === count($repo['participation']['all'])
+                52 === count($repo['participation']['all'])
             ) {
-                $this->getLogger()->trace('getGitHubRepoOverview - participation.length = 52', $this->context);
+                LoggerContainer::getInstance()->trace(
+                    'getGitHubRepoOverview - participation.length = 52',
+                    $this->context
+                );
 
                 foreach ($repo['participation']['all'] as $i => $n) {
                     $all[$i] = true === isset($all[$i]) ? $all[$i] + $n : $n;
@@ -132,7 +142,8 @@ class GitHubApiHelper implements LoggerAwareInterface
             }
         }
 
-        $this->getLogger()->trace('getGitHubRepoOverview - end', $this->context);
+        LoggerContainer::getInstance()
+            ->trace('getGitHubRepoOverview - end', $this->context);
 
         return ['all' => $all, 'data' => $repos];
     }
@@ -143,11 +154,14 @@ class GitHubApiHelper implements LoggerAwareInterface
      * @param int    $id       [description]
      * @param string $fullName [description]
      *
-     * @return array            [description]
+     * @return array [description]
      */
     public function getGithubRepoParticipation(int $id, string $fullName): array
     {
-        $this->getLogger()->trace("getGithubRepoParticipation - start (repo id {$id})", $this->context);
+        LoggerContainer::getInstance()->trace(
+            "getGithubRepoParticipation - start (repo id {$id})",
+            $this->context
+        );
 
         $file  = $this->getDirCache() . "/github/participation/repo.{$id}.json";
         $cache = $this->getGithubCache($file);
@@ -156,16 +170,24 @@ class GitHubApiHelper implements LoggerAwareInterface
             true === empty($cache) ||
             true === empty($cache['all'])
         ) {
-            $this->getLogger()->trace('getGithubRepoParticipation - no or old cache', $this->context);
+            LoggerContainer::getInstance()->trace(
+                'getGithubRepoParticipation - no or old cache',
+                $this->context
+            );
 
-            $apiResponse = $this->callGitHubAPI("repos/{$fullName}/stats/participation");
+            $apiResponse = $this->callGitHubAPI(
+                "repos/{$fullName}/stats/participation"
+            );
 
             if (
-                200  !== $apiResponse['headers']['status']['code'] ||
+                200 !== $apiResponse['headers']['status']['code'] ||
                 true === empty($apiResponse['data']) ||
                 true === empty($apiResponse['data']['all'])
             ) {
-                $this->getLogger()->trace('getGithubRepoParticipation - no data from api', $this->context);
+                LoggerContainer::getInstance()->trace(
+                    'getGithubRepoParticipation - no data from api',
+                    $this->context
+                );
 
                 $participation = $this->getGithubCache($file, true);
 
@@ -173,24 +195,36 @@ class GitHubApiHelper implements LoggerAwareInterface
                     true === empty($participation) ||
                     true === empty($participation['all'])
                 ) {
-                    $this->getLogger()->trace('getGithubRepoParticipation - no cache (ignore lifetime)', $this->context);
+                    LoggerContainer::getInstance()->trace(
+                        'getGithubRepoParticipation - no cache (ignore lifetime)',
+                        $this->context
+                    );
 
                     return ['all' => [], 'owner' => []];
                 }
             } else {
-                $this->getLogger()->trace('getGithubRepoParticipation - data from api', $this->context);
+                LoggerContainer::getInstance()->trace(
+                    'getGithubRepoParticipation - data from api',
+                    $this->context
+                );
 
                 $participation = $apiResponse['data'];
             }
 
             $this->setGithubCache($file, $participation);
         } else {
-            $this->getLogger()->trace('getGithubRepoParticipation - set cache as data', $this->context);
+            LoggerContainer::getInstance()->trace(
+                'getGithubRepoParticipation - set cache as data',
+                $this->context
+            );
 
             $participation = $cache;
         }
 
-        $this->getLogger()->trace("getGithubRepoParticipation - end (repo id {$id})", $this->context);
+        LoggerContainer::getInstance()->trace(
+            "getGithubRepoParticipation - end (repo id {$id})",
+            $this->context
+        );
 
         return $participation;
     }
@@ -198,9 +232,10 @@ class GitHubApiHelper implements LoggerAwareInterface
     /**
      * [getGithubCache description]
      *
-     * @param string     $file [description]
+     * @param string $file           [description]
+     * @param bool   $ignoreLifetime
      *
-     * @return null|array       [description]
+     * @return null|array [description]
      */
     private function getGithubCache(
         string $file,
@@ -247,9 +282,9 @@ class GitHubApiHelper implements LoggerAwareInterface
     /**
      * [callGitHubAPI description]
      *
-     * @param string  $path        [description]
+     * @param string $path [description]
      *
-     * @return array                [description]
+     * @return array [description]
      */
     private function callGitHubAPI(string $path): array
     {
@@ -319,7 +354,7 @@ class GitHubApiHelper implements LoggerAwareInterface
                 : $matches['message'],
         ];
 
-        $this->getLogger()->debugR($headers, [
+        LoggerContainer::getInstance()->debugR($headers, [
             '__AREA__' => 'GitHubApiHelper->callGitHubAPI()',
         ]);
 
@@ -403,25 +438,5 @@ class GitHubApiHelper implements LoggerAwareInterface
         $this->cacheLifeTime = $cacheLifeTime;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLogger(LoggerInterface $logger): GitHubApiHelper
-    {
-        $this->logger = $logger;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of [private description]
-     *
-     * @return LoggerInterface
-     */
-    private function getLogger(): LoggerInterface
-    {
-        return $this->logger;
     }
 }

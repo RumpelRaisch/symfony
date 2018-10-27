@@ -1,14 +1,16 @@
 <?php
-namespace App\Logger;
+namespace App\Logger\Types;
 
 use \Exception;
+use App\Logger\Abstracts\AbstractLogger;
+use App\Logger\LogLevel;
 
 /**
  * Class FileLogger
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
-class FileLogger extends Abstracts\AbstractLogger
+class FileLogger extends AbstractLogger
 {
     /**
      * @var string

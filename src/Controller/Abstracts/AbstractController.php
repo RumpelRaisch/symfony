@@ -3,7 +3,7 @@ namespace App\Controller\Abstracts;
 
 use \Exception;
 use App\Entity\User;
-use App\Logger\FileLogger;
+use App\Logger\LoggerContainer;
 use App\Logger\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
@@ -31,18 +31,26 @@ abstract class AbstractController extends Controller
     private $session = null;
 
     /**
-     * Logger Object
-     *
-     * @var FileLogger
-     */
-    private $logger = null;
-
-    /**
      * Constructor.
+     *
+     * @param KernelInterface $kernel
      */
-    public function __construct()
+    public function __construct(KernelInterface $kernel)
     {
-        // parent::__construct();
+        $envLogLevels = explode(',', getenv('LOG_LEVEL'));
+        $levels       = [];
+
+        foreach ($envLogLevels as $logLevel) {
+            try {
+                $levels[] = constant(LogLevel::class . '::' . $logLevel);
+            } catch (Exception $ex) {
+                // non existing log level => ignore
+            }
+        }
+
+        LoggerContainer::getInstance()
+            ->addLogLevel(...$levels)
+            ->addFileLogger($kernel->getLogDir() . '/app.log');
     }
 
     /**
@@ -228,57 +236,5 @@ abstract class AbstractController extends Controller
         }
 
         return $this;
-    }
-
-    /**
-     * Sets the Logger Object
-     *
-     * @param FileLogger $logger
-     *
-     * @return AbstractController
-     */
-    protected function setLogger(FileLogger $logger): AbstractController
-    {
-        $this->logger = $logger;
-
-        return $this;
-    }
-
-    /**
-     * Sets the default Logger Object
-     *
-     * @param $kernel KernelInterface
-     *
-     * @return AbstractController
-     */
-    protected function setDefaultLogger(KernelInterface $kernel): AbstractController
-    {
-        $envLogLevels = explode(',', getenv('LOG_LEVEL'));
-        $levels       = [];
-
-        foreach ($envLogLevels as $logLevel) {
-            try {
-                $levels[] = constant(LogLevel::class . '::' . $logLevel);
-            } catch (Exception $ex) {
-                // 42
-            }
-        }
-
-        $this->logger = new FileLogger(
-            $kernel->getLogDir() . '/app.log',
-            ...$levels
-        );
-
-        return $this;
-    }
-
-    /**
-     * Get the value of Logger Object
-     *
-     * @return FileLogger
-     */
-    protected function getLogger(): FileLogger
-    {
-        return $this->logger;
     }
 }

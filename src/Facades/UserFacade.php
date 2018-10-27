@@ -51,12 +51,22 @@ class UserFacade
      *
      * @param User          $user
      * @param ObjectManager $manager
+     * @param bool          $sync
      *
      * @return UserFacade
      */
-    public static function createFromUser(User $user, ObjectManager $manager): self
-    {
-        return new self($user, new UserAssert(), $manager);
+    public static function createFromUser(
+        User          $user,
+        ObjectManager $manager,
+        bool          $sync = true
+    ): self {
+        $userFacade = new self($user, new UserAssert(), $manager);
+
+        if (true === $sync) {
+            $userFacade->syncUserToUserAssert();
+        }
+
+        return $userFacade;
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Controller;
 use \Exception;
 use \RecursiveDirectoryIterator;
 use \RecursiveIteratorIterator;
+use App\Logger\LoggerContainer;
 use App\Logger\LogLevel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,12 +32,9 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function __construct(KernelInterface $kernel)
     {
-        parent::__construct();
+        parent::__construct($kernel);
 
-        $this
-            ->setDefaultSession()
-            ->setDefaultLogger($kernel);
-
+        $this->setDefaultSession();
         $this->context['__AREA__'] = 'PlaygroundController';
 
         if (null === $this->getSession()->get(self::SESSION_PLAYGROUND, null)) {
@@ -49,7 +47,8 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function indexView(): Response
     {
-        $this->getLogger()->trace(self::CONTROLLER_NAME . '.index', $this->context);
+        LoggerContainer::getInstance()
+            ->trace(self::CONTROLLER_NAME . '.index', $this->context);
 
         $test = [];
         $str  = '200 Test RS';
@@ -112,7 +111,7 @@ class PlaygroundController extends Abstracts\AbstractController
             'test'   => [
                 $log,
                 $levels,
-                $this->getLogger()->getFlags(),
+                LoggerContainer::getInstance()->getFlags(),
                 $this->get('kernel')->getLogDir(),
                 $test,
             ],
@@ -124,7 +123,8 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function iconsView(): Response
     {
-        $this->getLogger()->trace(self::CONTROLLER_NAME . '.icons', $this->context);
+        LoggerContainer::getInstance()
+            ->trace(self::CONTROLLER_NAME . '.icons', $this->context);
 
         return $this->render(self::CONTROLLER_NAME . '/icons.html.twig', [
             'config'  => [
@@ -147,7 +147,8 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function photosView(): Response
     {
-        $this->getLogger()->trace(self::CONTROLLER_NAME . '.photos', $this->context);
+        LoggerContainer::getInstance()
+            ->trace(self::CONTROLLER_NAME . '.photos', $this->context);
 
         return $this->render(self::CONTROLLER_NAME . '/photos.html.twig', [
             'config' => [
@@ -178,7 +179,8 @@ class PlaygroundController extends Abstracts\AbstractController
      */
     public function logView(string $file = ''): Response
     {
-        $this->getLogger()->trace(self::CONTROLLER_NAME . ".log '{$file}'", $this->context);
+        LoggerContainer::getInstance()
+            ->trace(self::CONTROLLER_NAME . ".log '{$file}'", $this->context);
 
         $file = strtr($file, ['%' => '']);
         $dd   = '/\.\.\//';
@@ -253,7 +255,12 @@ class PlaygroundController extends Abstracts\AbstractController
         $content = file_get_contents($file);
         $matches = [];
 
-        preg_match_all('/\.([a-zA-Z-0-9]+)::before \{/', $content, $matches, PREG_SET_ORDER);
+        preg_match_all(
+            '/\.([a-zA-Z-0-9]+)::before \{/',
+            $content,
+            $matches,
+            PREG_SET_ORDER
+        );
 
         return $matches;
     }
