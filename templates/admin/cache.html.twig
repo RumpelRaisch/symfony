@@ -23,29 +23,27 @@
                             {% endif %}
                             <li>
                                 <hr>
-                                <div class="row" data-cache="{{ cache }}">
-                                    <div class="col-md-2{{ class }}">
-                                        <i class="fas fa-chevron-{{ chevron }} fa-xs fa-fw"></i> {{ cache }}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <form id="form_{{ i }}" action="{{ absolute_url(path('admin.cache', { 'type' : cache, 'action' : 'find' })) }}" method="post">
-                                            <div class="input-group m-0">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <a href="#" style="height: 16px;" data-submit="#form_{{ i }}"><i class="fas fa-search"></i></a>
+                                <div data-cache="{{ cache }}">
+                                    <form id="form_{{ i }}" action="#" method="post">
+                                        <div class="form-group row">
+                                            <label for="key__{{ i }}" class="col-sm-2 col-form-label{{ class }}">
+                                                <i class="fas fa-chevron-{{ chevron }} fa-xs fa-fw"></i> {{ cache }}
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">
+                                                            <a href="{{ absolute_url(path('admin.cache', { 'type' : cache, 'action' : 'clear' })) }}" data-submit="#form_{{ i }}" data-toggle="tooltip" data-placement="top" title="clear whole cache or specific key"><i class="far fa-trash-alt text-danger"></i></a>
+                                                            <a href="{{ absolute_url(path('admin.cache', { 'type' : cache, 'action' : 'find' })) }}" data-submit="#form_{{ i }}" data-toggle="tooltip" data-placement="top" title="search for a key"><i class="fas fa-search"></i></a>
+                                                        </div>
                                                     </div>
+                                                    <input type="text" name="key" class="form-control m-0" id="key__{{ i }}" placeholder="search key" value="{% if cache == active %}{{ key }}{% endif %}">
                                                 </div>
-                                                <input type="text" name="key" class="form-control m-0" id="key" placeholder="search key" value="{% if cache == active %}{{ key }}{% endif %}">
                                             </div>
-                                        </form>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <a href="{{ absolute_url(path('admin.cache', { 'type' : cache, 'action' : 'clear' })) }}"><i class="far fa-trash-alt text-danger"></i></a>
-                                    </div>
-                                    {% if cache == active and data is not empty %}
-                                        <div class="col-md-12 mt-3">
-                                            <pre class="{{ preClass }}">{{ data|printr }}</pre>
                                         </div>
+                                    </form>
+                                    {% if cache == active and data is not empty %}
+                                    <pre class="{{ preClass }}">{{ data|printr }}</pre>
                                     {% endif %}
                                 </div>
                             </li>

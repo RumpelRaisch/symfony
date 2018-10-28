@@ -118,7 +118,7 @@ class AdminController extends AbstractController
                 ],
             ],
             self::CONTROLLER_NAME,
-            '',
+            'Geeky Stuff',
             'debug'
         );
     }
@@ -221,12 +221,13 @@ class AdminController extends AbstractController
      */
     public function cacheView(Request $request, string $type = '', string $action = ''): Response
     {
+        $key = $request->get('key', null);
+
         LoggerContainer::getInstance()->trace(
-            self::CONTROLLER_NAME . ".cache - type: '{$type}' action: '{$action}'",
+            self::CONTROLLER_NAME . ".cache - type: '{$type}' action: '{$action}' key: '{$key}'",
             $this->context
         );
 
-        $key      = '';
         $data     = '';
         $preClass = '';
 
@@ -235,8 +236,6 @@ class AdminController extends AbstractController
 
             switch ($action) {
                 case 'find':
-                    $key = $request->get('key', null);
-
                     if (false === empty($key)) {
                         $data     = $cache->get($key, null);
                         $preClass = 'text-success';
@@ -252,9 +251,16 @@ class AdminController extends AbstractController
                     break;
 
                 case 'clear':
-                    $cache->clear();
+                    if (false === empty($key)) {
+                        $cache->delete($key);
 
-                    $data     = 'Cache cleared!';
+                        $data = "Cache with key '{$key}' cleared!";
+                    } else {
+                        $cache->clear();
+
+                        $data = 'Cache cleared!';
+                    }
+
                     $preClass = 'text-success';
                     break;
             }

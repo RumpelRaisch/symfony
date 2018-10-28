@@ -94,7 +94,7 @@ abstract class AbstractController extends Controller
         string $title   = '',
         string $subPath = null
     ): array {
-        $title = trim(ucfirst($controller) . ' ' . $title);
+        $title = ucfirst($controller) . ($title ? ' > ' . $title : '');
         $path  = $subPath ? $controller . '.' . $subPath : $controller;
 
         return [
