@@ -2,7 +2,7 @@
 namespace App\Twig;
 
 use \DateTime;
-use App\Services\Annotations\SidebarAnnotationsReader;
+use App\Services\Helper\SidebarHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -56,20 +56,21 @@ class AppExtension extends AbstractExtension
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      *
      * @return string
      */
     public function renderSidebar(array $activeController): string
     {
-        /** @var SidebarAnnotationsReader $sidebarAnnotationsReader */
-        $sidebarAnnotationsReader = $this->container->get(
-            'raisch.sidebar_annotations_reader'
+        /** @var SidebarHelper $sidebarHelper */
+        $sidebarHelper = $this->container->get(
+            'raisch.sidebar.helper'
         );
 
         return $this->container->get('twig')->render(
             'twig_extensions/sidebar.html.twig',
             [
-                'items'            => $sidebarAnnotationsReader->getTree(),
+                'items'            => $sidebarHelper->get(),
                 'activeController' => $activeController,
             ]
         );
