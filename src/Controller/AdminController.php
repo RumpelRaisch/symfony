@@ -2,10 +2,12 @@
 namespace App\Controller;
 
 use \Exception;
+use App\Annotations\Sidebar;
 use App\Controller\Abstracts\AbstractController;
 use App\Logger\LoggerContainer;
 use App\Logger\LogLevel;
 use RecursiveIteratorIterator;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -13,6 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class AdminController
+ *
+ * @IsGranted("ROLE_ADMIN")
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
@@ -43,7 +47,11 @@ class AdminController extends AbstractController
     }
 
     /**
+     * @return Response
+     *
      * @Route("/admin/debug", name="admin.debug")
+     * @Sidebar(name="Admin", icon="tim-icons icon-badge")
+     * @Sidebar(name="Geeky Stuff", icon="tim-icons icon-atom", position=1, parent="Admin")
      */
     public function debugView(): Response
     {
@@ -129,6 +137,7 @@ class AdminController extends AbstractController
      *      defaults={"file"=""},
      *      requirements={"file"=".*"}
      * )
+     * @Sidebar(name="Log Files", icon="tim-icons icon-notes", position=2, parent="Admin")
      */
     public function logView(string $file = ''): Response
     {

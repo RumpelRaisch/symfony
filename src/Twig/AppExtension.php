@@ -2,21 +2,45 @@
 namespace App\Twig;
 
 use \DateTime;
+use App\Services\Annotations\SidebarAnnotationsReader;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
- * [AppExtension description]
+ * AppExtension class
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
 class AppExtension extends AbstractExtension
 {
+    /** @var ContainerInterface */
+    private $container;
+
     /**
-     * [getFilters description]
+     * AppExtension constructor.
      *
-     * @return array [description]
+     * @param ContainerInterface $container
      */
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    /** {@inheritdoc} */
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction(
+                'Sidebar',
+                [$this, 'renderSidebar'],
+                ['is_safe' => ['html']]
+            ),
+        ];
+    }
+
+    /** {@inheritdoc} */
     public function getFilters(): array
     {
         return [
@@ -24,6 +48,31 @@ class AppExtension extends AbstractExtension
             new TwigFilter('printr', [$this, 'printR']),
             new TwigFilter('formatDateTimeGitHub', [$this, 'formatDateTimeGitHub']),
         ];
+    }
+
+    /**
+     * @param array $activeController
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     *
+     * @return string
+     */
+    public function renderSidebar(array $activeController): string
+    {
+        /** @var SidebarAnnotationsReader $sidebarAnnotationsReader */
+        $sidebarAnnotationsReader = $this->container->get(
+            'raisch.sidebar_annotations_reader'
+        );
+
+        return $this->container->get('twig')->render(
+            'twig_extensions/sidebar.html.twig',
+            [
+                'items'            => $sidebarAnnotationsReader->getTree(),
+                'activeController' => $activeController,
+            ]
+        );
     }
 
     /**

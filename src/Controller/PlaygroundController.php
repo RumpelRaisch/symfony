@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Annotations\Sidebar;
 use \Exception;
 use App\Logger\LoggerContainer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -43,6 +44,8 @@ class PlaygroundController extends Abstracts\AbstractController
 
     /**
      * @Route("/playground/icons", name="playground.icons")
+     * @Sidebar(name="Playground", icon="tim-icons icon-controller", position=100)
+     * @Sidebar(name="CSS Icons", icon="tim-icons icon-molecule-40", position=100, parent="Playground")
      */
     public function iconsView(): Response
     {
@@ -67,6 +70,7 @@ class PlaygroundController extends Abstracts\AbstractController
 
     /**
      * @Route("/playground/photos", name="playground.photos")
+     * @Sidebar(name="CSS Photos", icon="tim-icons icon-image-02", position=200, parent="Playground")
      */
     public function photosView(): Response
     {
@@ -89,9 +93,7 @@ class PlaygroundController extends Abstracts\AbstractController
     }
 
     /**
-     * [parseNucleoIconsCss description]
-     *
-     * @return array [description]
+     * @return array
      */
     private function parseNucleoIconsCss(): array
     {

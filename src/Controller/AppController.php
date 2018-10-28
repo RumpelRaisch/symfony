@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use \Exception;
+use App\Annotations\Sidebar;
 use App\Helper\GitHubApiHelper;
 use App\Helper\LoremIpsumHelper;
 use App\Logger\LoggerContainer;
@@ -10,7 +12,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * [AppController description].
+ * AppController class
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
@@ -22,16 +24,11 @@ class AppController extends Abstracts\AbstractController
     private $context = [];
 
     /**
-     * Response Objekt.
-     *
-     * @var Response
-     */
-    private $response = null;
-
-    /**
      * Constructor.
      *
      * @param KernelInterface $kernel
+     *
+     * @throws Exception
      */
     public function __construct(KernelInterface $kernel)
     {
@@ -51,6 +48,7 @@ class AppController extends Abstracts\AbstractController
      * @return Response
      *
      * @Route("/", name="app.index")
+     * @Sidebar(name="Dashboard", icon="tim-icons icon-chart-pie-36", position=1)
      */
     public function indexView(Request $request): Response
     {
@@ -68,22 +66,5 @@ class AppController extends Abstracts\AbstractController
             'repos'     => $gitHubApiHelper->getGitHubRepoOverview('RumpelRaisch'),
             'dumpRepos' => false,
         ]);
-    }
-
-    /**
-     * [prepareDefaultResponse description]
-     *
-     * @return Response [description]
-     */
-    private function prepareDefaultResponse(): Response
-    {
-        $this->response = null;
-        $this->response = new Response();
-        $this->response
-            ->setStatusCode(Response::HTTP_OK)
-            ->setCharset('UTF-8')
-            ->headers->set('Content-Type', 'text/plain');
-
-        return $this->response;
     }
 }

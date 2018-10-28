@@ -1,0 +1,55 @@
+<ul class="nav">
+{% for item in items %}
+    {% set isGrantedTopLevel = true %}
+
+    {% for grant in item.isGranted %}
+        {% set isGrantedTopLevel = isGrantedTopLevel and is_granted(grant) %}
+    {% endfor %}
+
+    {% if isGrantedTopLevel is same as(true) %}
+        {% if item.children is empty %}
+            {% set hasChildren = false %}
+        {% else %}
+            {% set hasChildren = true %}
+        {% endif %}
+
+        <li class="nav-item{% if item.controller == activeController.name %} active{% endif %}">
+            <a class="nav-link"
+                {% if hasChildren is same as(true) %}
+                    href="#{{ item.controller }}Children"
+                    data-toggle="collapse"
+                    role="button"
+                    aria-expanded="{% if item.controller == activeController.name %}true{% else %}false{% endif %}"
+                    aria-controls="{{ item.controller }}Children"
+                {% else %}
+                    href="{{ absolute_url(path(item.route.path, item.route.defaults)) }}"
+                {% endif %}>
+                <i class="{{ item.icon }}"></i>
+                {{ item.name }}
+            </a>
+            {% if hasChildren is same as(true) %}
+            <div class="collapse{% if item.controller == activeController.name %} show{% endif %}" id="{{ item.controller }}Children">
+                <ul class="nav">
+                {% for child in item.children %}
+                    {% set isGrantedSecondLevel = true %}
+
+                    {% for grant in child.isGranted %}
+                        {% set isGrantedSecondLevel = isGrantedSecondLevel and is_granted(grant) %}
+                    {% endfor %}
+
+                    {% if isGrantedSecondLevel is same as(true) %}
+                    <li class="nav-item{% if child.route.path == activeController.sub %} active{% endif %}">
+                        <a class="nav-link" href="{{ absolute_url(path(child.route.path, child.route.defaults)) }}">
+                            <i class="{{ child.icon }}"></i>
+                            {{ child.name }}
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </li>
+    {% endif %}
+{% endfor %}
+</ul>

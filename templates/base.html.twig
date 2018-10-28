@@ -86,37 +86,7 @@
                 </div>
 
                 <div class="sidebar-wrapper">
-                    <ul class="nav">
-                        <li class="nav-item{% if 'app' == config.activeController.name %} active{% endif %}">
-                            <a class="nav-link" href="{{ absolute_url(path('app.index')) }}">
-                                <i class="tim-icons icon-chart-pie-36"></i>
-                                Dashboard
-                            </a>
-                        </li>
-                        {% if is_granted('ROLE_DEV') %}
-                        <li class="nav-item{% if 'playground' == config.activeController.name %} active{% endif %}">
-                            <a class="nav-link" href="#playgroundSidebar" data-toggle="collapse" role="button" aria-expanded="{% if 'playground' == config.activeController.name %}true{% else %}false{% endif %}" aria-controls="playgroundSidebar">
-                                <i class="tim-icons icon-controller"></i>
-                                Playground
-                            </a>
-                            <div class="collapse{% if 'playground' == config.activeController.name %} show{% endif %}" id="playgroundSidebar">
-                                {% include 'playground/sidebar.html.twig' %}
-                            </div>
-                        </li>
-                        {% endif %}
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li class="nav-item{% if 'admin' == config.activeController.name %} active{% endif %}">
-                                <a class="nav-link" href="#adminSidebar" data-toggle="collapse" role="button" aria-expanded="{% if 'admin' == config.activeController.name %}true{% else %}false{% endif %}" aria-controls="adminSidebar">
-                                    <i class="tim-icons icon-badge"></i>
-                                    Admin
-                                </a>
-                                <div class="collapse{% if 'admin' == config.activeController.name %} show{% endif %}" id="adminSidebar">
-                                    {% include 'admin/sidebar.html.twig' %}
-                                </div>
-                            </li>
-                        {% endif %}
-                        {% block sidebar %}{% endblock %}
-                    </ul>
+                    {{ Sidebar(config.activeController) }}
                 </div>
             </div>
             <!-- End Sidebar -->
