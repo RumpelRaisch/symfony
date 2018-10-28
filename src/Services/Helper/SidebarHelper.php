@@ -2,6 +2,7 @@
 namespace App\Services\Helper;
 
 use App\Annotations\Sidebar;
+use App\Helper\CacheHelper;
 use App\Kernel;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Cache\Simple\FilesystemCache;
@@ -34,13 +35,9 @@ final class SidebarHelper
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->kernel    = Kernel::getInstance();
         $this->container = $container;
-        $this->cache     = new FilesystemCache(
-            'sidebar',
-            0,
-            $this->kernel->getAppCacheDir() . '/views'
-        );
+        $this->kernel    = Kernel::getInstance();
+        $this->cache     = CacheHelper::getSidebar();
     }
 
     /**

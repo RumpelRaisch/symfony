@@ -1,6 +1,6 @@
 $(() =>
 {
-    const $log   = $(document.getElementById('playground_log'));
+    const $log   = $(document.getElementById('admin_log'));
     const active = $log.data('active-log-file');
 
     if ('' !== active) {

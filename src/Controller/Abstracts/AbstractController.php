@@ -128,7 +128,7 @@ abstract class AbstractController extends Controller
     ): Response {
         return $this->render(
             $template,
-            $args + $addConfig + ['config' => $this->buildConfig(
+            $args + ['config' => $addConfig + $this->buildConfig(
                 $controller,
                 $title,
                 $subPath

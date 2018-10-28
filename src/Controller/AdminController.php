@@ -4,11 +4,13 @@ namespace App\Controller;
 use \Exception;
 use App\Annotations\Sidebar;
 use App\Controller\Abstracts\AbstractController;
+use App\Helper\CacheHelper;
 use App\Logger\LoggerContainer;
 use App\Logger\LogLevel;
 use RecursiveIteratorIterator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -137,7 +139,7 @@ class AdminController extends AbstractController
     public function logView(string $file = ''): Response
     {
         LoggerContainer::getInstance()
-            ->trace(self::CONTROLLER_NAME . ".log '{$file}'", $this->context);
+            ->trace(self::CONTROLLER_NAME . ".log - file: '{$file}'", $this->context);
 
         $file = strtr($file, ['%' => '']);
         $dd   = '/\.\.\//';
@@ -193,6 +195,83 @@ class AdminController extends AbstractController
             self::CONTROLLER_NAME,
             'Log Files',
             'log'
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $type
+     * @param string  $action
+     *
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     *
+     * @return Response
+     *
+     * @IsGranted("ROLE_RAISCH")
+     * @Route("/admin/cache", name="admin.cache")
+     * @Route(
+     *     "/admin/cache/{type}/{action}",
+     *     name="admin.cache",
+     *     requirements={
+     *          "type"="[a-z]+",
+     *          "action"="find|clear"
+     *     }
+     * )
+     * @Sidebar(name="Cache", icon="fas fa-database", parent="Admin")
+     */
+    public function cacheView(Request $request, string $type = '', string $action = ''): Response
+    {
+        LoggerContainer::getInstance()->trace(
+            self::CONTROLLER_NAME . ".cache - type: '{$type}' action: '{$action}'",
+            $this->context
+        );
+
+        $key      = '';
+        $data     = '';
+        $preClass = '';
+
+        if ('' !== $type) {
+            $cache = CacheHelper::get($type);
+
+            switch ($action) {
+                case 'find':
+                    $key = $request->get('key', null);
+
+                    if (false === empty($key)) {
+                        $data     = $cache->get($key, null);
+                        $preClass = 'text-success';
+
+                        if (null === $data) {
+                            $data     = "No cache with key '{$key}' found!";
+                            $preClass = 'text-danger';
+                        }
+                    } elseif ('' === $key) {
+                        $data     = 'Please enter a key!';
+                        $preClass = 'text-warning';
+                    }
+                    break;
+
+                case 'clear':
+                    $cache->clear();
+
+                    $data     = 'Cache cleared!';
+                    $preClass = 'text-success';
+                    break;
+            }
+        }
+
+        return $this->renderWithConfig(
+            self::CONTROLLER_NAME . '/cache.html.twig',
+            [
+                'caches'   => CacheHelper::getAvailableCahces(),
+                'active'   => $type,
+                'key'      => $key,
+                'data'     => $data,
+                'preClass' => $preClass,
+            ],
+            self::CONTROLLER_NAME,
+            'Cache',
+            'cache'
         );
     }
 }

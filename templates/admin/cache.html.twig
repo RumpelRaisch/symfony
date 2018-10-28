@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ absolute_url(asset('js/admin.cache.min.js')|cacheHack) }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div id="admin_cache" class="row" data-active-cache="{{ active }}">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">find keys in cache or clear cache</h5>
+                    <h2 class="card-title">Available Caches</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        {% for i, cache in caches %}
+                            {% set class = '' %}
+                            {% set chevron = 'right' %}
+                            {% if cache == active %}
+                                {% set class = ' text-primary' %}
+                                {% set chevron = 'down' %}
+                            {% endif %}
+                            <li>
+                                <hr>
+                                <div class="row" data-cache="{{ cache }}">
+                                    <div class="col-md-2{{ class }}">
+                                        <i class="fas fa-chevron-{{ chevron }} fa-xs fa-fw"></i> {{ cache }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <form id="form_{{ i }}" action="{{ absolute_url(path('admin.cache', { 'type' : cache, 'action' : 'find' })) }}" method="post">
+                                            <div class="input-group m-0">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <a href="#" style="height: 16px;" data-submit="#form_{{ i }}"><i class="fas fa-search"></i></a>
+                                                    </div>
+                                                </div>
+                                                <input type="text" name="key" class="form-control m-0" id="key" placeholder="search key" value="{% if cache == active %}{{ key }}{% endif %}">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="{{ absolute_url(path('admin.cache', { 'type' : cache, 'action' : 'clear' })) }}"><i class="far fa-trash-alt text-danger"></i></a>
+                                    </div>
+                                    {% if cache == active and data is not empty %}
+                                        <div class="col-md-12 mt-3">
+                                            <pre class="{{ preClass }}">{{ data|printr }}</pre>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
