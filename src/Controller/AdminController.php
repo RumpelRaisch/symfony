@@ -104,26 +104,21 @@ class AdminController extends AbstractController
         /** @var \App\Entity\User $user */
         // $user = $this->getUser();
 
-        return $this->render(self::CONTROLLER_NAME . '/debug.html.twig', [
-            'config' => [
-                'pageTitle'        => ucfirst(self::CONTROLLER_NAME),
-                'activeController' => [
-                    'name' => self::CONTROLLER_NAME,
-                    'sub'  => self::CONTROLLER_NAME . '.debug',
+        return $this->renderWithConfig(
+            self::CONTROLLER_NAME . '/debug.html.twig',
+            [
+                'test' => [
+                    $log,
+                    $levels,
+                    LoggerContainer::getInstance()->getFlags(),
+                    $this->get('kernel')->getLogDir(),
+                    $test,
                 ],
-                'brandText'        => ucfirst(self::CONTROLLER_NAME),
-                'brandUrl'         => $this->generateAbsoluteUrl(
-                    self::CONTROLLER_NAME . '.debug'
-                ),
-            ] + $this->getBaseTemplateConfig(),
-            'test'   => [
-                $log,
-                $levels,
-                LoggerContainer::getInstance()->getFlags(),
-                $this->get('kernel')->getLogDir(),
-                $test,
             ],
-        ]);
+            self::CONTROLLER_NAME,
+            '',
+            'debug'
+        );
     }
 
     /**
@@ -188,21 +183,16 @@ class AdminController extends AbstractController
             }
         }
 
-        return $this->render(self::CONTROLLER_NAME . '/log.html.twig', [
-            'config'     => [
-                'pageTitle'        => ucfirst(self::CONTROLLER_NAME) . ' Log Files',
-                'activeController' => [
-                    'name' => self::CONTROLLER_NAME,
-                    'sub'  => self::CONTROLLER_NAME . '.log',
-                ],
-                'brandText'        => ucfirst(self::CONTROLLER_NAME) . ' Log Files',
-                'brandUrl'         => $this->generateAbsoluteUrl(
-                    self::CONTROLLER_NAME . '.log'
-                ),
-            ] + $this->getBaseTemplateConfig(),
-            'file'       => $file,
-            'logDirInfo' => $logDirInfo,
-            'log'        => $logContent,
-        ]);
+        return $this->renderWithConfig(
+            self::CONTROLLER_NAME . '/log.html.twig',
+            [
+                'file'       => $file,
+                'logDirInfo' => $logDirInfo,
+                'log'        => $logContent,
+            ],
+            self::CONTROLLER_NAME,
+            'Log Files',
+            'log'
+        );
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use \Exception;
 use App\Facades\UserFacade;
 use App\Form\UserAssertType;
 use App\Helper\LoremIpsumHelper;
@@ -29,6 +30,8 @@ class UserController extends Abstracts\AbstractController
      * Constructor.
      *
      * @param KernelInterface $kernel
+     *
+     * @throws Exception
      */
     public function __construct(KernelInterface $kernel)
     {
@@ -57,17 +60,22 @@ class UserController extends Abstracts\AbstractController
         $error        = $authUtils->getLastAuthenticationError();
         $lastUsername = $authUtils->getLastUsername();
 
-        return $this->render(self::CONTROLLER_NAME . '/login.html.twig', [
-            'config'       => [
-                'pageTitle'      => ucfirst(self::CONTROLLER_NAME) . ' Login',
+        return $this->renderWithConfig(
+            self::CONTROLLER_NAME . '/login.html.twig',
+            [
+                'error'        => $error,
+                'lastUsername' => $lastUsername,
+            ],
+            self::CONTROLLER_NAME,
+            'Login',
+            'login',
+            [
                 'contentClasses' => 'd-flex align-items-center',
                 'showNavBar'     => false,
                 'showSideBar'    => false,
                 'showFooter'     => false,
-            ] + $this->getBaseTemplateConfig(),
-            'error'        => $error,
-            'lastUsername' => $lastUsername,
-        ]);
+            ]
+        );
     }
 
     /**
@@ -120,21 +128,16 @@ class UserController extends Abstracts\AbstractController
             }
         }
 
-        return $this->render(self::CONTROLLER_NAME . '/profile.html.twig', [
-            'config' => [
-                'pageTitle'        => ucfirst(self::CONTROLLER_NAME) . ' Profile',
-                'activeController' => [
-                    'name' => self::CONTROLLER_NAME,
-                    'sub'  => self::CONTROLLER_NAME . '.profile',
-                ],
-                'brandText'        => ucfirst(self::CONTROLLER_NAME) . ' Profile',
-                'brandUrl'         => $this->generateAbsoluteUrl(
-                    self::CONTROLLER_NAME . '.profile'
-                ),
-            ] + $this->getBaseTemplateConfig(),
-            'form'   => $form->createView(),
-            'lorem'  => new LoremIpsumHelper(),
-        ]);
+        return $this->renderWithConfig(
+            self::CONTROLLER_NAME . '/profile.html.twig',
+            [
+                'form'  => $form->createView(),
+                'lorem' => new LoremIpsumHelper(),
+            ],
+            self::CONTROLLER_NAME,
+            'Profile',
+            'profile'
+        );
     }
 
     /**
@@ -144,6 +147,5 @@ class UserController extends Abstracts\AbstractController
     {
         LoggerContainer::getInstance()
             ->trace(self::CONTROLLER_NAME . '.logout', $this->context);
-        // ...
     }
 }

@@ -6,7 +6,6 @@ use App\Annotations\Sidebar;
 use App\Helper\GitHubApiHelper;
 use App\Helper\LoremIpsumHelper;
 use App\Logger\LoggerContainer;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,14 +42,12 @@ class AppController extends Abstracts\AbstractController
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      *
      * @Route("/", name="app.index")
      * @Sidebar(name="Dashboard", icon="tim-icons icon-chart-pie-36", position=1)
      */
-    public function indexView(Request $request): Response
+    public function indexView(): Response
     {
         LoggerContainer::getInstance()
             ->trace(self::CONTROLLER_NAME . '.index', $this->context);

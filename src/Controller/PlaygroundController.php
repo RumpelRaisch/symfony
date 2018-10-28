@@ -52,20 +52,15 @@ class PlaygroundController extends Abstracts\AbstractController
         LoggerContainer::getInstance()
             ->trace(self::CONTROLLER_NAME . '.icons', $this->context);
 
-        return $this->render(self::CONTROLLER_NAME . '/icons.html.twig', [
-            'config'  => [
-                'pageTitle'        => ucfirst(self::CONTROLLER_NAME) . ' Icons',
-                'activeController' => [
-                    'name' => self::CONTROLLER_NAME,
-                    'sub'  => self::CONTROLLER_NAME . '.icons',
-                ],
-                'brandText'        => ucfirst(self::CONTROLLER_NAME) . ' Icons',
-                'brandUrl'         => $this->generateAbsoluteUrl(
-                    self::CONTROLLER_NAME . '.icons'
-                ),
-            ] + $this->getBaseTemplateConfig(),
-            'matches' => $this->parseNucleoIconsCss(),
-        ]);
+        return $this->renderWithConfig(
+            self::CONTROLLER_NAME . '/icons.html.twig',
+            [
+                'matches' => $this->parseNucleoIconsCss(),
+            ],
+            self::CONTROLLER_NAME,
+            'Icons',
+            'icons'
+        );
     }
 
     /**
@@ -77,19 +72,13 @@ class PlaygroundController extends Abstracts\AbstractController
         LoggerContainer::getInstance()
             ->trace(self::CONTROLLER_NAME . '.photos', $this->context);
 
-        return $this->render(self::CONTROLLER_NAME . '/photos.html.twig', [
-            'config' => [
-                'pageTitle'        => ucfirst(self::CONTROLLER_NAME) . ' Photos',
-                'activeController' => [
-                    'name' => self::CONTROLLER_NAME,
-                    'sub'  => self::CONTROLLER_NAME . '.photos',
-                ],
-                'brandText'        => ucfirst(self::CONTROLLER_NAME) . ' Photos',
-                'brandUrl'         => $this->generateAbsoluteUrl(
-                    self::CONTROLLER_NAME . '.photos'
-                ),
-            ] + $this->getBaseTemplateConfig(),
-        ]);
+        return $this->renderWithConfig(
+            self::CONTROLLER_NAME . '/photos.html.twig',
+            [],
+            self::CONTROLLER_NAME,
+            'Photos',
+            'photos'
+        );
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Logger\LoggerContainer;
 use App\Logger\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * [AbstractController description]
+ * AbstractController class
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
@@ -31,7 +32,7 @@ abstract class AbstractController extends Controller
     private $session = null;
 
     /**
-     * Constructor.
+     * AbstractController constructor
      *
      * @param KernelInterface $kernel
      *
@@ -56,9 +57,7 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * [getBaseTemplateConfig description]
-     *
-     * @return array [description]
+     * @return array
      */
     protected function getBaseTemplateConfig(): array
     {
@@ -84,9 +83,61 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * [getLastRoute description]
+     * @param string      $controller
+     * @param string      $title
+     * @param null|string $subPath
      *
-     * @return array [description]
+     * @return array
+     */
+    protected function buildConfig(
+        string $controller,
+        string $title   = '',
+        string $subPath = null
+    ): array {
+        $title = trim(ucfirst($controller) . ' ' . $title);
+        $path  = $subPath ? $controller . '.' . $subPath : $controller;
+
+        return [
+            'pageTitle'        => $title,
+            'activeController' => [
+                'name' => $controller,
+                'sub'  => $path,
+            ],
+            'brandText'        => $title,
+            'brandUrl'         => $this->generateAbsoluteUrl($path),
+        ] + $this->getBaseTemplateConfig();
+    }
+
+    /**
+     * @param string      $template
+     * @param array       $args
+     * @param string      $controller
+     * @param string      $title
+     * @param null|string $subPath
+     * @param array       $addConfig
+     *
+     * @return Response
+     */
+    public function renderWithConfig(
+        string $template,
+        array  $args,
+        string $controller,
+        string $title     = '',
+        string $subPath   = null,
+        array  $addConfig = []
+    ): Response {
+        return $this->render(
+            $template,
+            $args + $addConfig + ['config' => $this->buildConfig(
+                $controller,
+                $title,
+                $subPath
+            )]
+        );
+    }
+
+    /**
+     * @return array
      */
     protected function getLastRoute(): array
     {
@@ -117,9 +168,7 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * [getCurrentRoute description]
-     *
-     * @return array [description]
+     * @return array
      */
     protected function getCurrentRoute(): array
     {
@@ -176,8 +225,6 @@ abstract class AbstractController extends Controller
 
     /**
      * Generates absolute URL for given route name.
-     *
-     * @author Rainer Schulz <rainer.schulz@bitshifting.de>
      *
      * @param string $routeName route name
      * @param array  $params    parameters for query string
