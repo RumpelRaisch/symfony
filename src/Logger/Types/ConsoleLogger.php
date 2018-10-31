@@ -2,7 +2,6 @@
 namespace App\Logger\Types;
 
 use App\Logger\Abstracts\AbstractLogger;
-use App\Logger\LogLevel;
 
 /**
  * Class ConsoleLogger
@@ -28,18 +27,11 @@ class ConsoleLogger extends AbstractLogger
      */
     public function log($level, $message, array $context = [])
     {
-        $levelFlag = LogLevel::getLevelFlag($level);
+        if (true === $this->shouldLog($level)) {
+            $message = $this->interpolate($message, $context);
+            $message = $this->beautify($level, $message, $context);
 
-        if (
-            LogLevel::FLAG_NONE === $levelFlag ||
-            false === $this->issetFlag($levelFlag)
-        ) {
-            return;
+            echo $message;
         }
-
-        $message = $this->interpolate($message, $context);
-        $message = $this->beautify($level, $message, $context);
-
-        echo $message;
     }
 }

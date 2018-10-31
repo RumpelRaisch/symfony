@@ -282,8 +282,93 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function resetLogLevel()
     {
-        $this->flags = LogLevel::FLAG_NONE;
+        $this->setFlag(LogLevel::FLAG_NONE);
 
         return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function unsetLogLevel()
+    {
+        $this->unsetFlags();
+
+        return $this;
+    }
+
+    /**
+     * @param string ...$levels
+     *
+     * @return self
+     */
+    public function addInstanceLogLevel(string ...$levels)
+    {
+        foreach ($levels as $level) {
+            $levelFlag = LogLevel::getLevelFlag($level);
+
+            if (LogLevel::FLAG_NONE === $levelFlag) {
+                continue;
+            }
+
+            $this->setFlag($levelFlag, 'instance');
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string ...$levels
+     *
+     * @return self
+     */
+    public function removeInstanceLogLevel(string ...$levels)
+    {
+        foreach ($levels as $level) {
+            $levelFlag = LogLevel::getLevelFlag($level);
+
+            if (LogLevel::FLAG_NONE === $levelFlag) {
+                continue;
+            }
+
+            $this->removeFlag($levelFlag, 'instance');
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function resetInstanceLogLevel()
+    {
+        $this->setFlag(LogLevel::FLAG_NONE, 'instance');
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function unsetInstanceLogLevel()
+    {
+        $this->unsetFlags('instance');
+
+        return $this;
+    }
+
+    protected function shouldLog($level)
+    {
+        $levelFlag = LogLevel::getLevelFlag($level);
+        $flags     = $this->issetFlags('instance') ? 'instance' : 'default';
+
+        if (
+            LogLevel::FLAG_NONE === $levelFlag ||
+            false === $this->issetFlag($levelFlag, $flags)
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }

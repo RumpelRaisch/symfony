@@ -3,7 +3,6 @@ namespace App\Logger\Types;
 
 use \Exception;
 use App\Logger\Abstracts\AbstractLogger;
-use App\Logger\LogLevel;
 
 /**
  * Class FileLogger
@@ -52,21 +51,14 @@ class FileLogger extends AbstractLogger
      */
     public function log($level, $message, array $context = [])
     {
-        $levelFlag = LogLevel::getLevelFlag($level);
+        if (true === $this->shouldLog($level)) {
+            $message = $this->interpolate($message, $context);
+            $message = $this->beautify($level, $message, $context);
 
-        if (
-            LogLevel::FLAG_NONE === $levelFlag ||
-            false === $this->issetFlag($levelFlag)
-        ) {
-            return;
+            $this->checkFileSize();
+
+            file_put_contents($this->file, $message, FILE_APPEND);
         }
-
-        $message = $this->interpolate($message, $context);
-        $message = $this->beautify($level, $message, $context);
-
-        $this->checkFileSize();
-
-        file_put_contents($this->file, $message, FILE_APPEND);
     }
 
     /**

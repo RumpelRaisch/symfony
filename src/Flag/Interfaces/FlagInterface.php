@@ -15,19 +15,19 @@ interface FlagInterface
      *
      * @return self
      */
-    public function removeFlag(int $flag);
+    public function removeFlag(?int $flag);
 
     /**
      * @param int $flag
      *
      * @return bool
      */
-    public function issetFlag(int $flag): bool;
+    public function issetFlag(?int $flag): bool;
 
     /**
      * @return int current flags
      */
-    public function getFlags(): int;
+    public function getFlags(): ?int;
 
     /**
      * @param int $flags
