@@ -22,11 +22,12 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-pack ###
 
-/less-watch-compiler.*
-/babel.*
-
-/.idea
+.idea
 
 test.*
 *.test
 *.test.*
+
+bak.*
+*.bak
+*.bak.*
