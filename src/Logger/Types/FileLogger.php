@@ -73,6 +73,12 @@ class FileLogger extends AbstractLogger
                 $this->file
             );
 
+            $backupDir = pathinfo($newFile)['dirname'];
+
+            if (false === is_dir($backupDir)) {
+                mkdir($backupDir, 0664, true);
+            }
+
             rename($this->file, $newFile);
         }
 
