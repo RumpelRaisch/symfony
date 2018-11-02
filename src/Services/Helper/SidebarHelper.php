@@ -104,8 +104,8 @@ final class SidebarHelper
                     }
                 }
 
-                $isGrantedMethod = $isGrantedClass + $isGrantedMethod;
-                $isGrantedMethod = array_unique($isGrantedMethod);
+                $isGrantedMethod += $isGrantedClass;
+                $isGrantedMethod  = array_unique($isGrantedMethod);
 
                 /** @var Sidebar $sidebar */
                 foreach ($method['annotations']['Sidebar'] as $sidebar) {
