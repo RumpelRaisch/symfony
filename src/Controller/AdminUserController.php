@@ -4,6 +4,7 @@ namespace App\Controller;
 use \Exception;
 use App\Annotations\Sidebar;
 use App\Controller\Abstracts\AbstractController;
+use App\Logger\LoggerContainer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,12 +50,17 @@ class AdminUserController extends AbstractController
      */
     public function index()
     {
+        LoggerContainer::getInstance()->trace(
+            AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.index',
+            $this->context
+        );
+
         return $this->renderWithConfig(
             AdminController::CONTROLLER_NAME . '/' . self::CONTROLLER_NAME . '/index.html.twig',
             [],
             AdminController::CONTROLLER_NAME,
             'User Administration',
-            'user.index'
+            self::CONTROLLER_NAME . '.index'
         );
     }
 }
