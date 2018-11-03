@@ -43,6 +43,8 @@ class PlaygroundController extends Abstracts\AbstractController
     }
 
     /**
+     * @return Response
+     *
      * @Route("/playground/icons", name="playground.icons")
      * @Sidebar(name="Playground", icon="tim-icons icon-controller", position=100)
      * @Sidebar(name="CSS Icons", icon="tim-icons icon-molecule-40", position=100, parent="Playground")
@@ -64,6 +66,8 @@ class PlaygroundController extends Abstracts\AbstractController
     }
 
     /**
+     * @return Response
+     *
      * @Route("/playground/photos", name="playground.photos")
      * @Sidebar(name="CSS Photos", icon="tim-icons icon-image-02", position=200, parent="Playground")
      */

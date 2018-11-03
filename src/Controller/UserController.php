@@ -143,7 +143,7 @@ class UserController extends Abstracts\AbstractController
     /**
      * @Route("/logout", name="user.logout")
      */
-    public function logout()
+    public function logout(): void
     {
         LoggerContainer::getInstance()
             ->trace(self::CONTROLLER_NAME . '.logout', $this->context);

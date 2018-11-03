@@ -4,8 +4,11 @@ namespace App\Controller;
 use \Exception;
 use App\Annotations\Sidebar;
 use App\Controller\Abstracts\AbstractController;
+use App\Entity\User;
 use App\Logger\LoggerContainer;
+use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -45,22 +48,30 @@ class AdminUserController extends AbstractController
     }
 
     /**
+     * @param UserRepository $userRepo
+     *
+     * @return Response
+     *
      * @Route("/admin/user", name="admin.user.index")
      * @Sidebar(name="User Administration", icon="tim-icons icon-single-02", position=3, parent="Admin")
      */
-    public function indexView()
+    public function indexView(UserRepository $userRepo): Response
     {
         LoggerContainer::getInstance()->trace(
             AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.index',
             $this->context
         );
 
+        /** @var User[] $users */
+        $users = $userRepo->findAll();
+
         return $this->renderWithConfig(
             AdminController::CONTROLLER_NAME . '/' . self::CONTROLLER_NAME . '/index.html.twig',
             [
-                'userAdminRoutes'   => $this->getRoutes(),
+                'userAdminRoutes'   => $this->getInternalRoutes(),
                 'userAdminCategory' => 'list of all users',
                 'userAdminTitle'    => 'overview',
+                'users'             => $users,
             ],
             AdminController::CONTROLLER_NAME,
             'User Administration',
@@ -69,9 +80,11 @@ class AdminUserController extends AbstractController
     }
 
     /**
+     * @return Response
+     *
      * @Route("/admin/user/create", name="admin.user.create")
      */
-    public function createView()
+    public function createView(): Response
     {
         LoggerContainer::getInstance()->trace(
             AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.create',
@@ -81,7 +94,7 @@ class AdminUserController extends AbstractController
         return $this->renderWithConfig(
             AdminController::CONTROLLER_NAME . '/' . self::CONTROLLER_NAME . '/create.html.twig',
             [
-                'userAdminRoutes'   => $this->getRoutes(),
+                'userAdminRoutes'   => $this->getInternalRoutes(),
                 'userAdminCategory' => 'create a new users',
                 'userAdminTitle'    => 'create',
             ],
@@ -97,7 +110,7 @@ class AdminUserController extends AbstractController
     /**
      * @return string[][]
      */
-    private function getRoutes(): array
+    private function getInternalRoutes(): array
     {
         return [
             'admin.user.index' => [

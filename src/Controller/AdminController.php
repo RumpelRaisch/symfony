@@ -219,8 +219,11 @@ class AdminController extends AbstractController
      * )
      * @Sidebar(name="Cache", icon="fas fa-database", parent="Admin")
      */
-    public function cacheView(Request $request, string $type = '', string $action = ''): Response
-    {
+    public function cacheView(
+        Request $request,
+        string  $type   = '',
+        string  $action = ''
+    ): Response {
         $key = $request->get('key', null);
 
         LoggerContainer::getInstance()->trace(
