@@ -57,10 +57,37 @@ class AdminUserController extends AbstractController
 
         return $this->renderWithConfig(
             AdminController::CONTROLLER_NAME . '/' . self::CONTROLLER_NAME . '/index.html.twig',
-            [],
+            [
+                'routes' => $this->getRoutes(),
+            ],
             AdminController::CONTROLLER_NAME,
             'User Administration',
             self::CONTROLLER_NAME . '.index'
         );
+    }
+
+    /**
+     * @return string[][]
+     */
+    private function getRoutes(): array
+    {
+        return [
+            'admin.user.index' => [
+                'text' => 'overview',
+                'url'  => $this->generateAbsoluteUrl('admin.user.index'),
+            ],
+            'admin.user.dummy_1' => [
+                'text' => 'dummy 1',
+                'url'  => '#',
+            ],
+            'admin.user.dummy_2' => [
+                'text' => 'dummy 2',
+                'url'  => '#',
+            ],
+            'admin.user.dummy_3' => [
+                'text' => 'dummy 3',
+                'url'  => '#',
+            ],
+        ];
     }
 }
