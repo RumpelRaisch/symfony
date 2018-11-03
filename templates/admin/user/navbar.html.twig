@@ -3,7 +3,7 @@
         <div class="card bg-dark">
             <div class="card-body">
                 <ul class="nav themed">
-                    {% for name, route in routes %}
+                    {% for name, route in userAdminRoutes %}
                     <li class="nav-item">
                         <a class="nav-link{% if name == config.activeController.sub %} active{% endif %}" href="{{ route.url }}">{{ route.text }}{% if name == config.activeController.sub %} <span class="sr-only">(current)</span>{% endif %}</a>
                     </li>

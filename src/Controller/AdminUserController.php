@@ -48,7 +48,7 @@ class AdminUserController extends AbstractController
      * @Route("/admin/user", name="admin.user.index")
      * @Sidebar(name="User Administration", icon="tim-icons icon-single-02", position=3, parent="Admin")
      */
-    public function index()
+    public function indexView()
     {
         LoggerContainer::getInstance()->trace(
             AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.index',
@@ -58,11 +58,37 @@ class AdminUserController extends AbstractController
         return $this->renderWithConfig(
             AdminController::CONTROLLER_NAME . '/' . self::CONTROLLER_NAME . '/index.html.twig',
             [
-                'routes' => $this->getRoutes(),
+                'userAdminRoutes'   => $this->getRoutes(),
+                'userAdminCategory' => 'list of all users',
+                'userAdminTitle'    => 'overview',
             ],
             AdminController::CONTROLLER_NAME,
             'User Administration',
             self::CONTROLLER_NAME . '.index'
+        );
+    }
+
+    /**
+     * @Route("/admin/user/create", name="admin.user.create")
+     */
+    public function createView()
+    {
+        LoggerContainer::getInstance()->trace(
+            AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.create',
+            $this->context
+        );
+
+        return $this->renderWithConfig(
+            AdminController::CONTROLLER_NAME . '/' . self::CONTROLLER_NAME . '/create.html.twig',
+            [
+                'userAdminRoutes'   => $this->getRoutes(),
+                'userAdminCategory' => 'create a new users',
+                'userAdminTitle'    => 'create',
+            ],
+            AdminController::CONTROLLER_NAME,
+            'User Administration',
+            // TODO: find a way to make 'user.index' active in sidebar
+            self::CONTROLLER_NAME . '.create'
         );
     }
 
@@ -76,18 +102,19 @@ class AdminUserController extends AbstractController
                 'text' => 'overview',
                 'url'  => $this->generateAbsoluteUrl('admin.user.index'),
             ],
-            'admin.user.dummy_1' => [
-                'text' => 'dummy 1',
+            'admin.user.create' => [
+                'text' => 'create',
+                'url'  => $this->generateAbsoluteUrl('admin.user.create'),
+            ],
+            // TODO: add search field
+            'todo' => [
+                'text' => 'TODO: add search field',
                 'url'  => '#',
             ],
-            'admin.user.dummy_2' => [
-                'text' => 'dummy 2',
-                'url'  => '#',
-            ],
-            'admin.user.dummy_3' => [
-                'text' => 'dummy 3',
-                'url'  => '#',
-            ],
+            // '{ROUTE_NAME}' => [
+            //     'text' => '{LINK_TEXT}',
+            //     'url'  => $this->generateAbsoluteUrl({ROUTE_NAME}),
+            // ],
         ];
     }
 }
