@@ -68,7 +68,7 @@ class UserController extends Abstracts\AbstractController
             ],
             self::CONTROLLER_NAME,
             'Login',
-            'login',
+            [self::CONTROLLER_NAME . '.login'],
             [
                 'contentClasses' => 'd-flex align-items-center',
                 'showNavBar'     => false,
@@ -136,7 +136,7 @@ class UserController extends Abstracts\AbstractController
             ],
             self::CONTROLLER_NAME,
             'Profile',
-            'profile'
+            [self::CONTROLLER_NAME . '.profile']
         );
     }
 

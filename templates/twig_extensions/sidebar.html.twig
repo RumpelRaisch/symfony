@@ -38,7 +38,7 @@
                     {% endfor %}
 
                     {% if isGrantedSecondLevel is same as(true) %}
-                    <li class="nav-item{% if child.route.path == activeController.sub %} active{% endif %}">
+                    <li class="nav-item{% if child.route.path in activeController.sub %} active{% endif %}">
                         <a class="nav-link" href="{{ absolute_url(path(child.route.path, child.route.defaults)) }}">
                             <i class="{{ child.icon }}"></i>
                             {{ child.name }}

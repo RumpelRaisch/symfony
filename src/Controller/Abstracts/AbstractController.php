@@ -74,7 +74,7 @@ abstract class AbstractController extends Controller
             'pageTitle'        => 'Dashboard',
             'activeController' => [
                 'name' => 'app',
-                'sub'  => '',
+                'sub'  => [],
             ],
             'brandText'        => 'Dashboard',
             'brandUrl'         => $this->generateAbsoluteUrl('app.index'),
@@ -83,25 +83,30 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @param string      $controller
-     * @param string      $title
-     * @param null|string $subPath
+     * @param string $controller
+     * @param string $title
+     * @param array  $subPaths
      *
      * @return array
      */
     protected function buildConfig(
         string $controller,
-        string $title   = '',
-        string $subPath = null
+        string $title    = '',
+        array  $subPaths = []
     ): array {
         $title = ucfirst($controller) . ($title ? ' > ' . $title : '');
-        $path  = $subPath ? $controller . '.' . $subPath : $controller;
+
+        if (false === empty($subPaths)) {
+            $path = $subPaths[count($subPaths) - 1];
+        } else {
+            $path = $controller;
+        }
 
         return [
             'pageTitle'        => $title,
             'activeController' => [
                 'name' => $controller,
-                'sub'  => $path,
+                'sub'  => $subPaths,
             ],
             'brandText'        => $title,
             'brandUrl'         => $this->generateAbsoluteUrl($path),
@@ -109,12 +114,12 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @param string      $template
-     * @param array       $args
-     * @param string      $controller
-     * @param string      $title
-     * @param null|string $subPath
-     * @param array       $addConfig
+     * @param string $template
+     * @param array  $args
+     * @param string $controller
+     * @param string $title
+     * @param array  $subPaths
+     * @param array  $addConfig
      *
      * @return Response
      */
@@ -123,7 +128,7 @@ abstract class AbstractController extends Controller
         array  $args,
         string $controller,
         string $title     = '',
-        string $subPath   = null,
+        array  $subPaths  = [],
         array  $addConfig = []
     ): Response {
         return $this->render(
@@ -131,7 +136,7 @@ abstract class AbstractController extends Controller
             $args + ['config' => $addConfig + $this->buildConfig(
                 $controller,
                 $title,
-                $subPath
+                $subPaths
             )]
         );
     }

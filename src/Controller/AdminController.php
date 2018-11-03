@@ -119,7 +119,7 @@ class AdminController extends AbstractController
             ],
             self::CONTROLLER_NAME,
             'Geeky Stuff',
-            'debug'
+            [self::CONTROLLER_NAME . '.debug']
         );
     }
 
@@ -194,7 +194,7 @@ class AdminController extends AbstractController
             ],
             self::CONTROLLER_NAME,
             'Log Files',
-            'log'
+            [self::CONTROLLER_NAME . '.log']
         );
     }
 
@@ -277,7 +277,7 @@ class AdminController extends AbstractController
             ],
             self::CONTROLLER_NAME,
             'Cache',
-            'cache'
+            [self::CONTROLLER_NAME . '.cache']
         );
     }
 }

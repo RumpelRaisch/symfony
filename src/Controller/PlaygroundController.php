@@ -59,7 +59,7 @@ class PlaygroundController extends Abstracts\AbstractController
             ],
             self::CONTROLLER_NAME,
             'Icons',
-            'icons'
+            [self::CONTROLLER_NAME . '.icons']
         );
     }
 
@@ -77,7 +77,7 @@ class PlaygroundController extends Abstracts\AbstractController
             [],
             self::CONTROLLER_NAME,
             'Photos',
-            'photos'
+            [self::CONTROLLER_NAME . '.photos']
         );
     }
 

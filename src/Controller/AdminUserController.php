@@ -64,7 +64,7 @@ class AdminUserController extends AbstractController
             ],
             AdminController::CONTROLLER_NAME,
             'User Administration',
-            self::CONTROLLER_NAME . '.index'
+            [AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.index']
         );
     }
 
@@ -87,8 +87,10 @@ class AdminUserController extends AbstractController
             ],
             AdminController::CONTROLLER_NAME,
             'User Administration',
-            // TODO: find a way to make 'user.index' active in sidebar
-            self::CONTROLLER_NAME . '.create'
+            [
+                AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.index',
+                AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.create',
+            ]
         );
     }
 
