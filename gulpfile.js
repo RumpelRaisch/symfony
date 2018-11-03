@@ -16,7 +16,7 @@ const dest = './public/';
 gulp.task('sass', () =>
 {
     gulp
-        .src(src + 'sass/**/[^_]*.sass')
+        .src(src + 'sass/**/[^_]*.s[ac]ss')
         .pipe(sourcemaps.init())
             .pipe(plumber())
             .pipe(sass())
@@ -76,8 +76,8 @@ gulp.task('ts', () =>
 
 gulp.task('default', () =>
 {
-    gulp.watch([src + 'sass/**/*.sass'], ['sass']);
-    gulp.watch([src + 'less/**/*.less'], ['less']);
+    gulp.watch([src + 'sass/**/*.s[ac]ss'], ['sass']);
+    // gulp.watch([src + 'less/**/*.less'], ['less']);
     gulp.watch([src + 'babel/**/*.es6'], ['es6']);
     gulp.watch([src + 'typescript/scripts/**/*.ts'], ['ts']);
 });
