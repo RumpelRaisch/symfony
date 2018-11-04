@@ -5,12 +5,16 @@ use \Exception;
 use App\Annotations\Sidebar;
 use App\Controller\Abstracts\AbstractController;
 use App\Entity\User;
+use App\Form\UserType;
 use App\Logger\LoggerContainer;
 use App\Repository\UserRepository;
+use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class AdminUserController
@@ -84,12 +88,36 @@ class AdminUserController extends AbstractController
      *
      * @Route("/admin/user/create", name="admin.user.create")
      */
-    public function createView(): Response
+    public function createView(Request $request, UserPasswordEncoderInterface $encoder): Response
     {
         LoggerContainer::getInstance()->trace(
             AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.create',
             $this->context
         );
+
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $encoder->encodePassword($user, $user->getPlainPassword());
+
+            $user->setPassword($password);
+
+            /** @var ObjectManager $manager */
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($user);
+            $manager->flush();
+
+            $form = $this->createForm(UserType::class, new User());
+        }
+
+        $errors = [
+            $form->getErrors(true),
+            $form['email']->getErrors(true),
+            $form['plainPassword']->getErrors(true),
+        ];
 
         return $this->renderWithConfig(
             AdminController::CONTROLLER_NAME . '/' . self::CONTROLLER_NAME . '/create.html.twig',
@@ -97,6 +125,8 @@ class AdminUserController extends AbstractController
                 'userAdminRoutes'   => $this->getInternalRoutes(),
                 'userAdminCategory' => 'create a new users',
                 'userAdminTitle'    => 'create',
+                'userCreateErrors'  => $errors,
+                'userCreateForm'    => $form->createView(),
             ],
             AdminController::CONTROLLER_NAME,
             'User Administration',

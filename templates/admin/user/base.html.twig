@@ -5,16 +5,16 @@
 {% block javascripts %}{% endblock %}
 
 {% block content %}
-    {% include 'admin/user/navbar.html.twig' %}
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    {% if userAdminCategory is defined %}<h5 class="card-category">{{ userAdminCategory }}</h5>{% endif %}
-                    {% if userAdminTitle is defined %}<h2 class="card-title">{{ userAdminTitle }}</h2>{% endif %}
-                </div>
-                <div class="card-body">{% block body %}{% endblock %}</div>
+{% include 'admin/user/navbar.html.twig' %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                {% if userAdminCategory is defined %}<h5 class="card-category">{{ userAdminCategory }}</h5>{% endif %}
+                {% if userAdminTitle is defined %}<h2 class="card-title">{{ userAdminTitle }}</h2>{% endif %}
             </div>
+            {% block userAdminCardContent %}{% endblock %}
         </div>
     </div>
+</div>
 {% endblock %}

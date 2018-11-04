@@ -30,6 +30,12 @@ $pre_bg: darken(#27293d, 2%);
   .nav-tabs.card-header-pills .nav-link.active {
     background-color: inherit;
   }
+
+  .form-control:not(:disabled),
+  .input-group-append:not(.disabled) .input-group-text,
+  .input-group-prepend:not(.disabled) .input-group-text {
+    background: rgba(0, 0, 0, .025);
+  }
 }
 
 .bs-bg-dark {

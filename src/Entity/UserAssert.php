@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class UserAssert
  *
- * User entity for forms.
+ * User entity for profile form.
  */
 class UserAssert
 {

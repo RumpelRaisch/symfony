@@ -1,12 +1,14 @@
 <?php
-
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields="email", message="Email already taken")
  */
 class User implements UserInterface
 {
@@ -18,14 +20,17 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Email()
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="json")
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
      */
-    private $roles = [];
+    private $plainPassword;
 
     /**
      * @var string The hashed password
@@ -34,16 +39,24 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
+     * @Assert\Length(min="2", max="50")
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $name;
 
     /**
+     * @Assert\Length(min="2", max="50")
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $surname;
 
     /**
+     * @Assert\Length(min="2", max="255")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $github_user;
@@ -97,7 +110,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUsername(): string
     {
@@ -105,7 +118,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getRoles(): array
     {
@@ -129,7 +142,7 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPassword(): string
     {
@@ -149,20 +162,21 @@ class User implements UserInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getSalt()
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+        // The bcrypt and argon2i algorithms don't require a separate salt.
+        // You *may* need a real salt if you choose a different encoder.
+        return null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     /**
@@ -176,7 +190,7 @@ class User implements UserInterface
     /**
      * @param null|string $name
      *
-     * @return User
+     * @return self
      */
     public function setName(?string $name): self
     {
@@ -196,7 +210,7 @@ class User implements UserInterface
     /**
      * @param null|string $surname
      *
-     * @return User
+     * @return self
      */
     public function setSurname(?string $surname): self
     {
@@ -216,7 +230,7 @@ class User implements UserInterface
     /**
      * @param null|string $github_user
      *
-     * @return User
+     * @return self
      */
     public function setGithubUser(?string $github_user): self
     {
@@ -236,7 +250,7 @@ class User implements UserInterface
     /**
      * @param $avatar
      *
-     * @return User
+     * @return self
      */
     public function setAvatar($avatar): self
     {
@@ -272,7 +286,7 @@ class User implements UserInterface
     /**
      * @param null|string $theme
      *
-     * @return User
+     * @return self
      */
     public function setTheme(?string $theme): self
     {
@@ -292,11 +306,31 @@ class User implements UserInterface
     /**
      * @param null|string $avatar_mime_type
      *
-     * @return User
+     * @return self
      */
     public function setAvatarMimeType(?string $avatar_mime_type): self
     {
         $this->avatar_mime_type = $avatar_mime_type;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param mixed $plainPassword
+     *
+     * @return self
+     */
+    public function setPlainPassword($plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
