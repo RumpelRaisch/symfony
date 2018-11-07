@@ -2,6 +2,7 @@
 namespace App\Twig;
 
 use \DateTime;
+use App\Entity\Alert;
 use App\Services\Helper\SidebarHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Extension\AbstractExtension;
@@ -35,6 +36,11 @@ class AppExtension extends AbstractExtension
             new TwigFunction(
                 'Sidebar',
                 [$this, 'renderSidebar'],
+                ['is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'Alert',
+                [$this, 'renderAlert'],
                 ['is_safe' => ['html']]
             ),
         ];
@@ -73,6 +79,23 @@ class AppExtension extends AbstractExtension
                 'items'            => $sidebarHelper->get(),
                 'activeController' => $activeController,
             ]
+        );
+    }
+
+    /**
+     * @param Alert $alert
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     *
+     * @return string
+     */
+    public function renderAlert(Alert $alert): string
+    {
+        return $this->container->get('twig')->render(
+            'twig_extensions/alert.html.twig',
+            ['alert' => $alert]
         );
     }
 

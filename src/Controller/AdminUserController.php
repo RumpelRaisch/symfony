@@ -4,6 +4,7 @@ namespace App\Controller;
 use \Exception;
 use App\Annotations\Sidebar;
 use App\Controller\Abstracts\AbstractController;
+use App\Entity\Alert;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Logger\LoggerContainer;
@@ -84,33 +85,52 @@ class AdminUserController extends AbstractController
     }
 
     /**
+     * @param Request                      $request
+     * @param UserPasswordEncoderInterface $encoder
+     *
      * @return Response
      *
      * @Route("/admin/user/create", name="admin.user.create")
      */
-    public function createView(Request $request, UserPasswordEncoderInterface $encoder): Response
-    {
+    public function createView(
+        Request $request,
+        UserPasswordEncoderInterface $encoder
+    ): Response {
         LoggerContainer::getInstance()->trace(
             AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.create',
             $this->context
         );
 
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $alerts = [];
+        $user   = new User();
+        $form   = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $password = $encoder->encodePassword($user, $user->getPlainPassword());
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $password = $encoder->encodePassword($user, $user->getPlainPassword());
 
-            $user->setPassword($password);
+                $user->setPassword($password);
 
-            /** @var ObjectManager $manager */
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($user);
-            $manager->flush();
+                /** @var ObjectManager $manager */
+                $manager = $this->getDoctrine()->getManager();
+                $manager->persist($user);
+                $manager->flush();
 
-            $form = $this->createForm(UserType::class, new User());
+                $user->eraseCredentials();
+                unset($user);
+
+                $form = $this->createForm(UserType::class, new User());
+
+                $alerts[] = (new Alert())
+                    ->setType('success')
+                    ->setText('User sucessfully added.');
+            } else {
+                $alerts[] = (new Alert())
+                    ->setType('warning')
+                    ->setText('There was a problem while adding the User.');
+            }
         }
 
         $errors = [
@@ -125,6 +145,7 @@ class AdminUserController extends AbstractController
                 'userAdminRoutes'   => $this->getInternalRoutes(),
                 'userAdminCategory' => 'create a new users',
                 'userAdminTitle'    => 'create',
+                'userAdminAlerts'   => $alerts,
                 'userCreateErrors'  => $errors,
                 'userCreateForm'    => $form->createView(),
             ],

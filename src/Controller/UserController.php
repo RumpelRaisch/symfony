@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
- * [UserController description]
+ * Class UserController
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
@@ -27,7 +27,7 @@ class UserController extends Abstracts\AbstractController
     private $context = [];
 
     /**
-     * Constructor.
+     * UserController constructor.
      *
      * @param KernelInterface $kernel
      *

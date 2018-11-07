@@ -28,6 +28,11 @@
     {#{{ form_label(userCreateForm.email) }}#}
     {#{{ form_widget(userCreateForm.email) }}#}
     {#{{ form_errors(userCreateForm.email) }}#}
+    {% if userAdminAlerts is not empty %}
+        {% for alert in userAdminAlerts %}
+            {{ Alert(alert) }}
+        {% endfor %}
+    {% endif %}
     <div class="row">
         <div class="col-md-2 mb-4">{{ form_label(userCreateForm.email) }}</div>
         <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.email) }}</div>
@@ -48,20 +53,6 @@
         <div class="col-md-2">{{ form_label(userCreateForm.github_user) }}</div>
         <div class="col-md-10">{{ form_widget(userCreateForm.github_user) }}</div>
     </div>
-    {#<div class="row">#}
-        {#<div class="col-md-4 pr-md-1">{{ form_row(userCreateForm.email) }}</div>#}
-    {#</div>
-    <div class="row">
-        <div class="col-md-6">{{ form_row(userCreateForm.plainPassword.first) }}</div>
-        <div class="col-md-6">{{ form_row(userCreateForm.plainPassword.second) }}</div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">{{ form_row(userCreateForm.name) }}</div>
-        <div class="col-md-6">{{ form_row(userCreateForm.surname) }}</div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">{{ form_row(userCreateForm.github_user) }}</div>
-    </div>#}
 </div>
 <div class="card-footer">
     <button type="submit" class="btn btn-fill btn-primary">Create</button>

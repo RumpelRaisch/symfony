@@ -1,0 +1,20 @@
+<div class="alert alert-{{ alert.type }}{% if alert.dismissible is same as(true) %} alert-dismissible fade show{% endif %}" role="alert">
+    <div class="d-flex flex-row">
+        <i class="{{ alert.icon }} fa-fw mr-3 mt-1"></i>
+        <div>
+            {% if alert.heading is not empty %}
+                <h4 class="alert-heading">{{ alert.heading }}</h4>
+            {% endif %}
+            {% if alert.trustable is same as(true) %}
+                {{ alert.text|raw }}
+            {% else %}
+                {{ alert.text }}
+            {% endif %}
+        </div>
+    </div>
+    {% if alert.dismissible is same as(true) %}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <i class="fas fa-times fa-sm"></i>
+    </button>
+    {% endif %}
+</div>

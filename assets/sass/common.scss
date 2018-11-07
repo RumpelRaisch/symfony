@@ -17,6 +17,11 @@ $pre_bg: darken(#27293d, 2%);
   overflow: auto;
 }
 
+.alert button.close {
+  right: 0;
+  top: 25px;
+}
+
 .card {
   [class*="card-"] pre,
   :not(pre) > code[class*="language-"],
