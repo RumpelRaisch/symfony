@@ -28,30 +28,34 @@
     {#{{ form_label(userCreateForm.email) }}#}
     {#{{ form_widget(userCreateForm.email) }}#}
     {#{{ form_errors(userCreateForm.email) }}#}
-    {% if userAdminAlerts is not empty %}
-        {% for alert in userAdminAlerts %}
+    {% if userCreateAlerts is not empty %}
+        {% for alert in userCreateAlerts %}
             {{ Alert(alert) }}
         {% endfor %}
     {% endif %}
-    <div class="row">
-        <div class="col-md-2 mb-4">{{ form_label(userCreateForm.email) }}</div>
-        <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.email) }}</div>
-    </div>
-    <div class="row">
-        <div class="col-md-2 mb-4">{{ form_label(userCreateForm.plainPassword.first) }}</div>
-        <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.plainPassword.first) }}</div>
-        <div class="col-md-2 mb-4">{{ form_label(userCreateForm.plainPassword.second) }}</div>
-        <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.plainPassword.second) }}</div>
-    </div>
-    <div class="row">
-        <div class="col-md-2 mb-4">{{ form_label(userCreateForm.name) }}</div>
-        <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.name) }}</div>
-        <div class="col-md-2 mb-4">{{ form_label(userCreateForm.surname) }}</div>
-        <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.surname) }}</div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">{{ form_label(userCreateForm.github_user) }}</div>
-        <div class="col-md-10">{{ form_widget(userCreateForm.github_user) }}</div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 mb-4">{{ form_label(userCreateForm.email) }}</div>
+            <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.email) }}</div>
+            <div class="col-md-2 mb-4">{{ form_label(userCreateForm.roles) }}</div>
+            <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.roles) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 mb-4">{{ form_label(userCreateForm.plainPassword.first) }}</div>
+            <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.plainPassword.first) }}</div>
+            <div class="col-md-2 mb-4">{{ form_label(userCreateForm.plainPassword.second) }}</div>
+            <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.plainPassword.second) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 mb-4">{{ form_label(userCreateForm.name) }}</div>
+            <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.name) }}</div>
+            <div class="col-md-2 mb-4">{{ form_label(userCreateForm.surname) }}</div>
+            <div class="col-md-4 mb-4">{{ form_widget(userCreateForm.surname) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 mb-4">{{ form_label(userCreateForm.github_user) }}</div>
+            <div class="col-md-10 mb-4">{{ form_widget(userCreateForm.github_user) }}</div>
+        </div>
     </div>
 </div>
 <div class="card-footer">

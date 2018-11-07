@@ -2,7 +2,9 @@
 
 {% block stylesheets %}{% endblock %}
 
-{% block javascripts %}{% endblock %}
+{% block javascripts %}
+<script type="text/javascript" src="{{ absolute_url(asset('js/admin.user.min.js')|cacheHack) }}"></script>
+{% endblock %}
 
 {% block content %}
 {% include 'admin/user/navbar.html.twig' %}

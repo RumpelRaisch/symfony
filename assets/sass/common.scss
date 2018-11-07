@@ -3,6 +3,10 @@
 $pre_fg: lighten(#27293d, 60%);
 $pre_bg: darken(#27293d, 2%);
 
+label.required:after {
+  content: '*';
+}
+
 .input-group-text {
   a {
     height: 16px;
@@ -62,6 +66,14 @@ body {
 
 body,
 body[data-theme=pink] {
+  .theme-color-start {
+    color: $color-pink-start;
+  }
+
+  .theme-color-end {
+    color: $color-pink-end;
+  }
+
   .sidebar,
   .off-canvas-sidebar {
     background: $color-pink-start;
@@ -73,6 +85,10 @@ body[data-theme=pink] {
 
     .content,
     .footer {
+      label.required:after {
+        color: $color-pink-end;
+      }
+
       .nav.themed a:not(.disabled),
       a:not(.nav-item):not(.nav-link):not(.btn):not(.disabled) {
         color: $color-pink-end;
@@ -100,6 +116,14 @@ body[data-theme=pink] {
 }
 
 body[data-theme=blue] {
+  .theme-color-start {
+    color: $color-blue-start;
+  }
+
+  .theme-color-end {
+    color: $color-blue-end;
+  }
+
   .sidebar,
   .off-canvas-sidebar {
     background: $color-blue-start;
@@ -111,6 +135,10 @@ body[data-theme=blue] {
 
     .content,
     .footer {
+      label.required:after {
+        color: $color-blue-end;
+      }
+
       .nav.themed a:not(.disabled),
       a:not(.nav-item):not(.nav-link):not(.btn):not(.disabled) {
         color: $color-blue-end;
@@ -138,6 +166,14 @@ body[data-theme=blue] {
 }
 
 body[data-theme=green] {
+  .theme-color-start {
+    color: $color-green-start;
+  }
+
+  .theme-color-end {
+    color: $color-green-end;
+  }
+
   .sidebar,
   .off-canvas-sidebar {
     background: $color-green-start;
@@ -149,6 +185,10 @@ body[data-theme=green] {
 
     .content,
     .footer {
+      label.required:after {
+        color: $color-green-end;
+      }
+
       .nav.themed a:not(.disabled),
       a:not(.nav-item):not(.nav-link):not(.btn):not(.disabled) {
         color: $color-green-end;

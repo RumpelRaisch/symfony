@@ -5,6 +5,7 @@ use \Exception;
 use App\Annotations\Sidebar;
 use App\Controller\Abstracts\AbstractController;
 use App\Entity\Alert;
+use App\Entity\Role;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Logger\LoggerContainer;
@@ -20,7 +21,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 /**
  * Class AdminUserController
  *
- * @IsGranted("ROLE_RAISCH")
+ * @IsGranted("ROLE_ADMIN")
  *
  * @author Rainer Schulz <rainer.schulz@bitshifting.de>
  */
@@ -101,9 +102,16 @@ class AdminUserController extends AbstractController
             $this->context
         );
 
+        $createFormOptions = [
+            'container'       => $this->container,
+            'repository_role' => $this->getDoctrine()
+                ->getManager()
+                ->getRepository(Role::class),
+        ];
+
         $alerts = [];
         $user   = new User();
-        $form   = $this->createForm(UserType::class, $user);
+        $form   = $this->createForm(UserType::class, $user, $createFormOptions);
 
         $form->handleRequest($request);
 
@@ -121,7 +129,7 @@ class AdminUserController extends AbstractController
                 $user->eraseCredentials();
                 unset($user);
 
-                $form = $this->createForm(UserType::class, new User());
+                $form = $this->createForm(UserType::class, new User(), $createFormOptions);
 
                 $alerts[] = (new Alert())
                     ->setType('success')
@@ -133,11 +141,15 @@ class AdminUserController extends AbstractController
             }
         }
 
-        $errors = [
-            $form->getErrors(true),
-            $form['email']->getErrors(true),
-            $form['plainPassword']->getErrors(true),
-        ];
+        // $errors = [
+        //     $form->getErrors(true),
+        //     $form['email']->getErrors(true),
+        //     $form['plainPassword']->getErrors(true),
+        // ];
+
+        $alerts[] = (new Alert())
+            ->setType('info')
+            ->setText('Test Info Alert.');
 
         return $this->renderWithConfig(
             AdminController::CONTROLLER_NAME . '/' . self::CONTROLLER_NAME . '/create.html.twig',
@@ -145,8 +157,8 @@ class AdminUserController extends AbstractController
                 'userAdminRoutes'   => $this->getInternalRoutes(),
                 'userAdminCategory' => 'create a new users',
                 'userAdminTitle'    => 'create',
-                'userAdminAlerts'   => $alerts,
-                'userCreateErrors'  => $errors,
+                'userCreateAlerts'  => $alerts,
+                // 'userCreateErrors'  => $errors,
                 'userCreateForm'    => $form->createView(),
             ],
             AdminController::CONTROLLER_NAME,
