@@ -83,11 +83,13 @@ class User implements UserInterface
     private $avatar_mime_type;
 
     /**
+     * @var null|\DateTimeInterface
      * @ORM\Column(type="datetime")
      */
     private $created;
 
     /**
+     * @var null|\DateTimeInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updated;
@@ -351,6 +353,15 @@ class User implements UserInterface
         return $this->created;
     }
 
+    public function getCreatedFormat(string $format = 'd.m.Y H:i:s'): string
+    {
+        if (false === $this->created instanceof \DateTimeInterface) {
+            return '';
+        }
+
+        return $this->created->format($format);
+    }
+
     public function setCreated(\DateTimeInterface $created): self
     {
         $this->created = $created;
@@ -361,6 +372,15 @@ class User implements UserInterface
     public function getUpdated(): ?\DateTimeInterface
     {
         return $this->updated;
+    }
+
+    public function getUpdatedFormat(string $format = 'd.m.Y H:i:s'): string
+    {
+        if (false === $this->updated instanceof \DateTimeInterface) {
+            return '';
+        }
+
+        return $this->updated->format($format);
     }
 
     public function setUpdated(\DateTimeInterface $updated): self
