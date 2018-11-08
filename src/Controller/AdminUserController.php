@@ -147,9 +147,9 @@ class AdminUserController extends AbstractController
         //     $form['plainPassword']->getErrors(true),
         // ];
 
-        $alerts[] = (new Alert())
-            ->setType('info')
-            ->setText('Test Info Alert.');
+        // $alerts[] = (new Alert())
+        //     ->setType('info')
+        //     ->setText('Test Info Alert.');
 
         return $this->renderWithConfig(
             AdminController::CONTROLLER_NAME . '/' . self::CONTROLLER_NAME . '/create.html.twig',
