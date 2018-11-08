@@ -109,9 +109,9 @@ class UserFacade
     }
 
     /**
-     * @return null|User
+     * @return User
      */
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
@@ -129,9 +129,9 @@ class UserFacade
     }
 
     /**
-     * @return null|UserAssert
+     * @return UserAssert
      */
-    public function getUserAssert(): ?UserAssert
+    public function getUserAssert(): UserAssert
     {
         return $this->userAssert;
     }
@@ -149,9 +149,9 @@ class UserFacade
     }
 
     /**
-     * @return null|ObjectManager
+     * @return ObjectManager
      */
-    public function getManager(): ?ObjectManager
+    public function getManager(): ObjectManager
     {
         return $this->manager;
     }

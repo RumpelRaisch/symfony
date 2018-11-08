@@ -117,9 +117,9 @@ class UserController extends Abstracts\AbstractController
                     $this->context
                 );
 
-                $userFacade
-                    ->syncUserAssertToUser()
-                    ->saveUser();
+                $userFacade->syncUserAssertToUser();
+                $userFacade->getUser()->setUpdatedBy($user);
+                $userFacade->saveUser();
             } else {
                 LoggerContainer::getInstance()->trace(
                     self::CONTROLLER_NAME . '.profile - form is NOT valid',

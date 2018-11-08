@@ -10,28 +10,32 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th class="text-center">#</th>
+                    <th class="text-center">id</th>
                     <th>email</th>
                     <th>roles</th>
                     <th>name</th>
                     <th>surname</th>
                     <th>github user</th>
                     <th>created</th>
+                    <th>created by</th>
                     <th>updated</th>
+                    <th>updated by</th>
                     <th class="text-right">actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in users %}
                 <tr>
-                    <td class="text-center">{{ loop.index }}</td>
+                    <td class="text-center">{{ user.getId() }}</td>
                     <td>{{ user.getEmail() }}</td>
                     <td>{{ user.getRoles()|join(', ') }}</td>
                     <td>{{ user.getName() }}</td>
                     <td>{{ user.getSurname() }}</td>
                     <td>{{ user.getGithubUser() }}</td>
                     <td class="text-monospace">{{ user.getCreatedFormat() }}</td>
+                    <td>{% if user.getCreatedBy() is not empty %}{{ user.getCreatedBy().getEmail() }}{% endif %}</td>
                     <td class="text-monospace">{{ user.getUpdatedFormat() }}</td>
+                    <td>{% if user.getUpdatedBy() is not empty %}{{ user.getUpdatedBy().getEmail() }}{% endif %}</td>
                     <td class="td-actions text-right">
                         <button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon">
                             <i class="tim-icons icon-single-02"></i>

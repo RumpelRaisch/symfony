@@ -120,6 +120,7 @@ class AdminUserController extends AbstractController
                 $password = $encoder->encodePassword($user, $user->getPlainPassword());
 
                 $user->setPassword($password);
+                $user->setCreatedBy($this->getUser());
 
                 /** @var ObjectManager $manager */
                 $manager = $this->getDoctrine()->getManager();

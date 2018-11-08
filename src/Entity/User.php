@@ -95,6 +95,17 @@ class User implements UserInterface
     private $updated;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $created_by;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     */
+    private $updated_by;
+
+    /**
      * @return null|int
      */
     public function getId(): ?int
@@ -408,5 +419,29 @@ class User implements UserInterface
     public function onPreUpdate()
     {
         $this->updated = new \DateTime('now');
+    }
+
+    public function getCreatedBy(): ?self
+    {
+        return $this->created_by;
+    }
+
+    public function setCreatedBy(self $created_by): self
+    {
+        $this->created_by = $created_by;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?self
+    {
+        return $this->updated_by;
+    }
+
+    public function setUpdatedBy(?self $updated_by): self
+    {
+        $this->updated_by = $updated_by;
+
+        return $this;
     }
 }
