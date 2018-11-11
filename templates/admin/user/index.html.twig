@@ -4,6 +4,7 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script type="text/javascript" src="{{ absolute_url(asset('js/core/sweetalert.min.js')|cacheHack) }}"></script>
 <script type="text/javascript" src="{{ absolute_url(asset('js/admin.user.index.min.js')|cacheHack) }}"></script>
 {% endblock %}
 
@@ -26,7 +27,7 @@
             </thead>
             <tbody id="userList">
                 {% for user in users %}
-                <tr>
+                <tr data-user-id="{{ user.getId() }}">
                     <td class="text-center">{{ user.getId() }}</td>
                     <td>{{ user.getEmail() }}</td>
                     <td>{{ user.getRoles()|join(', ') }}</td>
@@ -40,23 +41,23 @@
                     <td class="text-monospace">{{ user.getUpdatedFormat() }}</td>
                     <td>{% if user.getUpdatedBy() is not empty %}{{ user.getUpdatedBy().getEmail() }}{% endif %}</td>
                     <td class="td-actions text-right">
-                        <a href="#" rel="tooltip" class="text-info" data-info-area="info_user_{{ user.getId() }}" title="user infos">
+                        <a href="#" rel="tooltip" class="text-info" data-user-id="{{ user.getId() }}" data-action="userShowInfo" title="user infos">
                             <i class="fas fa-info-circle fa-2x"></i>
                         </a>
-                        <a href="#" rel="tooltip" class="text-warning" title="edit user">
+                        <a href="#" rel="tooltip" class="text-warning" data-user-id="{{ user.getId() }}" data-action="userEdit" title="edit user">
                             <i class="fas fa-user-edit fa-2x"></i>
                         </a>
-                        <a href="#" rel="tooltip" class="text-danger" title="remove user">
+                        <a href="{{ absolute_url(path('admin.user.remove', {'id': user.getId()})) }}" rel="tooltip" class="text-danger" data-user-id="{{ user.getId() }}" data-action="userRemove" title="remove user">
                             <i class="fas fa-user-times fa-2x"></i>
                         </a>
                     </td>
                 </tr>
-                <tr id="info_user_{{ user.getId() }}" data-info-status="visible">
+                <tr id="info_user_{{ user.getId() }}" data-user-id="{{ user.getId() }}" data-info-status="visible">
                     <td colspan="9">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-2">
-                                    <div class="bs-photo bs-photo-round bs-photo-size-96">
+                                    <div class="bs-photo bs-photo-size-96">
                                         <img src="data:{{ user.getAvatarMimeType() }};base64,{{ user.getAvatarBase64() }}" alt="Avatar">
                                     </div>
                                 </div>

@@ -14,6 +14,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -180,6 +181,45 @@ class AdminUserController extends AbstractController
                 AdminController::CONTROLLER_NAME . '.' . self::CONTROLLER_NAME . '.create',
             ]
         );
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return JsonResponse
+     * @Route(
+     *      "/admin/user/remove/{id}",
+     *      name="admin.user.remove",
+     *      requirements={"id"="[1-9][0-9]*"}
+     * )
+     */
+    public function removeUser(int $id): JsonResponse
+    {
+        $response = ['status' => 200, 'text' => 'OK'];
+
+        try {
+            // TODO: set user to inactive/deleted and prevent login (keep dataset for relations)
+            $user = $this->getDoctrine()
+                ->getRepository(User::class)
+                ->find($id);
+
+            /** @var ObjectManager $manager */
+            // $manager = $this->getDoctrine()->getManager();
+            // $manager->remove($user);
+            // $manager->flush();
+
+            if (null === $user) {
+                $response['status'] = 404;
+                $response['text']   = 'User Nor Found';
+            } else {
+                $response['debug'] = $user->getEmail();
+            }
+        } catch (Exception $ex) {
+            $response['status'] = 400;
+            $response['text']   = 'Bad Request';
+        }
+
+        return JsonResponse::create($response);
     }
 
     /**

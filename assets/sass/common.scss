@@ -230,9 +230,10 @@ ul.nav > li.nav-item > div > ul.nav {
 }
 
 .bs-photo {
+  border-radius: 0.2857rem;
   display: inline-block;
-  vertical-align: middle;
   overflow: hidden;
+  vertical-align: middle;
 
   &.bs-photo-border-white {
     border: 2px solid $color-white;
@@ -300,6 +301,11 @@ ul.nav > li.nav-item > div > ul.nav {
   }
 
   img {
-    width: 100%;
+    left: 50%;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    min-height: 100%;
+    min-width: 100%;
   }
 }
