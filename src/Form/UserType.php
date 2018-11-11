@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -62,6 +63,7 @@ class UserType extends AbstractType
             ->add('name', TextType::class, ['label' => 'First Name', 'required' => false])
             ->add('surname', TextType::class, ['label' => 'Last Name', 'required' => false])
             ->add('github_user', TextType::class, ['label' => 'GitHub Username', 'required' => false])
+            ->add('avatar', FileType::class, array('label' => 'Avatar (png or jpeg file)'))
             ->add('roles', ChoiceType::class, [
                 'expanded' => false,
                 'multiple' => true,

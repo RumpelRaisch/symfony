@@ -2,7 +2,10 @@
 
 {#{% block stylesheets %}{{ parent() }}{% endblock %}#}
 
-{#{% block javascripts %}{{ parent() }}{% endblock %}#}
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src="{{ absolute_url(asset('js/admin.user.index.min.js')|cacheHack) }}"></script>
+{% endblock %}
 
 {% block userAdminCardContent %}
 <div class="card-body">
@@ -13,9 +16,7 @@
                     <th class="text-center">id</th>
                     <th>email</th>
                     <th>roles</th>
-                    <th>name</th>
-                    <th>surname</th>
-                    <th>github user</th>
+                    <th>avatar</th>
                     <th>created</th>
                     <th>created by</th>
                     <th>updated</th>
@@ -23,29 +24,58 @@
                     <th class="text-right">actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="userList">
                 {% for user in users %}
                 <tr>
                     <td class="text-center">{{ user.getId() }}</td>
                     <td>{{ user.getEmail() }}</td>
                     <td>{{ user.getRoles()|join(', ') }}</td>
-                    <td>{{ user.getName() }}</td>
-                    <td>{{ user.getSurname() }}</td>
-                    <td>{{ user.getGithubUser() }}</td>
+                    <td>
+                        <div class="bs-photo bs-photo-round bs-photo-size-24">
+                            <img src="data:{{ user.getAvatarMimeType() }};base64,{{ user.getAvatarBase64() }}" alt="Avatar">
+                        </div>
+                    </td>
                     <td class="text-monospace">{{ user.getCreatedFormat() }}</td>
                     <td>{% if user.getCreatedBy() is not empty %}{{ user.getCreatedBy().getEmail() }}{% endif %}</td>
                     <td class="text-monospace">{{ user.getUpdatedFormat() }}</td>
                     <td>{% if user.getUpdatedBy() is not empty %}{{ user.getUpdatedBy().getEmail() }}{% endif %}</td>
                     <td class="td-actions text-right">
-                        <button type="button" rel="tooltip" class="btn btn-info btn-sm btn-icon">
-                            <i class="tim-icons icon-single-02"></i>
-                        </button>
-                        <button type="button" rel="tooltip" class="btn btn-success btn-sm btn-icon">
-                            <i class="tim-icons icon-settings"></i>
-                        </button>
-                        <button type="button" rel="tooltip" class="btn btn-danger btn-sm btn-icon">
-                            <i class="tim-icons icon-simple-remove"></i>
-                        </button>
+                        <a href="#" rel="tooltip" class="text-info" data-info-area="info_user_{{ user.getId() }}" title="user infos">
+                            <i class="fas fa-info-circle fa-2x"></i>
+                        </a>
+                        <a href="#" rel="tooltip" class="text-warning" title="edit user">
+                            <i class="fas fa-user-edit fa-2x"></i>
+                        </a>
+                        <a href="#" rel="tooltip" class="text-danger" title="remove user">
+                            <i class="fas fa-user-times fa-2x"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr id="info_user_{{ user.getId() }}" data-info-status="visible">
+                    <td colspan="9">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="bs-photo bs-photo-round bs-photo-size-96">
+                                        <img src="data:{{ user.getAvatarMimeType() }};base64,{{ user.getAvatarBase64() }}" alt="Avatar">
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="row mb-4">
+                                        <div class="col-md-2"><strong>name</strong></div>
+                                        <div class="col-md-10">{{ user.getName() }}</div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-2"><strong>surname</strong></div>
+                                        <div class="col-md-10">{{ user.getSurname() }}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2"><strong>github user</strong></div>
+                                        <div class="col-md-10">{{ user.getGithubUser() }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}

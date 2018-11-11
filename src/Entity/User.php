@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use App\Kernel;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -63,6 +64,8 @@ class User implements UserInterface
     private $github_user;
 
     /**
+     * @Assert\NotBlank(message="Please, upload the avatar as a png or jpeg file.")
+     * @Assert\File(mimeTypes={"image/png", "image/jpeg"})
      * @ORM\Column(type="blob", nullable=true)
      */
     private $avatar;
@@ -288,12 +291,16 @@ class User implements UserInterface
      */
     public function getAvatarBase64(): string
     {
-        if (false === is_resource($this->avatar)) {
-            return ''; // TODO: return default avatar
-        }
-
         if (null === $this->avatarBase64) {
-            $this->avatarBase64 = base64_encode(stream_get_contents($this->avatar));
+            if (false === is_resource($this->avatar)) {
+                $this->avatarBase64 = base64_encode(file_get_contents(
+                    Kernel::AVATAR_DEFAULT_FILE
+                ));
+            } else {
+                $this->avatarBase64 = base64_encode(stream_get_contents(
+                    $this->avatar
+                ));
+            }
         }
 
         return $this->avatarBase64;
@@ -320,11 +327,11 @@ class User implements UserInterface
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getAvatarMimeType(): ?string
+    public function getAvatarMimeType(): string
     {
-        return $this->avatar_mime_type;
+        return $this->avatar_mime_type ?? Kernel::AVATAR_DEFAULT_MIME;
     }
 
     /**

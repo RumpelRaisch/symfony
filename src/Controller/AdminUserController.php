@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use \Exception;
+use \SplFileObject;
 use App\Annotations\Sidebar;
 use App\Controller\Abstracts\AbstractController;
 use App\Entity\Alert;
@@ -12,6 +13,7 @@ use App\Logger\LoggerContainer;
 use App\Repository\UserRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -121,6 +123,15 @@ class AdminUserController extends AbstractController
 
                 $user->setPassword($password);
                 $user->setCreatedBy($this->getUser());
+
+                /** @var UploadedFile $avatar */
+                $avatar = $user->getAvatar();
+
+                /** @var SplFileObject $file */
+                $file = $avatar->openFile();
+
+                $user->setAvatar($file->fread($file->getSize()));
+                $user->setAvatarMimeType($avatar->getMimeType());
 
                 /** @var ObjectManager $manager */
                 $manager = $this->getDoctrine()->getManager();

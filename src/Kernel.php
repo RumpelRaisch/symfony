@@ -1,5 +1,4 @@
 <?php
-
 namespace App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -13,7 +12,11 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-    const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+    const AVATAR_DEFAULT_FILE = __DIR__ . '/../public/img/avatar.default.png';
+    const AVATAR_DEFAULT_MIME = 'image/png';
+    const AVATAR_MALE_FILE    = __DIR__ . '/../public/img/avatar.male.png';
+    const AVATAR_FEMALE_FILE  = __DIR__ . '/../public/img/avatar.female.png';
+    const CONFIG_EXTS         = '.{php,xml,yaml,yml}';
 
     private static $instance = null;
 
