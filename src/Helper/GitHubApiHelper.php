@@ -358,9 +358,17 @@ class GitHubApiHelper
                 : $matches['message'],
         ];
 
-        LoggerContainer::getInstance()->debugR($headers, [
-            '__AREA__' => 'GitHubApiHelper->callGitHubAPI()',
-        ]);
+        $status  = $headers['status']['code'] . ' ' . $headers['status']['message'];
+        $context = ['__AREA__' => 'GitHubApiHelper->callGitHubAPI()'];
+
+        LoggerContainer::getInstance()->debug(
+            'GitHub API responded with status: ' . $status,
+            $context
+        );
+
+        if (400 <= $headers['status']['code']) {
+            LoggerContainer::getInstance()->debugR($headers, $context);
+        }
 
         if (false === $response) {
             return ['headers' => $headers, 'data' => []];
