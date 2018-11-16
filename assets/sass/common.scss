@@ -255,49 +255,13 @@ ul.nav > li.nav-item > div > ul.nav {
     border-radius: 50%;
   }
 
-  &.bs-photo-size-16 {
-    height: 16px;
-    width: 16px;
-  }
+  @for $i from 2 through 16 {
+    $size: 8 * $i;
 
-  &.bs-photo-size-24 {
-    height: 24px;
-    width: 24px;
-  }
-
-  &.bs-photo-size-32 {
-    height: 32px;
-    width: 32px;
-  }
-
-  &.bs-photo-size-48 {
-    height: 48px;
-    width: 48px;
-  }
-
-  &.bs-photo-size-64 {
-    height: 64px;
-    width: 64px;
-  }
-
-  &.bs-photo-size-80 {
-    height: 80px;
-    width: 80px;
-  }
-
-  &.bs-photo-size-96 {
-    height: 96px;
-    width: 96px;
-  }
-
-  &.bs-photo-size-112 {
-    height: 112px;
-    width: 112px;
-  }
-
-  &.bs-photo-size-128 {
-    height: 128px;
-    width: 128px;
+    &.bs-photo-size-#{$size} {
+      height: #{$size}px;
+      width: #{$size}px;
+    }
   }
 
   img {
