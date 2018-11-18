@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Stay Up To Date</h5>
+                    <h2 class="card-title">Awesome Infos</h2>
+                </div>
+                <div class="card-body">
+                {% for header,info in infos %}
+                    <h3 class="card-title text-info">{{ header }}</h3>
+                    <pre class="card-text">{{ info }}</pre>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

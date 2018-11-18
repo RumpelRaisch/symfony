@@ -283,4 +283,32 @@ class AdminController extends AbstractController
             [self::CONTROLLER_NAME . '.cache']
         );
     }
+
+    /**
+     * @return Response
+     *
+     * @IsGranted("ROLE_RAISCH")
+     * @Route("/admin/info", name="admin.info")
+     * @Sidebar(name="Info", icon="fas fa-info-circle", parent="Admin")
+     */
+    public function infoView(): Response
+    {
+        LoggerContainer::getInstance()
+            ->trace(self::CONTROLLER_NAME . '.info', $this->context);
+
+        $roleHierarchy = $this->container->getParameter('security.role_hierarchy.roles');
+
+        return $this->renderWithConfig(
+            self::CONTROLLER_NAME . '/info.html.twig',
+            [
+                'infos' => [
+                    'Role Hierarchy'        => print_r($roleHierarchy, true),
+                    'Environment Variables' => print_r($_ENV, true),
+                ],
+            ],
+            self::CONTROLLER_NAME,
+            'Info',
+            [self::CONTROLLER_NAME . '.info']
+        );
+    }
 }

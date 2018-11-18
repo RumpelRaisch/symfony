@@ -11,6 +11,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Logger\LoggerContainer;
 use App\Repository\UserRepository;
+use App\Services\User\Hierarchy;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -105,12 +106,7 @@ class AdminUserController extends AbstractController
             $this->context
         );
 
-        $createFormOptions = [
-            'container'       => $this->container,
-            'repository_role' => $this->getDoctrine()
-                ->getManager()
-                ->getRepository(Role::class),
-        ];
+        $createFormOptions = ['container' => $this->container];
 
         $alerts = [];
         $user   = new User();
@@ -195,27 +191,32 @@ class AdminUserController extends AbstractController
      */
     public function removeUser(int $id): JsonResponse
     {
-        $response = ['status' => 200, 'text' => 'OK'];
+        /** @var Hierarchy $hierarchy */
+        $hierarchy = $this->get('raisch.user.hierarchy');
+        $response  = ['status' => Response::HTTP_OK, 'text' => 'OK'];
 
         try {
-            // TODO: set user to inactive/deleted and prevent login (keep dataset for relations)
             $user = $this->getDoctrine()
                 ->getRepository(User::class)
                 ->find($id);
 
-            /** @var ObjectManager $manager */
-            // $manager = $this->getDoctrine()->getManager();
-            // $manager->remove($user);
-            // $manager->flush();
-
             if (null === $user) {
-                $response['status'] = 404;
-                $response['text']   = 'User Nor Found';
+                $response['status'] = Response::HTTP_NOT_FOUND;
+                $response['text']   = 'User Not Found';
+            } elseif (false === $hierarchy->canDeactivateUser($user)) {
+                $response['status'] = Response::HTTP_UNAUTHORIZED;
+                $response['text']   = 'Not Authorized To Alter This User';
             } else {
+                // TODO: set user to inactive/deleted and prevent login (keep dataset for relations)
+                /** @var ObjectManager $manager */
+                // $manager = $this->getDoctrine()->getManager();
+                // $manager->remove($user);
+                // $manager->flush();
+
                 $response['debug'] = $user->getEmail();
             }
         } catch (Exception $ex) {
-            $response['status'] = 400;
+            $response['status'] = Response::HTTP_BAD_REQUEST;
             $response['text']   = 'Bad Request';
         }
 

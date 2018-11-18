@@ -43,6 +43,14 @@ services:
         arguments:
             $container: '@service_container'
 
+    raisch.user.hierarchy:
+        public: true
+        class: App\Services\User\Hierarchy
+        arguments:
+            $container: '@service_container'
+            $token: '@security.token_storage'
+            $auth: '@security.authorization_checker'
+
     # see: https://symfony.vojtechvondra.cz/en/2014-08-28-saving-the-last-matched-route
     smf_example.last_route_event_listener:
         class: App\EventListener\LastRouteListener

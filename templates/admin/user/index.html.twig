@@ -22,11 +22,11 @@
                     <th>created by</th>
                     <th>updated</th>
                     <th>updated by</th>
-                    <th class="text-right">actions</th>
+                    <th colspan="3">actions</th>
                 </tr>
             </thead>
             <tbody id="userList">
-                {% for user in users %}
+            {% for user in users %}
                 <tr data-user-id="{{ user.getId() }}">
                     <td class="text-center">{{ user.getId() }}</td>
                     <td>{{ user.getEmail() }}</td>
@@ -40,20 +40,28 @@
                     <td>{% if user.getCreatedBy() is not empty %}{{ user.getCreatedBy().getEmail() }}{% endif %}</td>
                     <td class="text-monospace">{{ user.getUpdatedFormat() }}</td>
                     <td>{% if user.getUpdatedBy() is not empty %}{{ user.getUpdatedBy().getEmail() }}{% endif %}</td>
-                    <td class="td-actions text-right">
+                    <td class="td-actions text-center pr-0">
                         <a href="#" rel="tooltip" class="text-info" data-user-id="{{ user.getId() }}" data-action="userShowInfo" title="user infos">
                             <i class="fas fa-info-circle fa-2x"></i>
                         </a>
+                    </td>
+                    <td class="td-actions text-center pl-0 pr-0">
+                        {% if CanAlterUser(user) %}
                         <a href="#" rel="tooltip" class="text-warning" data-user-id="{{ user.getId() }}" data-action="userEdit" title="edit user">
                             <i class="fas fa-user-edit fa-2x"></i>
                         </a>
+                        {% endif %}
+                    </td>
+                    <td class="td-actions text-center pl-0">
+                        {% if CanDeactivateUser(user) %}
                         <a href="{{ absolute_url(path('admin.user.remove', {'id': user.getId()})) }}" rel="tooltip" class="text-danger" data-user-id="{{ user.getId() }}" data-action="userRemove" title="remove user">
                             <i class="fas fa-user-times fa-2x"></i>
                         </a>
+                        {% endif %}
                     </td>
                 </tr>
                 <tr id="info_user_{{ user.getId() }}" data-user-id="{{ user.getId() }}" data-info-status="visible">
-                    <td colspan="9">
+                    <td colspan="11">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-2">
@@ -79,7 +87,7 @@
                         </div>
                     </td>
                 </tr>
-                {% endfor %}
+            {% endfor %}
             </tbody>
         </table>
     </div>

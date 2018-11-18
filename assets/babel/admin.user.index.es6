@@ -99,15 +99,19 @@ $(() =>
                     });
                 });
             } else {
-                throw new Error(json.status);
+                throw new Error(`Status ${json.status} - ${json.text}`);
             }
         }).catch(err =>
         {
             if (err) {
+                const elem = document.createElement('span');
+
+                elem.innerHTML = `The request returned with:<br>${err.message}`;
+
                 swal({
-                    title: 'Oh noes!',
-                    text : `The AJAX request returned with status ${err.message}!`,
-                    icon : 'error'
+                    title  : 'Oh noes!',
+                    content: elem,
+                    icon   : 'error'
                 });
             } else {
                 swal.stopLoading();

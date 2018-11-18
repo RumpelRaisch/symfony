@@ -1,13 +1,20 @@
 <?php
 namespace App\Twig;
 
-use \DateTime;
 use App\Entity\Alert;
+use App\Entity\User;
 use App\Services\Helper\SidebarHelper;
+use App\Services\User\Hierarchy;
+use DateTime;
+use Psr\SimpleCache\InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Twig_Error_Loader;
+use Twig_Error_Runtime;
+use Twig_Error_Syntax;
 
 /**
  * AppExtension class
@@ -32,6 +39,9 @@ class AppExtension extends AbstractExtension
     /** {@inheritdoc} */
     public function getFunctions(): array
     {
+        /** @var Hierarchy $hierarchy */
+        $hierarchy = $this->container->get('raisch.user.hierarchy');
+
         return [
             new TwigFunction(
                 'Sidebar',
@@ -42,6 +52,14 @@ class AppExtension extends AbstractExtension
                 'Alert',
                 [$this, 'renderAlert'],
                 ['is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'CanAlterUser',
+                [$hierarchy, 'canAlterUser']
+            ),
+            new TwigFunction(
+                'CanDeactivateUser',
+                [$hierarchy, 'canDeactivateUser']
             ),
         ];
     }
@@ -59,19 +77,17 @@ class AppExtension extends AbstractExtension
     /**
      * @param array $activeController
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
+     * @throws InvalidArgumentException
      *
      * @return string
      */
     public function renderSidebar(array $activeController): string
     {
         /** @var SidebarHelper $sidebarHelper */
-        $sidebarHelper = $this->container->get(
-            'raisch.sidebar.helper'
-        );
+        $sidebarHelper = $this->container->get('raisch.sidebar.helper');
 
         return $this->container->get('twig')->render(
             'twig_extensions/sidebar.html.twig',
@@ -85,9 +101,9 @@ class AppExtension extends AbstractExtension
     /**
      * @param Alert $alert
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      *
      * @return string
      */
@@ -100,12 +116,10 @@ class AppExtension extends AbstractExtension
     }
 
     /**
-     * [formatDateTimeGitHub description]
+     * @param string $date
+     * @param string $format
      *
-     * @param string $date   [description]
-     * @param string $format [description]
-     *
-     * @return string [description]
+     * @return string
      */
     public function formatDateTimeGitHub(
         string $date,
@@ -116,11 +130,9 @@ class AppExtension extends AbstractExtension
     }
 
     /**
-     * [printR description]
+     * @param mixed $data
      *
-     * @param [type] $data [description]
-     *
-     * @return string [description]
+     * @return string
      */
     public function printR($data): string
     {

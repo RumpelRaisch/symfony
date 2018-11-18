@@ -4,6 +4,7 @@ namespace App\Services\Helper;
 use App\Annotations\Sidebar;
 use App\Helper\CacheHelper;
 use App\Kernel;
+use Psr\SimpleCache\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,7 +42,7 @@ final class SidebarHelper
     }
 
     /**
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return array
      */
@@ -59,7 +60,7 @@ final class SidebarHelper
     }
 
     /**
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return array
      */
