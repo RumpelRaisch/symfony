@@ -28,8 +28,8 @@ class ConsoleLogger extends AbstractLogger
     public function log($level, $message, array $context = [])
     {
         if (true === $this->shouldLog($level)) {
-            $message = $this->interpolate($message, $context);
-            $message = $this->beautify($level, $message, $context);
+            $message = self::interpolate($message, $context);
+            $message = self::beautify($level, $message, $context);
 
             echo $message;
         }

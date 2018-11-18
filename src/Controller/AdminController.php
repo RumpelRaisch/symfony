@@ -296,6 +296,19 @@ class AdminController extends AbstractController
         LoggerContainer::getInstance()
             ->trace(self::CONTROLLER_NAME . '.info', $this->context);
 
+        LoggerContainer::getInstance()
+            ->error(new Exception('Test with Code', 500), $this->context);
+
+        LoggerContainer::getInstance()
+            ->info([
+                'foo' => 'uno',
+                'bar' => 'dos',
+                'baz' => 'tres',
+            ], $this->context);
+
+        LoggerContainer::getInstance()
+            ->error(new Exception('Test without Code'), $this->context);
+
         $roleHierarchy = $this->container->getParameter('security.role_hierarchy.roles');
 
         return $this->renderWithConfig(

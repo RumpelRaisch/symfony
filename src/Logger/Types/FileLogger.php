@@ -52,8 +52,8 @@ class FileLogger extends AbstractLogger
     public function log($level, $message, array $context = [])
     {
         if (true === $this->shouldLog($level)) {
-            $message = $this->interpolate($message, $context);
-            $message = $this->beautify($level, $message, $context);
+            $message = self::interpolate($message, $context);
+            $message = self::beautify($level, $message, $context);
 
             $this->checkFileSize();
 
@@ -62,9 +62,9 @@ class FileLogger extends AbstractLogger
     }
 
     /**
-     * @return FileLogger
+     * @return self
      */
-    protected function checkFileSize(): FileLogger
+    protected function checkFileSize(): self
     {
         if (filesize($this->file) > $this->maxFileSize) {
             $newFile = preg_replace(
@@ -73,7 +73,7 @@ class FileLogger extends AbstractLogger
                 $this->file
             );
 
-            $backupDir = pathinfo($newFile)['dirname'];
+            $backupDir = pathinfo($newFile, PATHINFO_DIRNAME);
 
             if (false === is_dir($backupDir)) {
                 mkdir($backupDir, 0664, true);
@@ -90,9 +90,9 @@ class FileLogger extends AbstractLogger
      *
      * @param integer $maxFileSize
      *
-     * @return FileLogger
+     * @return self
      */
-    public function setMaxFileSize(int $maxFileSize): FileLogger
+    public function setMaxFileSize(int $maxFileSize): self
     {
         $this->maxFileSize = $maxFileSize;
 
@@ -104,7 +104,7 @@ class FileLogger extends AbstractLogger
      *
      * @return string
      */
-    public function getFile()
+    public function getFile(): string
     {
         return $this->file;
     }
@@ -114,7 +114,7 @@ class FileLogger extends AbstractLogger
      *
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return pathinfo($this->file, PATHINFO_DIRNAME);
     }

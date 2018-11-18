@@ -145,21 +145,9 @@ class LoggerContainer extends AbstractLogger
     }
 
     /** {@inheritdoc} */
-    public function debugR($message, array $context = [])
-    {
-        $this->callLoggers('debugR', [$message, $context]);
-    }
-
-    /** {@inheritdoc} */
     public function debugDump($message, array $context = [])
     {
         $this->callLoggers('debugDump', [$message, $context]);
-    }
-
-    /** {@inheritdoc} */
-    public function debugException(Exception $ex, array $context = [])
-    {
-        $this->callLoggers('debugException', [$ex, $context]);
     }
 
     /** {@inheritdoc} */
@@ -169,21 +157,9 @@ class LoggerContainer extends AbstractLogger
     }
 
     /** {@inheritdoc} */
-    public function traceR($message, array $context = [])
-    {
-        $this->callLoggers('traceR', [$message, $context]);
-    }
-
-    /** {@inheritdoc} */
     public function traceDump($message, array $context = [])
     {
         $this->callLoggers('traceDump', [$message, $context]);
-    }
-
-    /** {@inheritdoc} */
-    public function traceException(Exception $ex, array $context = [])
-    {
-        $this->callLoggers('traceException', [$ex, $context]);
     }
 
     /** {@inheritdoc} */

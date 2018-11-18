@@ -368,7 +368,7 @@ class GitHubApiHelper
         );
 
         if (400 <= $headers['status']['code']) {
-            LoggerContainer::getInstance()->debugR($headers, $context);
+            LoggerContainer::getInstance()->debug($headers, $context);
         }
 
         if (false === $response) {

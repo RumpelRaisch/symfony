@@ -1,7 +1,7 @@
 <?php
 namespace App\Logger\Abstracts;
 
-use \Exception;
+use Exception;
 use App\Flag\Interfaces\FlagInterface;
 use App\Flag\Traits\FlagTrait;
 use App\Logger\Interfaces\LoggerInterface;
@@ -11,7 +11,7 @@ use App\Logger\LogLevel;
  * [AbstractLogger description]
  *
  * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
- * @see Psr\Log\LoggerInterface
+ * @see \Psr\Log\LoggerInterface
  */
 abstract class AbstractLogger implements LoggerInterface, FlagInterface
 {
@@ -22,7 +22,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function emergency($message, array $context = [])
     {
-        $this->log(LogLevel::EMERGENCY, $message, $context);
+        $this->log(LogLevel::EMERGENCY, self::getMessage($message), $context);
     }
 
     /**
@@ -30,7 +30,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function alert($message, array $context = [])
     {
-        $this->log(LogLevel::ALERT, $message, $context);
+        $this->log(LogLevel::ALERT, self::getMessage($message), $context);
     }
 
     /**
@@ -38,7 +38,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function critical($message, array $context = [])
     {
-        $this->log(LogLevel::CRITICAL, $message, $context);
+        $this->log(LogLevel::CRITICAL, self::getMessage($message), $context);
     }
 
     /**
@@ -46,7 +46,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function error($message, array $context = [])
     {
-        $this->log(LogLevel::ERROR, $message, $context);
+        $this->log(LogLevel::ERROR, self::getMessage($message), $context);
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function warning($message, array $context = [])
     {
-        $this->log(LogLevel::WARNING, $message, $context);
+        $this->log(LogLevel::WARNING, self::getMessage($message), $context);
     }
 
     /**
@@ -62,7 +62,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function notice($message, array $context = [])
     {
-        $this->log(LogLevel::NOTICE, $message, $context);
+        $this->log(LogLevel::NOTICE, self::getMessage($message), $context);
     }
 
     /**
@@ -70,7 +70,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function info($message, array $context = [])
     {
-        $this->log(LogLevel::INFO, $message, $context);
+        $this->log(LogLevel::INFO, self::getMessage($message), $context);
     }
 
     /**
@@ -78,15 +78,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function debug($message, array $context = [])
     {
-        $this->log(LogLevel::DEBUG, $message, $context);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function debugR($message, array $context = [])
-    {
-        $this->debug(print_r($message, true), $context);
+        $this->log(LogLevel::DEBUG, self::getMessage($message), $context);
     }
 
     /**
@@ -94,15 +86,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function debugDump($message, array $context = [])
     {
-        $this->debug($this->getVarDump($message), $context);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function debugException(Exception $ex, array $context = [])
-    {
-        $this->debug("Exception:\n" . $this->getExceptionData($ex), $context);
+        $this->debug(self::getVarDump($message), $context);
     }
 
     /**
@@ -110,15 +94,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function trace($message, array $context = [])
     {
-        $this->log(LogLevel::TRACE, $message, $context);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function traceR($message, array $context = [])
-    {
-        $this->trace(print_r($message, true), $context);
+        $this->log(LogLevel::TRACE, self::getMessage($message), $context);
     }
 
     /**
@@ -126,15 +102,45 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      */
     public function traceDump($message, array $context = [])
     {
-        $this->trace($this->getVarDump($message), $context);
+        $this->trace(self::getVarDump($message), $context);
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $message
+     *
+     * @return string
      */
-    public function traceException(Exception $ex, array $context = [])
+    public static function getMessage($message): string
     {
-        $this->trace("Exception:\n" . $this->getExceptionData($ex), $context);
+        if (true === is_string($message)) {
+            return $message;
+        }
+
+        if ($message instanceof Exception) {
+            return self::getExceptionData($message);
+        }
+
+        if (true === is_array($message) || true === is_object($message)) {
+            return print_r($message, true);
+        }
+
+        if (true === is_numeric($message)) {
+            return (string) $message;
+        }
+
+        if (null === $message) {
+            return 'null';
+        }
+
+        if (true === is_bool($message)) {
+            return true === $message ? 'true' : 'false';
+        }
+
+        if (true === is_callable($message)) {
+            return self::getMessage($message());
+        }
+
+        return $message;
     }
 
     /**
@@ -148,11 +154,11 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md#12-message
      *
      * @param string $message
-     * @param array  $context
+     * @param array $context
      *
      * @return string
      */
-    protected function interpolate(string $message, array $context = [])
+    public static function interpolate(string $message, array $context = []): string
     {
         // build a replacement array with braces around the context keys
         $replace = [];
@@ -170,11 +176,11 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
     /**
      * @param string $level
      * @param string $message
-     * @param array  $context
+     * @param array $context
      *
      * @return string
      */
-    protected function beautify(
+    public static function beautify(
         string $level,
         string $message,
         array  $context = []
@@ -209,7 +215,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      *
      * @return string
      */
-    protected function getVarDump($data): string
+    public static function getVarDump($data): string
     {
         $eol = preg_quote(PHP_EOL);
 
@@ -222,16 +228,27 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
 
     /**
      * @param Exception $ex
-     * @param int       $i
+     * @param int $i
      *
      * @return string
      */
-    protected function getExceptionData(Exception $ex, int $i = 1): string
+    public static function getExceptionData(Exception $ex, int $i = 1): string
     {
-        $response = "#{$i} - {$ex->getMessage()} [{$ex->getFile()}:{$ex->getLine()}]";
+        $response = '';
+
+        if (1 === $i) {
+            $response = "Exception:\n";
+        }
+
+        $response .= "#{$i} - {$ex->getMessage()} ";
+        $response .= "[{$ex->getFile()}:{$ex->getLine()}]";
+
+        if (0 < $ex->getCode()) {
+            $response .= " [Code {$ex->getCode()}]";
+        }
 
         if (null !== ($prev = $ex->getPrevious())) {
-            $response .= "\n" . $this->getExceptionData($prev, ++$i);
+            $response .= "\n" . self::getExceptionData($prev, ++$i);
         }
 
         return $response;
