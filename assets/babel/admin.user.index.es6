@@ -8,7 +8,8 @@ $(() =>
 
     $infoAreas
         .hide()
-        .attr('data-info-status', 'hidden');
+        .attr('data-info-status', 'invisible')
+        .removeClass('d-none');
 
     $info.on('click', function (e)
     {
@@ -20,10 +21,10 @@ $(() =>
         $infoAreas
             .not($infoArea)
             .hide()
-            .attr('data-info-status', 'hidden');
+            .attr('data-info-status', 'invisible');
 
         switch ($infoArea.attr('data-info-status')) {
-            case 'hidden':
+            case 'invisible':
                 $infoArea
                     .show()
                     .attr('data-info-status', 'visible');
@@ -32,7 +33,7 @@ $(() =>
             case 'visible':
                 $infoArea
                     .hide()
-                    .attr('data-info-status', 'hidden');
+                    .attr('data-info-status', 'invisible');
                 break;
         }
     });

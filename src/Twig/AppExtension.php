@@ -7,7 +7,6 @@ use App\Services\Helper\SidebarHelper;
 use App\Services\User\Hierarchy;
 use DateTime;
 use Psr\SimpleCache\InvalidArgumentException;
-use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -39,8 +38,8 @@ class AppExtension extends AbstractExtension
     /** {@inheritdoc} */
     public function getFunctions(): array
     {
-        /** @var Hierarchy $hierarchy */
-        $hierarchy = $this->container->get('raisch.user.hierarchy');
+        // /** @var Hierarchy $hierarchy */
+        // $hierarchy = $this->container->get('raisch.user.hierarchy');
 
         return [
             new TwigFunction(
@@ -55,11 +54,13 @@ class AppExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'CanAlterUser',
-                [$hierarchy, 'canAlterUser']
+                // [$hierarchy, 'canAlterUser']
+                [$this, 'canAlterUser']
             ),
             new TwigFunction(
                 'CanDeactivateUser',
-                [$hierarchy, 'canDeactivateUser']
+                // [$hierarchy, 'canDeactivateUser']
+                [$this, 'canDeactivateUser']
             ),
         ];
     }
@@ -113,6 +114,32 @@ class AppExtension extends AbstractExtension
             'twig_extensions/alert.html.twig',
             ['alert' => $alert]
         );
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function canAlterUser(User $user): bool
+    {
+        /** @var Hierarchy $hierarchy */
+        $hierarchy = $this->container->get('raisch.user.hierarchy');
+
+        return $hierarchy->canAlterUser($user);
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function canDeactivateUser(User $user): bool
+    {
+        /** @var Hierarchy $hierarchy */
+        $hierarchy = $this->container->get('raisch.user.hierarchy');
+
+        return $hierarchy->canDeactivateUser($user);
     }
 
     /**
