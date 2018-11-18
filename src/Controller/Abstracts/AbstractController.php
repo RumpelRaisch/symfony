@@ -40,20 +40,55 @@ abstract class AbstractController extends Controller
      */
     public function __construct(KernelInterface $kernel)
     {
-        $envLogLevels = explode(',', getenv('LOG_LEVEL'));
-        $levels       = [];
+        $this->addFileLogger(
+            $kernel->getLogDir() . '/rd.app.log',
+            explode(',', getenv('LOG_LEVEL'))
+        );
 
-        foreach ($envLogLevels as $logLevel) {
+        if ('dev' === $kernel->getEnvironment()) {
+            $this->addFileLogger(
+                $kernel->getLogDir() . '/rd.dev.log',
+                explode(',', getenv('LOG_LEVEL_DEV')),
+                true
+            );
+        }
+    }
+
+    /**
+     * @param string $file
+     * @param array  $logLevelNames
+     * @param bool   $internal
+     *
+     * @throws Exception
+     *
+     * @return self
+     */
+    protected function addFileLogger(
+        string $file,
+        array  $logLevelNames,
+        bool   $internal = false
+    ): self {
+        $levels          = [];
+        $loggerContainer = LoggerContainer::getInstance();
+
+        foreach ($logLevelNames as $name) {
             try {
-                $levels[] = constant(LogLevel::class . '::' . $logLevel);
+                $levels[] = constant(LogLevel::class . '::' . strtoupper($name));
             } catch (Exception $ex) {
                 // non existing log level => ignore
             }
         }
 
-        LoggerContainer::getInstance()
-            ->addLogLevel(...$levels)
-            ->addFileLogger($kernel->getLogDir() . '/app.log');
+        if (true === $internal) {
+            $fileLogger = $loggerContainer->addFileLogger($file);
+            $fileLogger->addInstanceLogLevel(...$levels);
+        } else {
+            $loggerContainer
+                ->addLogLevel(...$levels)
+                ->addFileLogger($file);
+        }
+
+        return $this;
     }
 
     /**
@@ -264,9 +299,9 @@ abstract class AbstractController extends Controller
      *
      * @param Session $session
      *
-     * @return AbstractController
+     * @return self
      */
-    protected function setSession(Session $session): AbstractController
+    protected function setSession(Session $session): self
     {
         $this->session = $session;
 
@@ -276,9 +311,9 @@ abstract class AbstractController extends Controller
     /**
      * Sets the default Session Object
      *
-     * @return AbstractController
+     * @return self
      */
-    protected function setDefaultSession(): AbstractController
+    protected function setDefaultSession(): self
     {
         $this->session = new Session(
             new NativeSessionStorage(),
