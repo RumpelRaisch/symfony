@@ -11,6 +11,7 @@ use App\Logger\LoggerContainer;
  */
 class GitHubApiHelper
 {
+    public const DATETIME_FORMAT = 'd.m.Y H:i:s';
     /**
      * [private description]
      *
@@ -121,11 +122,11 @@ class GitHubApiHelper
             $repo['created_at'] = DateTime::createFromFormat(
                 DateTime::ISO8601,
                 $repo['created_at']
-            )->format('Y-m-d H:i:s');
+            )->format(self::DATETIME_FORMAT);
             $repo['updated_at'] = DateTime::createFromFormat(
                 DateTime::ISO8601,
                 $repo['updated_at']
-            )->format('Y-m-d H:i:s');
+            )->format(self::DATETIME_FORMAT);
             $repo['participation'] = $this->getGithubRepoParticipation(
                 $repo['id'],
                 $repo['full_name']

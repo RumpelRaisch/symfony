@@ -38,6 +38,7 @@ class AppExtension extends AbstractExtension
     /** {@inheritdoc} */
     public function getFunctions(): array
     {
+        // loading other services inside this service is too early at this point
         // /** @var Hierarchy $hierarchy */
         // $hierarchy = $this->container->get('raisch.user.hierarchy');
 
@@ -150,7 +151,7 @@ class AppExtension extends AbstractExtension
      */
     public function formatDateTimeGitHub(
         string $date,
-        string $format = 'Y-m-d H:i:s'
+        string $format = 'd.m.Y H:i:s'
     ): string {
         return DateTime::createFromFormat(DateTime::ISO8601, $date)
             ->format($format);
