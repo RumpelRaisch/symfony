@@ -1,11 +1,11 @@
 <?php
 namespace App\Logger\Abstracts;
 
-use Exception;
 use App\Flag\Interfaces\FlagInterface;
 use App\Flag\Traits\FlagTrait;
 use App\Logger\Interfaces\LoggerInterface;
 use App\Logger\LogLevel;
+use Exception;
 
 /**
  * [AbstractLogger description]
@@ -154,12 +154,14 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
      * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md#12-message
      *
      * @param string $message
-     * @param array $context
+     * @param array  $context
      *
      * @return string
      */
-    public static function interpolate(string $message, array $context = []): string
-    {
+    public static function interpolate(
+        string $message,
+        array  $context = []
+    ): string {
         // build a replacement array with braces around the context keys
         $replace = [];
         foreach ($context as $key => $val) {
@@ -176,7 +178,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
     /**
      * @param string $level
      * @param string $message
-     * @param array $context
+     * @param array  $context
      *
      * @return string
      */
@@ -228,7 +230,7 @@ abstract class AbstractLogger implements LoggerInterface, FlagInterface
 
     /**
      * @param Exception $ex
-     * @param int $i
+     * @param int       $i
      *
      * @return string
      */
